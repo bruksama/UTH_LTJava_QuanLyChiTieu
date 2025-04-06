@@ -1,4 +1,4 @@
 package main.java.com.expensemanager.dao;
 
-public class Report {
+public class ReportDAO {
 }
