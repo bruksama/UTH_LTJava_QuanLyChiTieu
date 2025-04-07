@@ -9,25 +9,25 @@ public class ConnectorDAO {
 
     private static final String CREATE_PROFILES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS profiles (" +
-                    "id INTEGER PRIMARY_KEY AUTOINCREMENT, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name TEXT NOT NULL, " +
                     "createAt DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
     private static final String CREATE_TRANSACTIONS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS transactions (" +
-                    "id INTEGER PRIMARY_KEY AUTOINCREMENT, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "profileId INTEGER NOT NULL, " +
                     "type TEXT, " +
                     "categoryId INTEGER NOT NULL, " +
                     "description TEXT, " +
                     "date DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                    "amount REAL NOT NULL)" +
+                    "amount REAL NOT NULL, " +
                     "FOREIGN KEY (profileId) REFERENCES profiles(id), " +
                     "FOREIGN KEY (categoryId) REFERENCES categories(id))";
 
     private static final String CREATE_CATEGORIES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS categories (" +
-                    "id INTEGER PRIMARY_KEY AUTOINCREMENT, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name TEXT NOT NULL, " +
                     "type TEXT NOT NULL, " +
                     "profileId INTEGER NOT NULL, " +
@@ -35,7 +35,7 @@ public class ConnectorDAO {
 
     private static final String CREATE_REPORTS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS reports (" +
-                    "id INTEGER PRIMARY_KEY AUTOINCREMENT, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "profileId INTEGER NOT NULL, " +
                     "name TEXT NOT NULL, " +
                     "description TEXT, " +
@@ -68,8 +68,8 @@ public class ConnectorDAO {
             stmt.execute("PRAGMA foreign_keys = ON");
 
             stmt.execute(CREATE_PROFILES_TABLE_SQL);
-            stmt.execute(CREATE_TRANSACTIONS_TABLE_SQL);
             stmt.execute(CREATE_CATEGORIES_TABLE_SQL);
+            stmt.execute(CREATE_TRANSACTIONS_TABLE_SQL);
             stmt.execute(CREATE_REPORTS_TABLE_SQL);
 
             System.out.println("Khởi tạo thành công!");
