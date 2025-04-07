@@ -1,18 +1,10 @@
 package main.java.com.expensemanager.dao;
 
 import main.java.com.expensemanager.model.Category;
-
 import java.sql.*;
 
 public class CategoryDAO {
-    private final String dbURL;
-
-    private static final String CREATE_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS categories (" +
-                    "id INTEGER PRIMARY_KEY AUTOINCREMENT, " +
-                    "name TEXT NOT NULL, " +
-                    "type TEXT NOT NULL, " +
-                    "profileId INTEGER NOT NULL)";
+    private final ConnectorDAO dbConnector;
 
     private static final String INSERT_SQL =
             "INSERT INTO categories (name, type, profileId) +" +
@@ -29,29 +21,11 @@ public class CategoryDAO {
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name ASC";
 
     public CategoryDAO(String dbURL) {
-        this.dbURL = dbURL;
-        createTableIfNotExists();
-    }
-
-    private void createTableIfNotExists() {
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(CREATE_TABLE_SQL);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Connection getConnection() {
-        try {
-            return DriverManager.getConnection(dbURL);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        this.dbConnector = ConnectorDAO.getInstance();
     }
 
     public boolean insertCategory(Category category) {
-        try (Connection conn = getConnection();
+        try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, category.getName());
