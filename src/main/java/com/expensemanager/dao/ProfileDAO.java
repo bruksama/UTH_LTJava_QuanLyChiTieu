@@ -1,7 +1,7 @@
 package main.java.com.expensemanager.dao;
 
 
-import model.Profile;
+import com.expensemanager.model.Profile;
 import java.sql.*;
 
 public class ProfileDAO {
