@@ -3,7 +3,7 @@ package main.java.com.expensemanager.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+//report
 public class Report {
     private double totalIncome;
     private double totalExpense;
