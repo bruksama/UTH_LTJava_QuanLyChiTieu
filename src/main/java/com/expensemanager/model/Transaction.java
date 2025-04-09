@@ -26,10 +26,8 @@ public class Transaction {
 
     // Getter và Setter
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
 
     public int getProfileId() { return profileId; }
-    public void setProfileId(int profileId) { this.profileId = profileId; }
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
@@ -41,8 +39,7 @@ public class Transaction {
     public void setDescription(String description) { this.description = description; }
 
     public LocalDateTime getDate() { return date; }
-    public void setDate(LocalDateTime date) { this.date = date; }
 
     public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+
 }
