@@ -76,7 +76,6 @@ public class ConnectorDAO {
             return true;
         } catch (SQLException e) {
             System.err.println("Lỗi khi khởi tạo dữ liệu: " + e.getMessage());
-            e.printStackTrace();
             return false;
         }
     }

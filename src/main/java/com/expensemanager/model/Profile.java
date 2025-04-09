@@ -15,10 +15,6 @@ public class Profile {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -30,11 +26,5 @@ public class Profile {
     public String getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-   
 }
 
