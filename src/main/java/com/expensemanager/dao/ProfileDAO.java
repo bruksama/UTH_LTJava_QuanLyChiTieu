@@ -1,66 +1,130 @@
 package main.java.com.expensemanager.dao;
 
 
-import com.expensemanager.model.Profile;
+import main.java.com.expensemanager.model.Profile;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileDAO {
-   private static Connection getConnection() throws SQLException {
-        String url = "jdbc:sqlite:your_database.db"; 
-        return DriverManager.getConnection(url);
+    private final ConnectorDAO dbConnector;
+
+    private static final String INSERT_SQL =
+            "INSERT INTO profiles (name) VALUES (?)"; // Không cần truyền createdAt vì nó tự động cấp
+
+    private static final String UPDATE_SQL =
+            "UPDATE profiles SET name = ? WHERE id = ?"; // Không cập nhật createdAt vì nó tự động cấp
+
+    private static final String DELETE_SQL =
+            "DELETE FROM profiles WHERE id = ?";
+
+    private static final String SELECT_BY_ID_SQL =
+            "SELECT * FROM profiles WHERE id = ?";
+
+    private static final String SELECT_ALL_SQL =
+            "SELECT * FROM profiles ORDER BY name ASC";
+
+    // Khởi tạo ProfileDAO với đối tượng ConnectorDAO
+    public ProfileDAO() {
+        this.dbConnector = ConnectorDAO.getInstance();
     }
 
-    // Tạo hồ sơ mới
-    public void createProfile(String profileName) {
-        String query = "INSERT INTO profile (name, createdAt) VALUES (?, NOW())";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, profileName);
-            stmt.executeUpdate();
+    // Thêm một profile mới vào cơ sở dữ liệu
+    public boolean insertProfile(Profile profile) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Chỉ truyền tên vì createdAt tự động cấp
+            stmt.setString(1, profile.getName());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        profile.setId(generatedKeys.getInt(1));  // Lấy userID tự động cấp
+                        return true;
+                    }
+                }
+            }
+            return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error inserting profile: " + e.getMessage(), e);
         }
     }
 
-    // Cập nhật tên hồ sơ
-    public void updateProfileName(int profileId, String newProfileName) {
-        String query = "UPDATE profile SET name = ? WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, newProfileName);
-            stmt.setInt(2, profileId);
-            stmt.executeUpdate();
+    // Cập nhật thông tin của một profile
+    public boolean updateProfile(Profile profile) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
+
+            stmt.setString(1, profile.getName());
+            stmt.setInt(2, profile.getId());
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error updating profile: " + e.getMessage(), e);
         }
     }
 
-    // Tạo hồ sơ mới
-    public Profile getProfile(int profileId) {
-        String query = "SELECT * FROM profile WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+    // Xóa một profile khỏi cơ sở dữ liệu
+    public boolean deleteProfile(int profileId) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
+
+            stmt.setInt(1, profileId);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting profile: " + e.getMessage(), e);
+        }
+    }
+
+    // Lấy một profile theo ID
+    public Profile getProfileById(int profileId) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
+
             stmt.setInt(1, profileId);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
-                return new Profile(rs.getInt("id"), rs.getString("name"), rs.getString("createdAt"));
+                Profile profile = new Profile(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("createAt")  // Chuyển chuỗi thành LocalDateTime nếu cần
+                );
+                return profile;
             }
+            return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error retrieving profile by ID: " + e.getMessage(), e);
         }
-        return null;
     }
 
-    // Xóa hồ sơ
-    public void deleteProfile(int profileId) {
-        String query = "DELETE FROM profile WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, profileId);
-            stmt.executeUpdate();
+    // Lấy tất cả các profiles
+    public List<Profile> getAllProfiles() {
+        List<Profile> profiles = new ArrayList<>();
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SELECT_ALL_SQL)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Profile profile = new Profile(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("createAt")  // Chuyển chuỗi thành LocalDateTime nếu cần
+                );
+                profiles.add(profile);
+            }
+            return profiles;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error retrieving all profiles: " + e.getMessage(), e);
         }
     }
 }
+
 
