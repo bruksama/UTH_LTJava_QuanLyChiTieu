@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Report {
+    // changes
     private double totalIncome;
     private double totalExpense;
     private double balance;
