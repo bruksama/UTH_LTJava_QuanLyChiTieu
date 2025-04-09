@@ -1,69 +1,48 @@
 package main.java.com.expensemanager.model;
 
-import java.time.LocalDate;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 public class Transaction {
-    private String transactionId;
-    private String profileId;
-    private double amount;
-    private String type;           // thu or chi
-    private Category category;
-    private LocalDate date;
+    private int id;
+    private int profileId;
+    private String type; // "income" hoặc "expense"
+    private int categoryId;
     private String description;
+    private LocalDateTime date;
+    private double amount;
 
-    public Transaction(String profileId, double amount, String type, Category category, LocalDate date, String description) {
-        this.transactionId = UUID.randomUUID().toString();
+    public Transaction() {}
+
+    public Transaction(int id, int profileId, String type, int categoryId,
+                       String description, LocalDateTime date, double amount) {
+        this.id = id;
         this.profileId = profileId;
-        this.amount = amount;
         this.type = type;
-        this.category = category;
-        this.date = date;
+        this.categoryId = categoryId;
         this.description = description;
-    }
-
-    // Getters và setters
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public String getProfileId() {
-        return profileId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setAmount(double amount) {
+        this.date = date;
         this.amount = amount;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+    // Getter và Setter
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    public int getProfileId() { return profileId; }
+    public void setProfileId(int profileId) { this.profileId = profileId; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public int getCategoryId() { return categoryId; }
+    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
+
+    public double getAmount() { return amount; }
+    public void setAmount(double amount) { this.amount = amount; }
 }
