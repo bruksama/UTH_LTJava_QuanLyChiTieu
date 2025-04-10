@@ -125,6 +125,24 @@ public class ProfileDAO {
             throw new RuntimeException("Error retrieving all profiles: " + e.getMessage(), e);
         }
     }
+    public boolean isProfileExist(int profileId) {
+        String query = "SELECT COUNT(*) FROM profiles WHERE id = ?";
+
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, profileId); // Gán giá trị profileId vào câu truy vấn
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;  // Nếu có ít nhất 1 dòng trả về thì hồ sơ tồn tại
+            }
+            return false;  // Không tìm thấy profile
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if profile exists by ID: " + e.getMessage(), e);
+        }
+    }
+
 }
 
 
