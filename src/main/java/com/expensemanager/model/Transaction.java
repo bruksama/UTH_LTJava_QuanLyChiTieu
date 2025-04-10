@@ -1,6 +1,5 @@
 package main.java.com.expensemanager.model;
 
-import java.time.LocalDateTime;
 
 public class Transaction {
     private int id;
@@ -8,13 +7,13 @@ public class Transaction {
     private String type; // "income" hoặc "expense"
     private int categoryId;
     private String description;
-    private LocalDateTime date;
+    private String date;
     private double amount;
 
     public Transaction() {}
 
     public Transaction(int id, int profileId, String type, int categoryId,
-                       String description, LocalDateTime date, double amount) {
+                       String description, String date, double amount) {
         this.id = id;
         this.profileId = profileId;
         this.type = type;
@@ -38,8 +37,20 @@ public class Transaction {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public LocalDateTime getDate() { return date; }
+    public String getDate() { return date; }
 
     public double getAmount() { return amount; }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", profileId=" + profileId +
+                ", type='" + type + '\'' +
+                ", categoryId=" + categoryId +
+                ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }
