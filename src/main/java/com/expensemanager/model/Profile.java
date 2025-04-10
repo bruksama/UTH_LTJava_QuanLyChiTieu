@@ -11,6 +11,14 @@ public class Profile {
         this.createdAt = createdAt;
     }
 
+    public Profile(String name) {
+        this.name = name;
+    }
+
+    public Profile(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
