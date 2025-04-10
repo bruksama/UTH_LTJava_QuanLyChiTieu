@@ -23,7 +23,10 @@ public class CategoryDAO {
     private static final String SELECT_BY_PROFILE_SQL =
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name";
 
-    public CategoryDAO(String dbURL) {
+    private static final String SELECT_BY_ID =
+            "SELECT * FROM categories WHERE id = ?";
+
+    public CategoryDAO() {
         this.dbConnector = ConnectorDAO.getInstance();
     }
 
@@ -78,6 +81,23 @@ public class CategoryDAO {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return false;
+        }
+    }
+
+    public Category getCategoryById(int id) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID)) {
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()) {
+                    return extractCategory(rs);
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return null;
         }
     }
 

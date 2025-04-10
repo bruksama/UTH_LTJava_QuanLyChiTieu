@@ -64,4 +64,8 @@ public class Category {
                 ", profileId=" + profileId +
                 "}";
     }
+
+    public int getId() {
+        return id;
+    }
 }
