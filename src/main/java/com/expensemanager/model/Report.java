@@ -67,11 +67,10 @@ public class Report {
 
 
         }
-
         return sb.toString();
     }
 
-    // Getter & Setter (có thể mở rộng tùy nhu cầu)
+    // Getter & Setter
 
     public int getTotalTransaction() {
         return totalTransaction;
