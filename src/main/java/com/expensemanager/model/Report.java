@@ -1,6 +1,6 @@
 package main.java.com.expensemanager.model;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,20 +11,20 @@ public class Report {
     private String description;
     private int totalTransaction;
     private double totalAmount;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDate generatedDate;
+    private String startDate;
+    private String endDate;
+    private String generatedDate;
     private List<Transaction> filteredTransactions;
 
     public Report(int profileId, String name, String description, List<Transaction> allTransactions,
-                  LocalDate startDate, LocalDate endDate) {
+                  String startDate, String endDate) {
 
         this.profileId = profileId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
-        this.endDate = endDate;
-        this.generatedDate = LocalDate.now();
+        this.endDate = String.valueOf(endDate);
+        this.generatedDate = java.time.LocalDate.now().toString();
         this.filteredTransactions = new ArrayList<>();
 
         // Tính toán các giá trị thống kê
@@ -32,7 +32,7 @@ public class Report {
         int soGiaoDich = 0;
 
         for (Transaction t : allTransactions) {
-            if (isInRange(t.getDate())) {
+            if (isInRange(t.getDate().toString())) {
                 filteredTransactions.add(t);
                 tongTien += t.getAmount();
                 soGiaoDich++;
@@ -43,10 +43,11 @@ public class Report {
         this.totalTransaction = soGiaoDich;
     }
 
-    private boolean isInRange(LocalDate date) {
-        return (startDate == null || !date.isBefore(startDate)) &&
-                (endDate == null || !date.isAfter(endDate));
+    private boolean isInRange(String date) {
+        return (startDate == null || date.compareTo(startDate) >= 0) &&
+                (endDate == null || date.compareTo(endDate) <= 0);
     }
+
 
     public String exportText() {
         StringBuilder sb = new StringBuilder();
@@ -72,15 +73,24 @@ public class Report {
 
     // Getter & Setter
 
-    public int getTotalTransaction() {
-        return totalTransaction;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public double getTotalAmount() {
-        return totalAmount;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public LocalDate getGeneratedDate() {
-        return generatedDate;
+    public int getProfileId() {
+        return profileId;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
 }
