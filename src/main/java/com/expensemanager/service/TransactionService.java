@@ -14,7 +14,7 @@ public class TransactionService {
     }
 
     public boolean addTransaction(Transaction transaction) {
-        if (transaction.getProfileId() <= 0 || transaction.getType() == null || transaction.getDate() == null) {
+        if (transaction.getProfileId() <= 0 || transaction.getType() == null) {
             System.out.println("Thông tin giao dịch không đầy đủ!");
             return false;
         }
@@ -24,8 +24,11 @@ public class TransactionService {
             return false;
         }
 
-        System.out.println("Đã thêm giao dịch thành công.");
-        return transactionDAO.addTransaction(transaction);
+        boolean success = transactionDAO.addTransaction(transaction);
+        if (success) {
+            System.out.println("Thêm giao dịch thành công.");
+        }
+        return success;
     }
 
     public List<Transaction> getTransactionsByProfile(int profileId) {
@@ -34,7 +37,13 @@ public class TransactionService {
             return null;
         }
 
-        return transactionDAO.getTransactionsByProfile(profileId);
+        List<Transaction> list = transactionDAO.getTransactionsByProfile(profileId);
+        if (list != null && !list.isEmpty()) {
+            System.out.println("Lấy danh sách giao dịch thành công.");
+        } else {
+            System.out.println("Không có giao dịch nào được tìm thấy.");
+        }
+        return list;
     }
 
     public boolean deleteTransaction(int id) {
@@ -43,16 +52,24 @@ public class TransactionService {
             return false;
         }
 
-        return transactionDAO.deleteTransaction(id);
+        boolean success = transactionDAO.deleteTransaction(id);
+        if (success) {
+            System.out.println("Xóa giao dịch thành công.");
+        }
+        return success;
     }
 
     public boolean updateTransaction(Transaction transaction) {
-        if (transaction.getId() <= 0 || transaction.getType() == null || transaction.getDate() == null) {
+        if (transaction.getId() <= 0 || transaction.getType() == null) {
             System.out.println("Dữ liệu giao dịch không hợp lệ để cập nhật.");
             return false;
         }
 
-        return transactionDAO.updateTransaction(transaction);
+        boolean success = transactionDAO.updateTransaction(transaction);
+        if (success) {
+            System.out.println("Cập nhật giao dịch thành công.");
+        }
+        return success;
     }
 
     private boolean isProfileExist(int profileId) {
