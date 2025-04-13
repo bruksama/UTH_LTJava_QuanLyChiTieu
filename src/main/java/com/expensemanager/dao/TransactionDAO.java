@@ -15,7 +15,7 @@ public class TransactionDAO {
 
     // Thêm giao dịch
     public boolean addTransaction(Transaction transaction) {
-        String sql = "INSERT INTO transactions (profileId, type, categoryId, description, date, amount) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transactions (profileId, type, categoryId, description, amount) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = connector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,10 +24,13 @@ public class TransactionDAO {
             stmt.setString(2, transaction.getType());
             stmt.setInt(3, transaction.getCategoryId());
             stmt.setString(4, transaction.getDescription());
-            stmt.setString(5, transaction.getDate().toString());
-            stmt.setDouble(6, transaction.getAmount());
+            stmt.setDouble(5, transaction.getAmount());
 
-            return stmt.executeUpdate() > 0;
+            boolean success = stmt.executeUpdate() > 0;
+            if (success) {
+                System.out.println("Giao dịch đã được thêm vào cơ sở dữ liệu.");
+            }
+            return success;
 
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm giao dịch: " + e.getMessage());
@@ -74,17 +77,21 @@ public class TransactionDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
+            boolean success = stmt.executeUpdate() > 0;
+            if (success) {
+                System.out.println("Giao dịch đã được xoá khỏi hệ thống.");
+            }
+            return success;
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi xóa giao dịch: " + e.getMessage());
+            System.err.println("Lỗi khi xoá giao dịch: " + e.getMessage());
             return false;
         }
     }
 
     // Cập nhật giao dịch (nếu muốn)
     public boolean updateTransaction(Transaction transaction) {
-        String sql = "UPDATE transactions SET type = ?, categoryId = ?, description = ?, date = ?, amount = ? WHERE id = ?";
+        String sql = "UPDATE transactions SET type = ?, categoryId = ?, description = ?, amount = ? WHERE id = ?";
 
         try (Connection conn = connector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -92,11 +99,14 @@ public class TransactionDAO {
             stmt.setString(1, transaction.getType());
             stmt.setInt(2, transaction.getCategoryId());
             stmt.setString(3, transaction.getDescription());
-            stmt.setString(4, transaction.getDate().toString());
-            stmt.setDouble(5, transaction.getAmount());
-            stmt.setInt(6, transaction.getId());
+            stmt.setDouble(4, transaction.getAmount());
+            stmt.setInt(5, transaction.getId());
 
-            return stmt.executeUpdate() > 0;
+            boolean success = stmt.executeUpdate() > 0;
+            if (success) {
+                System.out.println("Giao dịch đã được cập nhật thành công.");
+            }
+            return success;
 
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật giao dịch: " + e.getMessage());
