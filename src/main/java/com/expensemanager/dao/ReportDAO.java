@@ -10,7 +10,6 @@ import java.util.List;
 public class ReportDAO {
     private Connection conn;
 
-
     // ✅ Thêm báo cáo vào bảng 'reports'
     public boolean insertReport(Report report) {
         if (report == null) {
