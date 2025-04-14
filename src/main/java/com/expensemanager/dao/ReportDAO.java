@@ -10,57 +10,50 @@ import java.util.List;
 public class ReportDAO {
     private Connection conn;
 
-    // Constructor nhận kết nối database
-    public ReportDAO(Connection conn) {
-        this.conn = conn;
-        createReportsTableIfNotExists(); // Thêm để đảm bảo bảng luôn tồn tại
-    }
-
-    // ✅ Tạo bảng 'reports' nếu chưa có
-    private void createReportsTableIfNotExists() {
-        String sql = "CREATE TABLE IF NOT EXISTS reports (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "profileId INTEGER," +
-                "name TEXT," +
-                "description TEXT," +
-                "totalTransaction INTEGER," +
-                "totalAmount REAL," +
-                "startDate TEXT," +
-                "endDate TEXT," +
-                "generatedDate TEXT DEFAULT CURRENT_TIMESTAMP)";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     // ✅ Thêm báo cáo vào bảng 'reports'
     public boolean insertReport(Report report) {
+        if (report == null) {
+            System.err.println("Báo cáo không hợp lệ.");
+            return false;
+        }
+
         String sql = "INSERT INTO reports (profileId, name, description, totalTransaction, totalAmount, startDate, endDate, generatedDate) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Set các giá trị vào PreparedStatement
             stmt.setInt(1, report.getProfileId());
             stmt.setString(2, report.getName());
             stmt.setString(3, report.getDescription());
             stmt.setInt(4, report.getTotalTransaction());
 
-            double tongTien = 0;
+            // Tính tổng số tiền từ các giao dịch
+            double totalAmount = 0;
             for (Transaction t : report.getFilteredTransactions()) {
-                tongTien += t.getAmount();
+                totalAmount += t.getAmount();
             }
-            stmt.setDouble(5, tongTien);
+            stmt.setDouble(5, totalAmount);
 
             stmt.setString(6, report.getStartDate());
             stmt.setString(7, report.getEndDate());
 
-            return stmt.executeUpdate() > 0;
+            // Thực thi câu lệnh và kiểm tra kết quả
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Báo cáo đã được thêm thành công.");
+                return true;
+            } else {
+                System.out.println("Không thể thêm báo cáo.");
+                return false;
+            }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm báo cáo: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
+
 
     // ✅ Lấy danh sách báo cáo theo profileId
     public List<Report> getReportsByProfileId(int profileId) {
@@ -71,19 +64,20 @@ public class ReportDAO {
             stmt.setInt(1, profileId);
             ResultSet rs = stmt.executeQuery();
 
+            // Duyệt qua các dòng kết quả và tạo đối tượng Report
             while (rs.next()) {
-                // Chỉ tạo đối tượng Report chứa thông tin tổng quan, không cần danh sách giao dịch
                 Report report = new Report(
                         rs.getInt("profileId"),
                         rs.getString("name"),
                         rs.getString("description"),
-                        new ArrayList<>(),
+                        new ArrayList<>(),  // Giả sử ban đầu không lấy giao dịch chi tiết
                         rs.getString("startDate"),
                         rs.getString("endDate")
                 );
                 reports.add(report);
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn báo cáo: " + e.getMessage());
             e.printStackTrace();
         }
 
