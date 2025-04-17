@@ -14,7 +14,6 @@ public class ReportDAO {
     public ReportDAO(Connection conn) {
         this.conn = conn;
     }
-
     // Hàm chèn báo cáo mới vào bảng reports
     public boolean insertReport(Report report) {
         String sql = "INSERT INTO reports (profileId, name, description, totalTransaction, totalAmount, startDate, endDate, generatedDate) " +
