@@ -101,4 +101,14 @@ public class Report {
         return description;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setFilteredTransactions(List<Transaction> transactions) {
+    }
 }
