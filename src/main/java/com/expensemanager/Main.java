@@ -1,11 +1,11 @@
 package main.java.com.expensemanager;
 
-import main.java.com.expensemanager.dao.CategoryDAO;
-import main.java.com.expensemanager.dao.ConnectorDAO;
-import main.java.com.expensemanager.dao.ProfileDAO;
-import main.java.com.expensemanager.model.Category;
-import main.java.com.expensemanager.model.Profile;
-import main.java.com.expensemanager.service.CategoryService;
+//import main.java.com.expensemanager.dao.CategoryDAO;
+//import main.java.com.expensemanager.dao.ConnectorDAO;
+//import main.java.com.expensemanager.dao.ProfileDAO;
+//import main.java.com.expensemanager.model.Category;
+//import main.java.com.expensemanager.model.Profile;
+//import main.java.com.expensemanager.service.CategoryService;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,35 +16,37 @@ public class Main {
 //        new File(appDataPath + "\\QuanLyChiTieu").mkdirs();
 //
 //        ConnectorDAO dbConnector = ConnectorDAO.getInstance(dbURL);
-        ConnectorDAO dbConnector = ConnectorDAO.getInstance();
+//        ConnectorDAO dbConnector = ConnectorDAO.getInstance();
 //        dbConnector.initDatabase();
 
-        if (dbConnector.isConnected()) {
-            System.out.println("Kết nối thành công!");
-        } else {
-            System.out.println("Không thể kết nối!");
-        }
-
-        ProfileDAO dbProfile = new ProfileDAO();
-        Profile testProfile = dbProfile.getProfileById(5);
-        System.out.println("Đang tương tác bằng profile: " + testProfile.getName());
+//        if (dbConnector.isConnected()) {
+//            System.out.println("Kết nối thành công!");
+//        } else {
+//            System.out.println("Không thể kết nối!");
+//        }
+//
+//        ProfileDAO dbProfile = new ProfileDAO();
+//        Profile testProfile = dbProfile.getProfileById(5);
+//        System.out.println("Đang tương tác bằng profile: " + testProfile.getName());
 //        if (dbProfile.insertProfile(testProfile)) {
 //            System.out.println("Success");
 //        } else {
 //            System.out.println("Fail");
 //        }
 
-        CategoryDAO dbCategory = new CategoryDAO();
-        CategoryService dbCategoryService = new CategoryService(dbCategory);
-        Category testCategory = dbCategory.getCategoryById(3);
+//        CategoryDAO dbCategory = new CategoryDAO();
+//        CategoryService dbCategoryService = new CategoryService(dbCategory);
+//        Category testCategory = dbCategory.getCategoryById(3);
+//
+//        System.out.println("Danh mục " + testCategory.getName());
+//
+//        if(dbCategoryService.deleteCategory(testCategory.getId(), testProfile.getId())) {
+//            System.out.println("Xóa thành công");
+//        } else {
+//            System.out.println("Xóa thất bại");
+//        }
 
-        System.out.println("Danh mục " + testCategory.getName());
-
-        if(dbCategoryService.deleteCategory(testCategory.getId(), testProfile.getId())) {
-            System.out.println("Xóa thành công");
-        } else {
-            System.out.println("Xóa thất bại");
-        }
+        Application.launch(Application.class);
 
     }
 }
