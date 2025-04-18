@@ -28,8 +28,13 @@ public class CategoryService {
             return false;
         }
 
-        System.out.println("Đã tạo danh mục " + category.getName() + "!");
-        return categoryDAO.insertCategory(category);
+        if (categoryDAO.insertCategory(category)) {
+            System.out.println("Đã tạo danh mục " + category.getName() + "!");
+            return true;
+        } else {
+            System.out.println("Tạo danh mục thất bại!");
+            return false;
+        }
     }
 
     private boolean isProfileExist(int profileId) {
@@ -45,6 +50,12 @@ public class CategoryService {
             return false;
         }
 
-        return categoryDAO.deleteCategory(id, profileId);
+        if (categoryDAO.deleteCategory(id, profileId)) {
+            System.out.println("Đã xóa danh mục thành công!");
+            return true;
+        } else {
+            System.out.println("Xóa danh mục thất bại!");
+            return false;
+        }
     }
 }
