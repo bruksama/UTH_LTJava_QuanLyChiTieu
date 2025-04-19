@@ -10,7 +10,7 @@ import java.util.List;
 public class ReportDAO {
     private final ConnectorDAO connector;
 
-    public ReportDAO() {
+    public ReportDAO(Connection conn) {
         this.connector = ConnectorDAO.getInstance();
     }
 
@@ -144,5 +144,9 @@ public class ReportDAO {
             System.err.println("Lỗi khi cập nhật báo cáo: " + e.getMessage());
             return false;
         }
+    }
+
+    public ConnectorDAO getConnector() {
+        return connector;
     }
 }
