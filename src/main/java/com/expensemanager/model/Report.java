@@ -47,6 +47,14 @@ public class Report {
         return (startDate == null || date.compareTo(startDate) >= 0) &&
                 (endDate == null || date.compareTo(endDate) <= 0);
     }
+    public int getTotalTransaction() {
+        return filteredTransactions != null ? filteredTransactions.size() : 0;
+    }
+
+    public List<Transaction> getFilteredTransactions() {
+        return filteredTransactions;
+    }
+
 
 
     public String exportText() {
@@ -93,4 +101,14 @@ public class Report {
         return description;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setFilteredTransactions(List<Transaction> transactions) {
+    }
 }
