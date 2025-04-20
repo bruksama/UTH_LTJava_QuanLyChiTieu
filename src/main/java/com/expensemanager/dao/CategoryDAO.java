@@ -20,8 +20,6 @@ public class CategoryDAO {
     private static final String DELETE_SQL =
             "DELETE FROM categories WHERE id = ? AND profileId = ?";
 
-
-
     private static final String SELECT_BY_PROFILE_SQL =
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name";
 
@@ -62,21 +60,6 @@ public class CategoryDAO {
 
             stmt.setInt(1, id);
             stmt.setInt(2, profileId);
-
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean updateCategory(String name, String type) {
-        try (Connection conn = dbConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
-
-            stmt.setString(1, name);
-            stmt.setString(2, type);
 
             int affectedRows = stmt.executeUpdate();
             return affectedRows > 0;
