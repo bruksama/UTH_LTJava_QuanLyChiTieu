@@ -1,3 +1,84 @@
-.parent {
-    -fx-background-color: #ffffff;
+/* Màu nền mặc định của ToggleButton khi không được chọn */
+.toggle-button {
+    -fx-background-color: #FFCC00;        /* Màu nền mặc định */
+    -fx-font-size: 14px;
+    -fx-pref-width: 150px;                /* Kích thước cố định cho nút */
+    -fx-pref-height: 50px;                /* Kích thước cố định cho nút */
+    -fx-padding: 10px 20px;              /* Padding trong Button */
+    -fx-border-color: #FFD700;           /* Màu viền vàng */
+    -fx-border-radius: 5px;
+    -fx-text-fill: black;                /* Màu chữ đen mặc định */
 }
+
+.toggle-button:selected {
+    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
+    -fx-font-weight: bold;
+}
+
+/* Màu nền khi di chuột vào ToggleButton */
+.toggle-button:hover {
+    -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;           /* Màu chữ khi hover */
+    -fx-border-color: #FF6600;      /* Màu viền khi hover */
+    -fx-border-width: 2px;          /* Viền dày hơn khi hover */
+}
+
+.toggle-button:pressed {
+    -fx-background-color: #FF6600;
+    -fx-text-fill: black;
+}
+.button:selected{
+    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
+    -fx-font-weight: bold;
+}
+.button:hover {
+    -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;           /* Màu chữ khi hover */
+    -fx-border-color: #FFFFCC;      /* Màu viền khi hover */
+    -fx-border-width: 2px;          /* Viền dày hơn khi hover */
+}
+.color_profile{
+    -fx-background-color: linear-gradient(to bottom, #f8bbd0, #f48fb1);
+}
+.color_profile2{
+    -fx-background-color: linear-gradient(to bottom, #b3e5fc, #81d4fa);
+}
+.add{
+    -fx-border-style: dashed;
+    -fx-background-color: trans;
+}
+.pane{
+    -fx-background-color: #FFFFFF;
+    -fx-border-color:#DDDDDD ;
+    -fx-background-radius: 0 0 30 30;
+    -fx-border-radius: 0 0 30 30 ;
+}
+/* Thay đổi kiểu dáng của MenuButton */
+.menu-button {
+    -fx-background-color: #FFCC00;  /* Màu nền vàng nhạt */
+    -fx-text-fill: black;           /* Màu chữ đen */
+    -fx-font-size: 14px;            /* Cỡ chữ */
+    -fx-border-radius: 5px;        /* Bo góc */
+    -fx-border-color: #FFD700;     /* Màu viền vàng */
+}
+
+/* Màu nền khi di chuột vào MenuButton */
+.menu-button:hover {
+    -fx-background-color: #FFB84D; /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;          /* Màu chữ khi hover */
+    -fx-border-color: #FF6600;     /* Màu viền khi hover */
+}
+
+/* Màu nền khi MenuButton được chọn */
+.menu-button:pressed {
+    -fx-background-color: #FF6600; /* Màu nền khi nhấn */
+    -fx-text-fill: black;          /* Màu chữ trắng khi nhấn */
+    -fx-border-color: #FF4500;     /* Màu viền khi nhấn */
+}
+.menu-item:hover{
+    -fx-text-fill: black;
+}
+
+
