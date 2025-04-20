@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
@@ -9,6 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #FFD700;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.LoginController">
    <top>
@@ -23,17 +22,8 @@
       <Pane maxHeight="150.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <ComboBox fx:id="profileComboBox" layoutX="212.0" layoutY="50.0" maxWidth="480.0" onAction="#handleProfileSelection" prefHeight="28.0" prefWidth="480.0" promptText="Hãy chọn hồ sơ của bạn" style="-fx-background-radius: 30;">
-               <!-- Điền danh sách các profile -->
-               <items>
-                  <FXCollections fx:factory="observableArrayList">
-                     <String fx:value="Profile 1" />
-                     <String fx:value="Profile 2" />
-                     <String fx:value="Profile 3" />
-                     <String fx:value="Profile 4" />
-                     <String fx:value="Profile 5" />
-                  </FXCollections>
-               </items>
             </ComboBox>
+
             <!-- TextField cho phép nhập tên hồ sơ mới -->
             <TextField fx:id="newProfileTextField" layoutX="216.0" layoutY="96.0" onAction="#handleCreateProfile" prefHeight="26.0" prefWidth="474.0" promptText="Hoặc tạo hồ sơ mới" style="-fx-background-color: #D3D3D3; -fx-background-radius: 30;" />
          </children>
@@ -42,7 +32,15 @@
    <bottom>
       <Pane prefHeight="126.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="okButton" layoutX="384.0" layoutY="9.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="59.0" prefWidth="133.0" style="-fx-background-color: CD3700; -fx-background-radius: 30;" text="OK" translateY="-50.0" />
+            <Button fx:id="okButton" layoutX="209.0" layoutY="9.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="59.0" prefWidth="482.0" style="-fx-background-color: CD3700; -fx-background-radius: 30;" text="OK" translateY="-50.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Button>
+            <Button fx:id="okButton1" layoutX="209.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="59.0" prefWidth="482.0" style="-fx-background-color: CD3700; -fx-background-radius: 30;" text="Thoát">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </bottom>

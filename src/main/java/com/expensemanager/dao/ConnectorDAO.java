@@ -10,7 +10,7 @@ public class ConnectorDAO {
     private static final String CREATE_PROFILES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS profiles (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name TEXT NOT NULL, " +
+                    "name TEXT NOT NULL , " +
                     "createAt DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
     private static final String CREATE_TRANSACTIONS_TABLE_SQL =

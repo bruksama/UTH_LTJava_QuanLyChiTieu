@@ -27,26 +27,26 @@ public class Main {
             System.out.println("Không thể kết nối!");
         }
 
-        ProfileDAO dbProfile = new ProfileDAO();
-        Profile testProfile = dbProfile.getProfileById(5);
-        System.out.println("Đang tương tác bằng profile: " + testProfile.getName());
-        if (dbProfile.insertProfile(testProfile)) {
-            System.out.println("Success");
-        } else {
-            System.out.println("Fail");
-        }
-
-        CategoryDAO dbCategory = new CategoryDAO();
-        CategoryService dbCategoryService = new CategoryService(dbCategory);
-        Category testCategory = dbCategory.getCategoryById(3);
-
-        System.out.println("Danh mục " + testCategory.getName());
-
-        if(dbCategoryService.deleteCategory(testCategory.getId(), testProfile.getId())) {
-            System.out.println("Xóa thành công");
-        } else {
-            System.out.println("Xóa thất bại");
-        }
+//        ProfileDAO dbProfile = new ProfileDAO();
+//        Profile testProfile = dbProfile.getProfileById(5);
+//        System.out.println("Đang tương tác bằng profile: " + testProfile.getName());
+//        if (dbProfile.insertProfile(testProfile)) {
+//            System.out.println("Success");
+//        } else {
+//            System.out.println("Fail");
+//        }
+//
+//        CategoryDAO dbCategory = new CategoryDAO();
+//        CategoryService dbCategoryService = new CategoryService(dbCategory);
+//        Category testCategory = dbCategory.getCategoryById(3);
+//
+//        System.out.println("Danh mục " + testCategory.getName());
+//
+//        if(dbCategoryService.deleteCategory(testCategory.getId(), testProfile.getId())) {
+//            System.out.println("Xóa thành công");
+//        } else {
+//            System.out.println("Xóa thất bại");
+//        }
 
         Application.launch(Application.class);
 

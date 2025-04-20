@@ -5,7 +5,7 @@ import main.java.com.expensemanager.model.Profile;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+;
 public class ProfileDAO {
     private final ConnectorDAO dbConnector;
 
@@ -43,7 +43,7 @@ public class ProfileDAO {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        profile.setId(generatedKeys.getInt(1));  // Lấy userID tự động cấp
+                        profile.setId(generatedKeys.getInt(1));
                         return true;
                     }
                 }
@@ -52,6 +52,7 @@ public class ProfileDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Error inserting profile: " + e.getMessage(), e);
         }
+
     }
 
     // Cập nhật thông tin của một profile
@@ -70,18 +71,20 @@ public class ProfileDAO {
     }
 
     // Xóa một profile khỏi cơ sở dữ liệu
-    public boolean deleteProfile(int profileId) {
-        try (Connection conn = dbConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
+//    public boolean deleteProfile(int profileId) {
+//        try (Connection conn = dbConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
+//
+//            stmt.setInt(1, profileId); // Tham số truyền vào là profileId
+//
+//            int affectedRows = stmt.executeUpdate();
+//            return affectedRows > 0;
+//        } catch (SQLException e) {
+//            System.err.println(e.getMessage());
+//            return false;
+//        }
+//    }
 
-            stmt.setInt(1, profileId);
-
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting profile: " + e.getMessage(), e);
-        }
-    }
 
     // Lấy một profile theo ID
     public Profile getProfileById(int profileId) {
@@ -126,6 +129,7 @@ public class ProfileDAO {
             throw new RuntimeException("Error retrieving all profiles: " + e.getMessage(), e);
         }
     }
+
     public boolean isProfileExist(int profileId) {
         String query = "SELECT COUNT(*) FROM profiles WHERE id = ?";
 
@@ -164,6 +168,73 @@ public class ProfileDAO {
         }
         return null;
     }
+
+    public boolean isProfileExistByName(String newProfileName) {
+        String query = "SELECT COUNT(*) FROM profiles WHERE name = ?";  // Truy vấn kiểm tra sự tồn tại của profile
+
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, newProfileName);  // Truyền tên hồ sơ vào câu truy vấn
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Kiểm tra số lượng profile với tên đã cho
+                int count = rs.getInt(1);
+                System.out.println("Đã tìm thấy " + count + " profile với tên '" + newProfileName + "'.");
+                return count > 0;  // Nếu số lượng trả về > 0, hồ sơ đã tồn tại
+            }
+            return false;  // Nếu không tìm thấy hồ sơ với tên này
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if profile exists by name: " + e.getMessage(), e);
+        }
+    }
+
+
+
+    public List<String> getAllProfileNames() {
+        List<String> profileNames = new ArrayList<>();
+        String query = "SELECT DISTINCT name FROM profiles";  // Truy vấn để lấy tên tất cả các profile
+
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                profileNames.add(rs.getString("name"));  // Thêm tên profile vào danh sách
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách profile: " + e.getMessage());
+        }
+
+        // In ra kết quả để kiểm tra dữ liệu
+        System.out.println("Danh sách profile lấy từ cơ sở dữ liệu: " + profileNames);
+        return profileNames;
+    }
+
+    public boolean deleteProfileByName(String profileName) {
+        String query = "DELETE FROM profiles WHERE name = ?";
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, profileName);  // Truyền tên profile vào câu truy vấn
+            int affectedRows = stmt.executeUpdate();
+
+            // Kiểm tra số lượng bản ghi bị xóa
+            System.out.println("Affected rows: " + affectedRows);
+
+            return affectedRows > 0;  // Trả về true nếu xóa thành công
+        } catch (SQLException e) {
+            System.err.println("Error deleting profile by name: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+
+
+
 }
 
 

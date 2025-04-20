@@ -3,11 +3,15 @@ package main.java.com.expensemanager.service;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.dao.ProfileDAO;
 import java.util.List;
+import main.java.com.expensemanager.dao.CategoryDAO;
+
 public class ProfileService {
     private final ProfileDAO profileDAO;
 
+
     public ProfileService(ProfileDAO profileDAO) {
         this.profileDAO = profileDAO;
+
     }
 
     // Thêm mới hồ sơ người dùng
@@ -19,7 +23,11 @@ public class ProfileService {
 
         System.out.println("Đã tạo hồ sơ người dùng " + profile.getName() + "!");
         return profileDAO.insertProfile(profile);
+
+
     }
+
+
 
     // Cập nhật thông tin hồ sơ người dùng
     public boolean updateProfile(Profile profile) {
@@ -39,15 +47,26 @@ public class ProfileService {
     }
 
     // Xóa hồ sơ người dùng
-    public boolean deleteProfile(int profileId) {
-        if (profileId <= 0) {
-            System.out.println("Có lỗi xảy ra, vui lòng thử lại!");
-            System.err.println("Lỗi tham số truyền không hợp lệ!");
-            return false;
-        }
-
-        return profileDAO.deleteProfile(profileId);
+//    public boolean deleteProfileByName(String profileName) {
+//        // In ra thông tin về profile sẽ bị xóa
+//        System.out.println("Đang cố gắng xóa profile với tên: " + profileName);
+//
+//        // Gọi phương thức trong ProfileDAO để xóa profile theo tên
+//        boolean result = profileDAO.deleteProfileByName(profileName);
+//
+//        // In ra thông tin kết quả của việc xóa
+//        if (result) {
+//            System.out.println("Hồ sơ '" + profileName + "' đã được xóa thành công.");
+//        } else {
+//            System.out.println("Không thể xóa hồ sơ: " + profileName);
+//        }
+//
+//        return result;  // Trả về kết quả của việc xóa
+//    }
+    public boolean deleteProfileByName(String profileName) {
+        return profileDAO.deleteProfileByName(profileName);  // Gọi phương thức trong ProfileDAO để xóa profile theo tên
     }
+
 
     // Lấy hồ sơ người dùng theo ID
     public Profile getProfile(int profileId) {
@@ -81,4 +100,22 @@ public class ProfileService {
         return profileDAO.getProfileByUsername(selectedProfile);
 
     }
+
+    public boolean isProfileExistByName(String profileName) {
+        if (profileName == null || profileName.isEmpty()) {
+            System.out.println("Tên người dùng không hợp lệ!");
+            return false;
+        }
+
+        return profileDAO.isProfileExistByName(profileName);  // Gọi phương thức trong ProfileDAO
+    }
+
+    public List<String> getAllProfileNames() {
+        return profileDAO.getAllProfileNames();
+    }
+
+
+
+
+
 }
