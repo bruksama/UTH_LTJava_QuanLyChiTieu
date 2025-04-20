@@ -1,0 +1,41 @@
+/* Màu nền mặc định của ToggleButton khi không được chọn */
+.toggle-button {
+    -fx-background-color: #FFCC00;        /* Màu nền mặc định */
+    -fx-font-size: 14px;
+    -fx-pref-width: 150px;                /* Kích thước cố định cho nút */
+    -fx-pref-height: 50px;                /* Kích thước cố định cho nút */
+    -fx-padding: 10px 20px;              /* Padding trong Button */
+    -fx-border-color: #FFD700;           /* Màu viền vàng */
+    -fx-border-radius: 5px;
+    -fx-text-fill: black;                /* Màu chữ đen mặc định */
+}
+
+.toggle-button:selected {
+    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
+    -fx-font-weight: bold;
+}
+
+/* Màu nền khi di chuột vào ToggleButton */
+.toggle-button:hover {
+    -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;           /* Màu chữ khi hover */
+    -fx-border-color: #FF6600;      /* Màu viền khi hover */
+    -fx-border-width: 2px;          /* Viền dày hơn khi hover */
+}
+
+.toggle-button:pressed {
+    -fx-background-color: #FF6600;
+    -fx-text-fill: black;
+}
+.button:selected{
+    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
+    -fx-font-weight: bold;
+}
+.button:hover {
+    -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;           /* Màu chữ khi hover */
+    -fx-border-color: #FFFFCC;      /* Màu viền khi hover */
+    -fx-border-width: 2px;          /* Viền dày hơn khi hover */
+}
