@@ -61,7 +61,7 @@ public class ConnectorDAO {
         return instance;
     }
 
-    public boolean initDatabase() {
+    public void initDatabase() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
@@ -71,12 +71,8 @@ public class ConnectorDAO {
             stmt.execute(CREATE_CATEGORIES_TABLE_SQL);
             stmt.execute(CREATE_TRANSACTIONS_TABLE_SQL);
             stmt.execute(CREATE_REPORTS_TABLE_SQL);
-
-            System.out.println("Khởi tạo thành công!");
-            return true;
         } catch (SQLException e) {
             System.err.println("Lỗi khi khởi tạo dữ liệu: " + e.getMessage());
-            return false;
         }
     }
 
