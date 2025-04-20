@@ -20,6 +20,8 @@ public class CategoryDAO {
     private static final String DELETE_SQL =
             "DELETE FROM categories WHERE id = ? AND profileId = ?";
 
+
+
     private static final String SELECT_BY_PROFILE_SQL =
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name";
 
@@ -168,5 +170,15 @@ public class CategoryDAO {
             stmt.setInt(3, profileId);
             stmt.executeUpdate();
         }
+    }
+
+    public boolean deleteByProfileId(int profileId) {
+        List<Category> categories = getCategoriesByProfile(profileId);
+
+        for(Category category : categories) {
+            deleteCategory(category.getId(), profileId);
+        }
+
+        return true;
     }
 }
