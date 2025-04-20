@@ -212,23 +212,23 @@ public class ProfileDAO {
         return profileNames;
     }
 
-    public boolean deleteProfileByName(String profileName) {
-        String query = "DELETE FROM profiles WHERE name = ?";
+
+    // Xóa một profile theo ID
+    public boolean deleteProfile(int profileId) {
+        String query = "DELETE FROM profiles WHERE id = ?";
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, profileName);  // Truyền tên profile vào câu truy vấn
+            stmt.setInt(1, profileId);  // Sử dụng ID để xóa profile
             int affectedRows = stmt.executeUpdate();
-
-            // Kiểm tra số lượng bản ghi bị xóa
-            System.out.println("Affected rows: " + affectedRows);
 
             return affectedRows > 0;  // Trả về true nếu xóa thành công
         } catch (SQLException e) {
-            System.err.println("Error deleting profile by name: " + e.getMessage());
+            System.err.println("Error deleting profile: " + e.getMessage());
             return false;
         }
     }
+
 
 
 

@@ -3,7 +3,7 @@ package main.java.com.expensemanager.service;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.dao.ProfileDAO;
 import java.util.List;
-import main.java.com.expensemanager.dao.CategoryDAO;
+
 
 public class ProfileService {
     private final ProfileDAO profileDAO;
@@ -48,24 +48,23 @@ public class ProfileService {
 
     // Xóa hồ sơ người dùng
 //    public boolean deleteProfileByName(String profileName) {
-//        // In ra thông tin về profile sẽ bị xóa
-//        System.out.println("Đang cố gắng xóa profile với tên: " + profileName);
+//        boolean result = profileDAO.deleteProfileByName(profileName);  // Gọi phương thức xóa từ ProfileDAO
 //
-//        // Gọi phương thức trong ProfileDAO để xóa profile theo tên
-//        boolean result = profileDAO.deleteProfileByName(profileName);
-//
-//        // In ra thông tin kết quả của việc xóa
+//        // In ra kết quả xóa để kiểm tra
 //        if (result) {
-//            System.out.println("Hồ sơ '" + profileName + "' đã được xóa thành công.");
+//            System.out.println("Đã xóa hồ sơ: " + profileName);
 //        } else {
 //            System.out.println("Không thể xóa hồ sơ: " + profileName);
 //        }
 //
-//        return result;  // Trả về kết quả của việc xóa
+//        return result;  // Trả về kết quả xóa
 //    }
-    public boolean deleteProfileByName(String profileName) {
-        return profileDAO.deleteProfileByName(profileName);  // Gọi phương thức trong ProfileDAO để xóa profile theo tên
+// Cập nhật phương thức deleteProfile
+    public boolean deleteProfile(int profileId) {
+        // Gọi phương thức trong ProfileDAO để xóa profile theo ID
+        return profileDAO.deleteProfile(profileId);  // Gọi phương thức xóa trong ProfileDAO
     }
+
 
 
     // Lấy hồ sơ người dùng theo ID

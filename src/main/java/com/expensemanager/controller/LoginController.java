@@ -1,16 +1,12 @@
 package main.java.com.expensemanager.controller;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import main.java.com.expensemanager.Application;
 import main.java.com.expensemanager.model.Profile;
-import main.java.com.expensemanager.dao.ProfileDAO;
 import main.java.com.expensemanager.service.ProfileService;
-import javafx.scene.control.ListCell;
 
 import java.util.List;
 
@@ -22,6 +18,8 @@ public class LoginController {
     @FXML
     private Button okButton;  // Nút OK để tiếp tục
 
+    @FXML
+    private Button deleteButton;
     @FXML
     private Button exitButton;
 
@@ -35,51 +33,41 @@ public class LoginController {
     @FXML
     public void initialize() {
         handleProfileSelection();
-        setComboBoxCellFactory(); // Gọi phương thức để tải các profile vào ComboBox khi trang load
+        deleteButton.setVisible(false);
     }
 
-    private void setComboBoxCellFactory() {
-        profileComboBox.setCellFactory(param -> {
-            ListCell<String> cell = new ListCell<String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setText(null);
-                    } else {
-                        // Tạo nút "X" cho mỗi item
-                        Button deleteButton = new Button("X");
-                        deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                        deleteButton.setOnAction(event -> deleteProfileByName(item));  // Gọi hàm xóa khi nhấn X
-                        setGraphic(deleteButton);
-                        setText(item);  // Hiển thị tên profile
-                    }
+
+
+
+
+
+
+    @FXML
+    private void handleDeleteProfile() {
+        String selectedProfile = profileComboBox.getValue();  // Lấy profile được chọn
+
+        if (selectedProfile != null && !selectedProfile.isEmpty()) {
+            // Lấy profile từ service bằng tên
+            Profile profile = profileService.getProfileByUsername(selectedProfile);
+
+            if (profile != null) {
+                // Gọi service để xóa profile
+                boolean result = profileService.deleteProfile(profile.getId());  // Gọi phương thức xóa bằng ID
+
+                if (result) {
+                    showAlert("Thành công", "Hồ sơ đã được xóa.");
+                    handleProfileSelection();  // Cập nhật lại danh sách profile trong ComboBox
+                    deleteButton.setVisible(false);  // Ẩn nút xóa sau khi xóa thành công
+                } else {
+                    showAlert("Lỗi", "Không thể xóa hồ sơ.");
                 }
-            };
-            return cell;
-        });
-    }
-
-
-    // Xóa profile theo tên
-    private void deleteProfileByName(String profileName) {
-        // In ra thông tin về profile sẽ bị xóa
-        System.out.println("Đang cố gắng xóa profile với tên: " + profileName);
-
-        // Gọi phương thức trong ProfileService để xóa profile theo tên
-        boolean result = profileService.deleteProfileByName(profileName);
-
-        // In ra thông tin kết quả của việc xóa
-        if (result) {
-            System.out.println("Hồ sơ '" + profileName + "' đã được xóa thành công.");
-            showAlert("Thành công", "Hồ sơ đã được xóa.");
-            handleProfileSelection();  // Cập nhật lại danh sách profile trong ComboBox
+            } else {
+                showAlert("Lỗi", "Không tìm thấy hồ sơ với tên: " + selectedProfile);
+            }
         } else {
-            System.out.println("Không thể xóa hồ sơ: " + profileName);
-            showAlert("Lỗi", "Không thể xóa hồ sơ.");
+            showAlert("Lỗi", "Vui lòng chọn một hồ sơ để xóa.");
         }
     }
-
 
 
     // Xử lý sự kiện khi người dùng chọn profile từ ComboBox
@@ -88,19 +76,22 @@ public class LoginController {
         // Lấy tất cả các profile từ cơ sở dữ liệu và điền vào ComboBox
         List<String> profileList = profileService.getAllProfileNames();
 
-        // Kiểm tra danh sách profile trước khi thêm vào ComboBox
-        if (profileList.isEmpty()) {
-            showAlert("Lỗi", "Không có hồ sơ nào trong cơ sở dữ liệu.");
-            return;
-        }
-
         // Cập nhật ComboBox với danh sách các profile
         profileComboBox.getItems().clear();  // Xóa tất cả các mục cũ trong ComboBox
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
-        System.out.println("Danh sách profile đã được cập nhật.");
+
+        // Khi người dùng chọn một profile, hiển thị nút xóa
+        profileComboBox.setOnAction(event -> {
+            String selectedProfile = profileComboBox.getValue();
+            if (selectedProfile != null && !selectedProfile.isEmpty()) {
+                // Hiển thị nút xóa khi chọn một profile
+                deleteButton.setVisible(true);
+            } else {
+                // Nếu không có profile được chọn, ẩn nút xóa
+                deleteButton.setVisible(false);
+            }
+        });
     }
-
-
 
 
 
@@ -216,13 +207,15 @@ public class LoginController {
     }
 
     // Hiển thị thông báo lỗi nếu đăng nhập hoặc tạo hồ sơ không thành công
+    // LoginController.java
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);  // Tạo đối tượng Alert
-        alert.setTitle(title);  // Đặt tiêu đề cho thông báo
-        alert.setHeaderText(null);  // Không có tiêu đề phụ
-        alert.setContentText(message);  // Nội dung thông báo
+        Alert alert = new Alert(AlertType.INFORMATION);  // Thông báo thành công
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();  // Hiển thị thông báo và chờ người dùng đóng
     }
+
 
 
 }

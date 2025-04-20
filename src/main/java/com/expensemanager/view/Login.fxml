@@ -26,6 +26,11 @@
 
             <!-- TextField cho phép nhập tên hồ sơ mới -->
             <TextField fx:id="newProfileTextField" layoutX="216.0" layoutY="96.0" onAction="#handleCreateProfile" prefHeight="26.0" prefWidth="474.0" promptText="Hoặc tạo hồ sơ mới" style="-fx-background-color: #D3D3D3; -fx-background-radius: 30;" />
+            <Button fx:id="deleteButton" layoutX="796.0" layoutY="48.0" mnemonicParsing="false" onAction="#handleDeleteProfile" prefHeight="61.0" prefWidth="68.0" style="-fx-background-color: #ff0000;" text="X">
+               <font>
+                  <Font name="System Bold" size="64.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </center>
