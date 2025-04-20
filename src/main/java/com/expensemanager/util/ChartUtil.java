@@ -1,29 +1,21 @@
 package main.java.com.expensemanager.util;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
-
+import javafx.scene.chart.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 import main.java.com.expensemanager.model.Transaction;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
 public class ChartUtil {
 
-    // Hàm tạo biểu đồ cột cho các giao dịch theo loại (income/expense)
-    public static JPanel createIncomeExpenseChart(List<Transaction> transactions) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
+    // Tạo biểu đồ cột thu/chi (Income vs Expense)
+    public static Node createIncomeExpenseChart(List<Transaction> transactions) {
         double incomeTotal = 0;
         double expenseTotal = 0;
 
-        // Tính tổng thu nhập và chi tiêu
         for (Transaction transaction : transactions) {
             if ("income".equals(transaction.getType())) {
                 incomeTotal += transaction.getAmount();
@@ -32,19 +24,27 @@ public class ChartUtil {
             }
         }
 
-        // Thêm dữ liệu vào dataset
-        dataset.addValue(incomeTotal, "Income", "Income");
-        dataset.addValue(expenseTotal, "Expense", "Expense");
+        // Tạo trục X, Y
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Loại giao dịch");
 
-        // Tạo và trả về biểu đồ cột
-        return createBarChart(dataset, "Income vs Expense", "Category", "Amount");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Số tiền");
+
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("So sánh Thu và Chi");
+
+        // Dữ liệu
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.getData().add(new XYChart.Data<>("Thu", incomeTotal));
+        series.getData().add(new XYChart.Data<>("Chi", expenseTotal));
+
+        barChart.getData().add(series);
+        return new VBox(barChart);
     }
 
-    // Hàm tạo biểu đồ tròn cho các danh mục chi tiêu
-    public static JPanel createExpenseCategoryChart(List<Transaction> transactions, List<String> categories) {
-        DefaultPieDataset dataset = new DefaultPieDataset();
-
-        // Sử dụng Map để lưu trữ tổng chi tiêu cho mỗi danh mục
+    // Tạo biểu đồ tròn cho các danh mục chi tiêu
+    public static Node createExpenseCategoryChart(List<Transaction> transactions, List<String> categories) {
         Map<String, Double> categoryTotalMap = new HashMap<>();
 
         for (Transaction transaction : transactions) {
@@ -54,44 +54,16 @@ public class ChartUtil {
             }
         }
 
-        // Thêm dữ liệu vào dataset
+        PieChart pieChart = new PieChart();
+        pieChart.setTitle("Tỷ lệ chi tiêu theo danh mục");
+
         for (String category : categories) {
-            Double categoryTotal = categoryTotalMap.get(category);
-            if (categoryTotal != null) {
-                dataset.setValue(category, categoryTotal);
+            Double total = categoryTotalMap.get(category);
+            if (total != null && total > 0) {
+                pieChart.getData().add(new PieChart.Data(category, total));
             }
         }
 
-        // Tạo và trả về biểu đồ tròn
-        return createPieChart(dataset, "Expense Category Distribution");
-    }
-
-    // Tạo biểu đồ cột (Bar Chart) với dataset đã có
-    private static JPanel createBarChart(DefaultCategoryDataset dataset, String title, String xAxisLabel, String yAxisLabel) {
-        JFreeChart chart = ChartFactory.createBarChart(
-                title,         // Tiêu đề
-                xAxisLabel,    // Tiêu đề trục X
-                yAxisLabel,    // Tiêu đề trục Y
-                dataset,       // Dữ liệu
-                PlotOrientation.VERTICAL, // Hướng
-                false,         // Hiển thị legend
-                true,          // Hiển thị tooltips
-                false          // Hiển thị URL
-        );
-
-        return new ChartPanel(chart);
-    }
-
-    // Tạo biểu đồ tròn (Pie Chart) với dataset đã có
-    private static JPanel createPieChart(DefaultPieDataset dataset, String title) {
-        JFreeChart chart = ChartFactory.createPieChart(
-                title,         // Tiêu đề
-                dataset,       // Dữ liệu
-                true,          // Hiển thị legend
-                true,          // Hiển thị tooltips
-                false          // Hiển thị URL
-        );
-
-        return new ChartPanel(chart);
+        return new VBox(pieChart);
     }
 }
