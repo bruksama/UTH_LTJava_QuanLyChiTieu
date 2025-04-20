@@ -86,6 +86,23 @@ public class CategoryDAO {
         }
     }
 
+    public boolean updateCategory(String name, String type, int id, int profileId) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
+
+            stmt.setString(1, name);
+            stmt.setString(2, type);
+            stmt.setInt(3, id);
+            stmt.setInt(4, profileId);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
     public Category getCategoryById(int id) {
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID)) {
