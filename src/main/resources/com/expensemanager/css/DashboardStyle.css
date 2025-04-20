@@ -11,7 +11,7 @@
 }
 
 .toggle-button:selected {
-    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-background-color: #FF6600;        /* Đậm hơn một chút so với màu gốc khi được chọn */
     -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
     -fx-font-weight: bold;
 }
