@@ -23,6 +23,7 @@ public class ProfileDAO {
 
     private static final String SELECT_ALL_SQL =
             "SELECT * FROM profiles ORDER BY name ASC";
+    private static final String SELECT_BY_USERNAME_SQL = "SELECT * FROM profiles WHERE name = ?";
 
     // Khởi tạo ProfileDAO với đối tượng ConnectorDAO
     public ProfileDAO() {
@@ -143,6 +144,26 @@ public class ProfileDAO {
         }
     }
 
+    public Profile getProfileByUsername(String selectedProfile) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_USERNAME_SQL)) {
+
+            stmt.setString(1, selectedProfile);  // Gán giá trị tên vào câu truy vấn
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Profile profile = new Profile();
+                profile.setId(rs.getInt("id"));
+                profile.setName(rs.getString("name"));
+
+                profile.setCreateAt(rs.getString("createAt"));
+                return profile;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
 

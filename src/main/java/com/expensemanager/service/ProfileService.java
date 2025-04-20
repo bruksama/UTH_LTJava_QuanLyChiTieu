@@ -71,4 +71,14 @@ public class ProfileService {
         return profileDAO.isProfileExist(profileId);
     }
 
+    public Profile getProfileByUsername(String selectedProfile) {
+        if (selectedProfile == null || selectedProfile.isEmpty()) {
+            System.out.println("Tên người dùng không hợp lệ!");
+            return null;
+        }
+
+        // Gọi ProfileDAO để lấy profile theo tên đăng nhập
+        return profileDAO.getProfileByUsername(selectedProfile);
+
+    }
 }
