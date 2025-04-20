@@ -76,7 +76,7 @@
                               <Font name="Verdana Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Button maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans;" translateX="30.0">
+                        <Button maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0">
                            <graphic>
                               <FontAwesomeIconView glyphName="PLUS" size="3em" />
                            </graphic>
@@ -271,19 +271,17 @@
                      <font>
                         <Font name="Tahoma" size="12.0" />
                      </font></Button>
+                  <Button layoutX="744.0" layoutY="217.0" mnemonicParsing="false" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Cài đặt" translateX="60.0" translateY="30.0">
+                     <font>
+                        <Font name="Tahoma Bold" size="12.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="GEAR" />
+                     </graphic>
+                  </Button>
                </children>
             </AnchorPane>
          </children>
       </VBox>
    </center>
-   <bottom>
-      <Button mnemonicParsing="false" style="-fx-text-fill: black; -fx-background-color: FCB454;" text="Cài đặt" translateX="408.5" BorderPane.alignment="CENTER">
-         <graphic>
-            <Icon content="SETTINGS" style="-fx-text-fill: black;" />
-         </graphic>
-         <font>
-            <Font name="Tahoma Bold" size="12.0" />
-         </font>
-      </Button>
-   </bottom>
 </BorderPane>
