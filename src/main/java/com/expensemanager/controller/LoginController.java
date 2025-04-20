@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import main.java.com.expensemanager.Application;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.service.ProfileService;
-
+import main.java.com.expensemanager.util.SessionManager;
 import java.util.List;
 
 public class LoginController {

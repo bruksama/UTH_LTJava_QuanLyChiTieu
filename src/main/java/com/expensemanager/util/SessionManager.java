@@ -20,4 +20,5 @@ public class SessionManager {
     public void setCurrentProfileId(int profileId) {
         this.currentProfileId = profileId;
     }
+
 }
