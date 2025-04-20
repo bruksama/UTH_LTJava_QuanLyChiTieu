@@ -156,6 +156,7 @@ public class CategoryDAO {
             stmt.setString(1, category);
             stmt.setString(2, Category.TYPE_INCOME);
             stmt.setInt(3, profileId);
+            stmt.executeUpdate();
         }
     }
 
@@ -165,6 +166,7 @@ public class CategoryDAO {
             stmt.setString(1, category);
             stmt.setString(2, Category.TYPE_EXPENSE);
             stmt.setInt(3, profileId);
+            stmt.executeUpdate();
         }
     }
 }
