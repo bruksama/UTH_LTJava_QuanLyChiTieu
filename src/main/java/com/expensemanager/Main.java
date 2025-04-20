@@ -1,7 +1,7 @@
 package main.java.com.expensemanager;
 
 //import main.java.com.expensemanager.dao.CategoryDAO;
-//import main.java.com.expensemanager.dao.ConnectorDAO;
+import main.java.com.expensemanager.dao.ConnectorDAO;
 //import main.java.com.expensemanager.dao.ProfileDAO;
 //import main.java.com.expensemanager.model.Category;
 //import main.java.com.expensemanager.model.Profile;
@@ -16,8 +16,8 @@ public class Main {
 //        new File(appDataPath + "\\QuanLyChiTieu").mkdirs();
 //
 //        ConnectorDAO dbConnector = ConnectorDAO.getInstance(dbURL);
-//        ConnectorDAO dbConnector = ConnectorDAO.getInstance();
-//        dbConnector.initDatabase();
+        ConnectorDAO dbConnector = ConnectorDAO.getInstance();
+        dbConnector.initDatabase();
 
 //        if (dbConnector.isConnected()) {
 //            System.out.println("Kết nối thành công!");
