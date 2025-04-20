@@ -12,5 +12,7 @@
     <orderEntry type="library" exported="" name="charm-glisten-4.4.1" level="project" />
     <orderEntry type="library" exported="" name="jcommon-1.0.24" level="project" />
     <orderEntry type="library" exported="" name="jfreechart-1.5.3" level="project" />
+    <orderEntry type="library" exported="" name="fontawesomefx-commons-9.1.2" level="project" />
+    <orderEntry type="library" exported="" name="fontawesomefx-fontawesome-4.7.0-9.1.2" level="project" />
   </component>
 </module>

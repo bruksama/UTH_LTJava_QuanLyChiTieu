@@ -3,6 +3,7 @@
 <?import com.gluonhq.charm.glisten.control.Icon?>
 <?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
@@ -40,22 +41,22 @@
                         <ToggleGroup fx:id="timeRangeGroup" />
                      </toggleGroup>
                      <graphic>
-                        <Icon content="HOME" />
+                        <FontAwesomeIconView glyphName="HOME" size="1.2em" />
                      </graphic>
                   </ToggleButton>
                   <ToggleButton mnemonicParsing="false" text="Giao dịch" toggleGroup="$timeRangeGroup">
                      <graphic>
-                        <Icon content="LAPTOP_MAC" />
+                        <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
                      </graphic>
                   </ToggleButton>
                   <ToggleButton mnemonicParsing="false" text="Danh mục" toggleGroup="$timeRangeGroup">
                      <graphic>
-                        <Icon content="LIST" />
+                        <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
                      </graphic>
                   </ToggleButton>
                   <ToggleButton mnemonicParsing="false" text="Báo cáo" toggleGroup="$timeRangeGroup">
                      <graphic>
-                        <Icon content="ASSESSMENT" />
+                        <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
                      </graphic>
                   </ToggleButton>
                </toggles>
@@ -77,7 +78,7 @@
                         </Label>
                         <Button maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans;" translateX="30.0">
                            <graphic>
-                              <Icon content="ADD" styleClass="add" />
+                              <FontAwesomeIconView glyphName="PLUS" size="3em" />
                            </graphic>
                         </Button>
                      </children>
