@@ -172,13 +172,11 @@ public class CategoryDAO {
         }
     }
 
-    public boolean deleteByProfileId(int profileId) {
+    public void deleteByProfileId(int profileId) {
         List<Category> categories = getCategoriesByProfile(profileId);
 
         for(Category category : categories) {
             deleteCategory(category.getId(), profileId);
         }
-
-        return true;
     }
 }
