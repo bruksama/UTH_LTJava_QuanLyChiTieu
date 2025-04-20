@@ -37,7 +37,6 @@
     -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
     -fx-text-fill: black;           /* Màu chữ khi hover */
     -fx-border-color: #FFFFCC;      /* Màu viền khi hover */
-    -fx-border-width: 2px;          /* Viền dày hơn khi hover */
 }
 .color_profile{
     -fx-background-color: linear-gradient(to bottom, #f8bbd0, #f48fb1);
