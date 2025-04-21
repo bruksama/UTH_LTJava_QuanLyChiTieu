@@ -46,7 +46,7 @@
 }
 .add{
     -fx-border-style: dashed;
-    -fx-background-color: trans;
+    -fx-background-color: transparent;
 }
 .pane{
     -fx-background-color: #FFFFFF;
