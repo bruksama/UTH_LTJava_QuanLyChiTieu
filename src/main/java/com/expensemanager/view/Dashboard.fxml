@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController ">
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController">
    <top>
       <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
          <children>
@@ -105,7 +105,7 @@
                         </AnchorPane>
                      </children>
                   </VBox>
-                  <VBox maxWidth="200.0" prefHeight="269.0" prefWidth="200.0">
+                  <VBox maxWidth="200.0" prefHeight="269.0" prefWidth="162.0">
                      <children>
                         <AnchorPane maxHeight="150.0" prefHeight="150.0" prefWidth="242.0" styleClass="color_profile">
                            <VBox.margin>

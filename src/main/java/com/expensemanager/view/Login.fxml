@@ -24,7 +24,6 @@
             <ComboBox fx:id="profileComboBox" layoutX="213.0" layoutY="46.0" maxWidth="480.0" onAction="#handleProfileSelection" prefHeight="28.0" prefWidth="480.0" promptText="Hãy chọn hồ sơ của bạn" style="-fx-background-radius: 30;">
             </ComboBox>
 
-            <!-- TextField cho phép nhập tên hồ sơ mới -->
             <TextField fx:id="newProfileTextField" layoutX="216.0" layoutY="96.0" onAction="#handleCreateProfile" prefHeight="26.0" prefWidth="474.0" promptText="Hoặc tạo hồ sơ mới" style="-fx-background-color: #D3D3D3; -fx-background-radius: 30;" />
          </children>
       </Pane>
@@ -35,7 +34,8 @@
             <Button fx:id="okButton" layoutX="209.0" layoutY="9.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="59.0" prefWidth="482.0" style="-fx-background-color: CD3700; -fx-background-radius: 30;" text="OK" translateY="-50.0">
                <font>
                   <Font name="System Bold" size="14.0" />
-               </font></Button>
+               </font>
+            </Button>
             <Button fx:id="okButton1" layoutX="209.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="59.0" prefWidth="482.0" style="-fx-background-color: CD3700; -fx-background-radius: 30;" text="Thoát">
                <font>
                   <Font name="System Bold" size="14.0" />

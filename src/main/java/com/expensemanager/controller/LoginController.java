@@ -1,5 +1,6 @@
 package main.java.com.expensemanager.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -45,7 +46,6 @@ public class LoginController {
         // Cập nhật ComboBox với danh sách các profile
         profileComboBox.getItems().clear();  // Xóa tất cả các mục cũ trong ComboBox
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
-
     }
 
     // Xử lý sự kiện khi người dùng nhấn nút OK
@@ -94,9 +94,11 @@ public class LoginController {
         }
     }
 
+    // Method tạo hồ sơ mới
     @FXML
     private void handleCreateProfile() {
-        String newProfileName = newProfileTextField.getText();  // Lấy tên profile mới từ TextField
+        // Lấy tên profile mới từ TextField
+        String newProfileName = newProfileTextField.getText();
 
         // Kiểm tra nếu tên profile không trống
         if (newProfileName != null && !newProfileName.isEmpty()) {
@@ -105,7 +107,7 @@ public class LoginController {
 
             if (profileExists) {
                 // Nếu profile đã tồn tại, hiển thị thông báo lỗi
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Đăng ký thất bại", "Hồ sơ với tên này đã tồn tại!");
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Hồ sơ với tên này đã tồn tại!", "Vui lòng chọn tên khác.");
                 return;  // Dừng lại nếu hồ sơ đã tồn tại
             }
 
@@ -118,30 +120,29 @@ public class LoginController {
 
             if (success) {
                 // Nếu thành công, hiển thị thông báo và chuyển sang màn hình Dashboard
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công", "Hồ sơ người dùng đã được tạo thành công.");
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ người dùng đã được tạo thành công.", "Đã tạo hồ sơ người dùng mới: " + newProfileName);
 
                 // Lưu profileId vào SessionManager
                 SessionManager.getInstance().setCurrentProfileId(newProfile.getId());
 
-                // Điều hướng sang Dashboard sau khi tạo profile thành công
-                navigateDashboard();  // Điều hướng tới Dashboard
-
+                // Điều hướng sang Dashboard
+                navigateDashboard();
             } else {
                 // Nếu không thành công, hiển thị thông báo lỗi
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Đăng ký thất bại", "Không thể tạo hồ sơ người dùng mới.");
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo hồ sơ người dùng mới.", "Vui lòng thử lại sau.");
             }
         } else {
             // Nếu tên profile trống, hiển thị thông báo lỗi
-            showAlert(Alert.AlertType.ERROR, "Lỗi nhập liệu", "Thông tin không hợp lệ", "Vui lòng nhập tên hồ sơ.");
+            showAlert(Alert.AlertType.ERROR, "Lỗi nhập liệu", "Vui lòng nhập tên hồ sơ.", "Tên hồ sơ không được để trống.");
         }
     }
+
 
     // Phương thức để điều hướng sang màn hình Dashboard
     private void navigateDashboard() {
         try {
             // Tải màn hình Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Dashboard.fxml"));
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/DashBroad.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới
@@ -154,9 +155,6 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính", "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
-
-    // Phương thức để điều hướng sang màn hình Dashboard
-
 
     // Phương thức để hiển thị thông báo
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -173,7 +171,6 @@ public class LoginController {
         Stage stage = (Stage) okButton.getScene().getWindow();
         stage.close();
     }
-
 
 
 }
