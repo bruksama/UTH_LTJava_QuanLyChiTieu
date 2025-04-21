@@ -1,14 +1,14 @@
 package main.java.com.expensemanager.util;
 
-public class SessionManager {
-    private static SessionManager instance;
+public class SessionManagerUtil {
+    private static SessionManagerUtil instance;
     private int currentProfileId;
 
-    private SessionManager() {}
+    private SessionManagerUtil() {}
 
-    public static SessionManager getInstance() {
+    public static SessionManagerUtil getInstance() {
         if (instance == null) {
-            instance = new SessionManager();
+            instance = new SessionManagerUtil();
         }
         return instance;
     }

@@ -11,12 +11,11 @@ import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import main.java.com.expensemanager.model.Category;
-import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.util.SessionManagerUtil;
 import main.java.com.expensemanager.dao.TransactionDAO;
 import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.model.Transaction;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
@@ -139,7 +138,7 @@ public class TransactionController {
 
 
     private void loadTransactions() {
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
         try {
             // Lấy tất cả giao dịch của profile hiện tại từ database
             transactionObservableList.setAll(transactionDAO.getTransactionsByProfile(currentProfileId));
@@ -149,7 +148,7 @@ public class TransactionController {
         }
     }
     private void loadCategories() {
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
         ObservableList<String> categoryNames = FXCollections.observableArrayList();
         for (Category category : categoryDAO.getCategoriesByProfile(currentProfileId)) {
             categoryNames.add(category.getName());  // Thêm tên danh mục vào ComboBox
