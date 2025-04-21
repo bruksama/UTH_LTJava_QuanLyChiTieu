@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import main.java.com.expensemanager.controller.LoginController;
-
+import java.util.List;
 public class LoginView {
     @FXML
     private ComboBox<String> profileComboBox;  // ComboBox để chọn profile có sẵn
