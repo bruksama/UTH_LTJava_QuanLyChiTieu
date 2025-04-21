@@ -26,6 +26,9 @@ public class CategoryDAO {
     private static final String SELECT_BY_ID =
             "SELECT * FROM categories WHERE id = ?";
 
+    private static final String CHECK_CATEGORY_EXIST =
+            "SELECT COUNT(*) FROM categories WHERE id = ? AND profileId = ?";
+
     public CategoryDAO() {
         this.dbConnector = ConnectorDAO.getInstance();
     }
@@ -131,7 +134,7 @@ public class CategoryDAO {
         );
     }
 
-    public boolean preCreateCategory(int profileId) {
+    public void preCreateCategory(int profileId) {
         try (Connection conn = dbConnector.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -139,16 +142,13 @@ public class CategoryDAO {
                 createDefaultIncomeCategories(stmt, profileId);
                 createDefaultExpenseCategories(stmt, profileId);
                 conn.commit();
-                return true;
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
-                return false;
             } finally {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            return false;
         }
     }
 
@@ -177,6 +177,25 @@ public class CategoryDAO {
 
         for(Category category : categories) {
             deleteCategory(category.getId(), profileId);
+        }
+    }
+
+    public boolean isCategoryExist(int categoryId, int profileId) {
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(CHECK_CATEGORY_EXIST)) {
+
+            stmt.setInt(1, categoryId);
+            stmt.setInt(2, profileId );
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) >0;
+            }
+
+            return false;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
         }
     }
 }

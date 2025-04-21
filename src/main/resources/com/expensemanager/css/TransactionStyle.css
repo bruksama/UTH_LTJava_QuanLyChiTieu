@@ -1,0 +1,161 @@
+.thu {
+    -fx-text-fill: #1A5D1A;                /* Màu chữ sáng, dễ nhìn */
+    -fx-padding: 12px 20px;                /* Tăng padding để nút rộng hơn */
+    -fx-font-size: 18px;                   /* Tăng kích thước chữ */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Chọn phông chữ đẹp và hiện đại */
+    -fx-background-radius: 15px;           /* Bo tròn các góc */
+    -fx-border-radius: 15px;               /* Bo tròn viền */
+    -fx-background-color: #D3F1DF;         /* Màu nền xanh nhạt */
+    -fx-border-color: #1A5D1A;             /* Màu viền xanh */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 2, 2); /* Thêm bóng mờ */
+}
+
+/* Nút Tổng Chi */
+.chi {
+    -fx-text-fill: #B82132;                /* Màu chữ đỏ */
+    -fx-padding: 12px 20px;                /* Tăng padding */
+    -fx-font-size: 18px;                   /* Tăng kích thước chữ */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Phông chữ hiện đại */
+    -fx-background-radius: 15px;           /* Bo tròn các góc */
+    -fx-border-radius: 15px;               /* Bo tròn viền */
+    -fx-background-color: #F6DED8;         /* Màu nền đỏ nhạt */
+    -fx-border-color: #B82132;             /* Màu viền đỏ */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 2, 2); /* Thêm bóng mờ */
+}
+.diamond{
+    -fx-background-color: trans;
+    -fx-text-fill: black;
+}
+.onhap{
+    -fx-background-color: #FFF085;
+    -fx-background-radius: 10;
+}
+.dropdown-menu {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 10 0 0 10;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 10 10 0 10;
+}
+.button:selected{
+    -fx-background-color: #FFB84D;        /* Đậm hơn một chút so với màu gốc khi được chọn */
+    -fx-text-fill: black;                 /* Màu chữ trắng khi được chọn */
+    -fx-font-weight: bold;
+}
+.button:hover {
+    -fx-background-color: #FFB84D;  /* Màu nền khi hover (màu vàng cam sáng) */
+    -fx-text-fill: black;           /* Màu chữ khi hover */
+    -fx-border-color: #FFFFCC;      /* Màu viền khi hover */
+}
+.combo-box {
+    -fx-background-color: #F2C94C; /* Màu vàng nhạt */
+    -fx-text-fill: #333333; /* Màu chữ đen */
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5;
+}
+
+.combo-box:hover {
+    -fx-background-color: #F2B200; /* Màu vàng đậm khi hover */
+}
+.button-add-transaction {
+    -fx-background-color: #E03E5B; /* Màu đỏ */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+}
+/* Định dạng ListView */
+.list-view {
+    -fx-background-color: #f0f0f0;    /* Màu nền nhạt */
+    -fx-border-color: #cccccc;        /* Màu viền nhẹ */
+    -fx-border-radius: 5px;           /* Bo tròn các góc */
+    -fx-padding: 10px;                /* Padding cho ListView */
+    -fx-font-size: 14px;              /* Kích thước font chữ */
+    -fx-font-family: 'Segoe UI', sans-serif;  /* Phông chữ đẹp và dễ đọc */
+    -fx-cell-size: 35px;              /* Điều chỉnh chiều cao mỗi mục trong ListView */
+    -fx-selection-bar: #7ED4AD;       /* Màu sắc khi chọn mục */
+}
+
+/* Định dạng từng mục trong ListView */
+.list-view .cell {
+    -fx-background-color: white;      /* Màu nền của các mục trong ListView */
+    -fx-text-fill: #333333;           /* Màu chữ đen */
+    -fx-padding: 5px 10px;            /* Padding trong mỗi mục */
+    -fx-border-radius: 3px;           /* Bo tròn góc cho từng mục */
+}
+
+/* Màu khi hover vào mục */
+.list-view .cell:hover {
+    -fx-background-color: #f1f1f1;    /* Màu nền khi di chuột qua mục */
+    -fx-text-fill: #ff9800;            /* Màu chữ khi hover */
+}
+
+/* Màu khi mục được chọn */
+.list-view .cell:selected {
+    -fx-background-color: #7ED4AD;    /* Màu nền khi mục được chọn */
+    -fx-text-fill: white;              /* Màu chữ khi mục được chọn */
+}
+.scrollable-content {
+    -fx-background-color: transparent;   /* Nền trong suốt để không làm phiền */
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: transparent;  /* Viền trong suốt */
+    -fx-focus-color: transparent; /* Ẩn viền khi không focus */
+}
+
+/* Cấu hình cho thanh trượt */
+.scrollable-content .scroll-bar {
+    -fx-background-color: transparent; /* Màu nền của thanh trượt là trong suốt */
+    -fx-padding: 0;
+    -fx-pref-height: 6px; /* Đặt chiều cao cho thanh trượt */
+    -fx-pref-width: 6px; /* Đặt chiều rộng cho thanh trượt */
+    -fx-border-radius: 5px;  /* Bo góc thanh trượt */
+}
+
+.scrollable-content .scroll-bar:vertical, .scrollable-content .scroll-bar:horizontal {
+    -fx-opacity: 0; /* Thanh trượt sẽ mờ đi khi không tương tác */
+}
+
+/* Khi người dùng cuộn, thanh trượt sẽ hiện ra */
+.scrollable-content .scroll-bar:hover, .scrollable-content .scroll-bar:focused {
+    -fx-opacity: 1;  /* Thanh trượt sẽ hiển thị hoàn toàn khi cuộn */
+    -fx-background-color: rgba(0, 0, 0, 0.2); /* Thêm màu nền mờ cho thanh trượt */
+}
+.date-picker {
+    -fx-background-color: #FFCC00;
+    -fx-border-color: #FF6600;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.date-picker .text {
+    -fx-text-fill: #555;
+}
+
+.date-picker .text.selected {
+    -fx-text-fill: #008000;
+}
+
+.date-picker .calendar-popup-button {
+    -fx-background-color: #FF6600;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.date-picker .popup .day-cell {
+    -fx-background-color: #FFFFCC;
+    -fx-border-color: #FF6600;
+    -fx-border-radius: 3px;
+}
+
+.date-picker .popup .day-cell.selected {
+    -fx-background-color: #FF6600;
+    -fx-text-fill: white;
+}
+
