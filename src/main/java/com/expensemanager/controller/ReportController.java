@@ -1,22 +1,28 @@
 package main.java.com.expensemanager.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.Node;
-
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import main.java.com.expensemanager.model.Report;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.service.ReportService;
 import main.java.com.expensemanager.util.ChartUtil;
-
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReportController {
-
-    @FXML
-    private VBox chartContainer;
 
     @FXML
     private DatePicker fromDatePicker;
@@ -25,48 +31,177 @@ public class ReportController {
     private DatePicker toDatePicker;
 
     @FXML
-    private Button btnViewChart;
+    private Button btnExport;
 
-    private ReportService reportService;
+    @FXML
+    private Button btnCreate;
 
+    @FXML
+    private Label lblTongThu;
+
+    @FXML
+    private Label lblTongChi;
+
+
+    @FXML
+    private VBox chartContainer;
+
+
+    private final ReportService reportService = new ReportService();
+    private List<Transaction> transactionsInRange;
+
+    @FXML
     public void initialize() {
-        reportService = new ReportService();
+        // Gắn sự kiện cho nút "Tạo báo cáo" và "Xuất báo cáo"
+        btnExport.setOnAction(e -> exportCSV());
+        btnCreate.setOnAction(e -> showReportWithSummary());  // Gọi phương thức tạo báo cáo
 
-        // Gán sự kiện nút "Xem biểu đồ"
-        btnViewChart.setOnAction(e -> loadCharts());
+        // Đảm bảo rằng các phương thức tính tổng thu chi được thực thi khi người dùng thay đổi ngày
+        fromDatePicker.setOnAction(e -> showReportWithSummary());
+        toDatePicker.setOnAction(e -> showReportWithSummary());
     }
 
-    private void loadCharts() {
-        // Kiểm tra ngày đã chọn
-        if (fromDatePicker.getValue() == null || toDatePicker.getValue() == null) {
-            System.out.println("Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.");
+    private void showReportWithSummary() {
+        // Kiểm tra ngày có hợp lệ không
+        if (!isDateValid()) return;
+
+        List<Transaction> transactions = getTransactionsInRange();
+        if (transactions.isEmpty()) {
+            System.out.println("Không có giao dịch nào trong khoảng thời gian đã chọn.");
             return;
         }
+        // Tính tổng thu
+        double totalIncome = transactions.stream()
+                .filter(t -> "income".equalsIgnoreCase(t.getType()))
+                .mapToDouble(Transaction::getAmount)
+                .sum();
 
-        String from = fromDatePicker.getValue().toString();
-        String to = toDatePicker.getValue().toString();
+        // Tính tổng chi
+        double totalExpense = transactions.stream()
+                .filter(t -> "expense".equalsIgnoreCase(t.getType()))
+                .mapToDouble(Transaction::getAmount)
+                .sum();
 
-        List<Transaction> transactions = reportService.getTransactionsInRange(from, to);
+        // In ra tổng thu và chi
+        lblTongThu.setText("Tổng thu 💰: " + totalIncome + " VND");
+        lblTongChi.setText("Tổng chi 💸: " + totalExpense + " VND");
 
-        // Thống kê tổng thu - chi
-        int totalIncome = 0;
-        int totalExpense = 0;
-        for (Transaction t : transactions) {
-            if ("income".equalsIgnoreCase(t.getType())) {
-                totalIncome += t.getAmount();
-            } else if ("expense".equalsIgnoreCase(t.getType())) {
-                totalExpense += t.getAmount();
-            }
-        }
 
-        // Hiển thị thống kê
+        System.out.println("Tổng thu: " + totalIncome);
+        System.out.println("Tổng chi: " + totalExpense);
+
+        // Hiển thị thông tin tổng thu và tổng chi
         Label summary = new Label("Tổng thu: " + totalIncome + " | Tổng chi: " + totalExpense);
         summary.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        // Tạo biểu đồ
-        Node chart = ChartUtil.createIncomeExpenseChart(transactions);
+        // Nếu không có dữ liệu thu chi
+        if (totalIncome == 0 && totalExpense == 0) {
+            summary.setText("Không có dữ liệu thu chi");
+        }
 
-        // Hiển thị lên giao diện
-        chartContainer.getChildren().setAll(summary, chart);
+        // Tạo biểu đồ so sánh thu chi
+        BarChart<String, Number> barChart = createBarChart(totalIncome, totalExpense);
+
+        chartContainer.getChildren().clear();
+        chartContainer.getChildren().add(summary);
+        chartContainer.getChildren().add(barChart);
+
+    }
+
+
+
+
+
+    private List<Transaction> getTransactionsInRange() {
+        // Chuyển đổi LocalDate thành String
+        String fromDate = fromDatePicker.getValue().toString(); // Chuyển ngày bắt đầu sang String
+        String toDate = toDatePicker.getValue().toString();     // Chuyển ngày kết thúc sang String
+        return (List<Transaction>) reportService.getTransactionsInRange(fromDate, toDate); // Truyền String vào phương thức
+    }
+
+
+
+    private BarChart<String, Number> createBarChart(double totalIncome, double totalExpense) {
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Loại giao dịch");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Số tiền");
+
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("So sánh Thu và Chi");
+
+        // Dữ liệu cho biểu đồ
+        XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("Thu");
+        incomeSeries.getData().add(new XYChart.Data<>("Thu", totalIncome));
+
+        XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
+        expenseSeries.setName("Chi");
+        expenseSeries.getData().add(new XYChart.Data<>("Chi", totalExpense));
+
+        // Thêm dữ liệu vào biểu đồ
+        barChart.getData().addAll(incomeSeries, expenseSeries);
+
+        barChart.setPrefSize(500, 400);  // Đặt kích thước cho biểu đồ
+
+
+        System.out.println("Số lượng dữ liệu trong Thu: " + incomeSeries.getData().size());
+        System.out.println("Số lượng dữ liệu trong Chi: " + expenseSeries.getData().size());
+        return barChart;
+    }
+
+    private void exportCSV() {
+        if (!isDateValid()) return;
+
+        List<Transaction> transactions = getTransactionsInRange();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Lưu báo cáo CSV");
+        fileChooser.setInitialFileName("BaoCao.csv");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write("Loại,Ghi chú,Số tiền,Ngày\n");
+                for (Transaction t : transactions) {
+                    writer.write(String.format("%s,%s,%.2f,%s\n",
+                            t.getType(), t.getNote(), t.getAmount(), t.getDate()));
+                }
+                showAlert("Thành công", "Xuất báo cáo thành công: " + file.getAbsolutePath());
+            } catch (IOException e) {
+                showAlert("Lỗi", "Không thể ghi file: " + e.getMessage());
+            }
+        }
+    }
+
+    private boolean isDateValid() {
+        // Kiểm tra nếu không chọn đầy đủ ngày bắt đầu và kết thúc
+        if (fromDatePicker.getValue() == null || toDatePicker.getValue() == null) {
+            // Chỉ hiển thị thông báo nếu thiếu cả 2 ngày
+            if (fromDatePicker.getValue() == null && toDatePicker.getValue() == null) {
+                showAlert("Lỗi", "Vui lòng chọn đầy đủ ngày bắt đầu và kết thúc.");
+            }
+            return false;
+        }
+        System.out.println("Ngày bắt đầu: " + fromDatePicker.getValue());
+        System.out.println("Ngày kết thúc: " + toDatePicker.getValue());
+        return true;
+    }
+
+
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    public void setTransactionsInRange(List<Transaction> transactionsInRange) {
+        this.transactionsInRange = transactionsInRange;
     }
 }

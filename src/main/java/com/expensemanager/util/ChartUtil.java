@@ -12,10 +12,11 @@ import java.util.HashMap;
 public class ChartUtil {
 
     // Tạo biểu đồ cột thu/chi (Income vs Expense)
-    public static Node createIncomeExpenseChart(List<Transaction> transactions) {
+    public static VBox createIncomeExpenseChart(List<Transaction> allTransactions) {
         double incomeTotal = 0;
         double expenseTotal = 0;
 
+        Transaction[] transactions = new Transaction[0];
         for (Transaction transaction : transactions) {
             if ("income".equals(transaction.getType())) {
                 incomeTotal += transaction.getAmount();
@@ -65,5 +66,10 @@ public class ChartUtil {
         }
 
         return new VBox(pieChart);
+    }
+
+
+    public static PieChart createExpenseCategoryChart(List<Transaction> allTransactions) {
+        return null;
     }
 }
