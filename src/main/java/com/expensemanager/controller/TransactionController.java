@@ -17,6 +17,8 @@ import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.model.Transaction;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -30,7 +32,6 @@ public class TransactionController {
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
     private int currentProfileId;
-
     @FXML
     private DatePicker datePicker;
 
@@ -48,6 +49,9 @@ public class TransactionController {
 
     @FXML
     private Label totalExpenseLabel;
+
+    @FXML
+    private Button addButton;
 
     @FXML
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -103,7 +107,6 @@ public class TransactionController {
             }
         }
     }
-
     @FXML
     public void initialize() {
         // Khởi tạo các DAO
@@ -112,8 +115,7 @@ public class TransactionController {
         //lấy profileId
         currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
-        datePicker.setOnAction(event -> updateTotalsByDate(datePicker.getValue().toString()));
-
+        addButton.setOnAction(event -> handleAddTransaction());
         // Khởi tạo ObservableList để liên kết với ListView
         transactionObservableList = FXCollections.observableArrayList();
         transactionListView.setItems(transactionObservableList);
@@ -139,18 +141,6 @@ public class TransactionController {
         amountField.requestFocus();
     }
     @FXML
-    private void handleAddTransaction() {
-        String amountText = amountField.getText().trim();
-        if (amountText.isEmpty()) {
-            // Hiển thị cảnh báo nếu người dùng không nhập số tiền
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Số tiền không hợp lệ", "Vui lòng nhập số tiền giao dịch.");
-        } else {
-            // Thực hiện logic để thêm giao dịch vào cơ sở dữ liệu hoặc các thao tác khác
-            System.out.println("Thêm giao dịch với số tiền: " + amountText);
-            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Giao dịch đã được thêm", "Số tiền giao dịch là: " + amountText);
-        }
-    }
-
 
     private void loadTransactions() {
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
@@ -171,28 +161,81 @@ public class TransactionController {
 
         categoryComboBox.setItems(categoryNames);
     }
-    private void updateTotalsByDate(String selectedDate) {
-        if (selectedDate != null) {
-            // Lấy tất cả giao dịch của profile hiện tại và lọc theo ngày
-            List<Transaction> allTransactions = transactionDAO.getTransactionsByProfile(currentProfileId);
-            double totalIncome = 0;
-            double totalExpense = 0;
+    @FXML
+    private void handleAddTransaction() {
+        String amountText = amountField.getText().trim();
+        String selectedCategoryName = categoryComboBox.getValue(); // Lấy tên danh mục đã chọn
 
-            // Lọc các giao dịch theo ngày đã chọn
-            for (Transaction transaction : allTransactions) {
-                if (transaction.getDate().toString().equals(selectedDate)) {
-                    // Kiểm tra loại giao dịch và tính tổng
-                    if (transaction.getType().equals(Transaction.TYPE_INCOME)) {
-                        totalIncome += transaction.getAmount();  // Thêm vào tổng thu nhập
-                    } else if (transaction.getType().equals(Transaction.TYPE_EXPENSE)) {
-                        totalExpense += transaction.getAmount();  // Thêm vào tổng chi tiêu
-                    }
-                }
-            }
-
-            // Cập nhật Label với tổng thu và chi
-            totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-            totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+        if (amountText.isEmpty() || selectedCategoryName == null) {
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thông tin chưa đầy đủ",
+                    "Vui lòng nhập số tiền và chọn danh mục.");
+            return;
         }
+
+        // Kiểm tra số tiền có hợp lệ không
+        double amount = 0;
+        try {
+            amount = Double.parseDouble(amountText);
+            if (amount <= 0) {
+                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Số tiền không hợp lệ",
+                        "Số tiền giao dịch phải lớn hơn 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Số tiền không hợp lệ",
+                    "Vui lòng nhập một số tiền hợp lệ.");
+            return;
+        }
+
+        int categoryId = -1;
+        String transactionType = "";
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        List<Category> categories = categoryDAO.getCategoriesByProfile(currentProfileId);
+
+        for (Category category : categories) {
+            if (category.getName().equals(selectedCategoryName)) {
+                categoryId = category.getId();
+                transactionType = category.getType();
+                break;
+            }
+        }
+
+        if (categoryId == -1) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Danh mục không tồn tại", "Danh mục bạn chọn không có trong cơ sở dữ liệu.");
+            return;
+        }
+
+        // Lấy ngày hiện tại
+        String transactionDateString = LocalDate.now().toString(); // Chuyển LocalDate thành chuỗi (YYYY-MM-DD)
+
+        // Tạo đối tượng giao dịch mới với ngày và giờ hiện tại
+        Transaction newTransaction = new Transaction(
+                0, // id tự động tăng, nên gán là 0
+                currentProfileId, // lấy profileId từ SessionManager
+                transactionType, // Loại giao dịch (Thu hoặc Chi)
+                categoryId, // id danh mục
+                "Mô tả giao dịch", // Mô tả, có thể tùy chỉnh
+                transactionDateString, // Ngày giao dịch
+                amount // Số tiền
+        );
+
+        // Thêm giao dịch vào cơ sở dữ liệu
+        boolean success = transactionDAO.addTransaction(newTransaction);
+
+        // Thông báo người dùng và làm mới danh sách giao dịch
+        if (success) {
+            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm giao dịch thành công",
+                    "Giao dịch đã được thêm vào cơ sở dữ liệu.");
+            loadTransactions();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm giao dịch",
+                    "Đã xảy ra lỗi khi thêm giao dịch vào cơ sở dữ liệu.");
+        }
+
+        // Reset amountField và categoryComboBox sau khi thêm giao dịch
+        amountField.clear();  // Xóa dữ liệu trong TextField số tiền
+        categoryComboBox.setValue("Chọn danh mục");
     }
+
 }

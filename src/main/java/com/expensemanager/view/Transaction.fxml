@@ -106,7 +106,7 @@
                </font>
             </Label>
             <ComboBox fx:id="categoryComboBox" layoutX="130.0" layoutY="98.0" prefHeight="51.0" prefWidth="172.0" promptText="Chọn danh mục" styleClass="menu-button" />
-            <Button layoutX="161.0" layoutY="274.0" mnemonicParsing="false" styleClass="button-add-transaction" text="Thêm giao dịch" />
+            <Button fx:id="addButton" layoutX="161.0" layoutY="274.0" mnemonicParsing="false" styleClass="button-add-transaction" text="Thêm giao dịch" onAction="#handleAddTransaction"/>
          </children>
       </AnchorPane>
    </right>
