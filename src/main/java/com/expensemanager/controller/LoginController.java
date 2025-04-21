@@ -114,7 +114,7 @@ public class LoginController {
             }
 
             // Tạo profile mới nếu chưa tồn tại
-            Profile newProfile = new Profile();
+            Profile newProfile =  new Profile();
             newProfile.setName(newProfileName);  // Cập nhật tên profile mới
 
             // Lưu hồ sơ mới vào cơ sở dữ liệu

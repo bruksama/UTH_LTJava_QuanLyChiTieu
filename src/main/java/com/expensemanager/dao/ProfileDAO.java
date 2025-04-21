@@ -40,7 +40,7 @@ public class ProfileDAO {
 
             int affectedRows = stmt.executeUpdate();
 
-            if (affectedRows > 0) {
+            if(affectedRows > 0) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         profile.setId(generatedKeys.getInt(1));

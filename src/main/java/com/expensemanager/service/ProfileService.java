@@ -34,7 +34,7 @@ public class ProfileService {
         if (profile.getId() <= 0) {
             System.out.println("Có lỗi xảy ra, vui lòng thử lại!");
             System.err.println("Lỗi tham số truyền không hợp lệ!");
-            return false;
+            return  false;
         }
 
         if (profile.getName() == null || profile.getName().isEmpty()) {
