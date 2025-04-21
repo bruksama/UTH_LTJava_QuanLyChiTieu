@@ -5,27 +5,39 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import main.java.com.expensemanager.model.Category;
+import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.dao.TransactionDAO;
+import main.java.com.expensemanager.dao.CategoryDAO;
+import main.java.com.expensemanager.model.Transaction;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
 public class TransactionController {
     @FXML
-    private ListView<String> transactionListView;
+    private ListView<Transaction> transactionListView;
+
+    @FXML
+    private ComboBox<String> categoryComboBox;
+    private ObservableList<Transaction> transactionObservableList;
+    private TransactionDAO transactionDAO;
+    private CategoryDAO categoryDAO;
 
     @FXML
     private ToggleButton toggleTransactionButton;
 
     @FXML
     private ToggleButtonGroup navigationGroup;
+
+    @FXML
+    private TextField amountField;
 
     @FXML
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -35,17 +47,15 @@ public class TransactionController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
-    // Phương thức chuyển cảnh chung
     private void navigateTo(String fxmlFile, String errorMessage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));  // Đọc file FXML
-            Parent root = loader.load();  // Tải giao diện mới
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent root = loader.load();
 
-            Stage stage = (Stage) navigationGroup.getScene().getWindow();  // Lấy Stage hiện tại
-            Scene scene = new Scene(root);  // Tạo Scene mới
-            stage.setScene(scene);  // Thiết lập Scene mới
-            stage.show();  // Hiển thị Stage
+            Stage stage = (Stage) navigationGroup.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -73,46 +83,78 @@ public class TransactionController {
     private void handleToggleSelection() {
         ToggleButton selectedButton = (ToggleButton) navigationGroup.getToggles();
         if (selectedButton != null) {
-            String text = selectedButton.getText();  // Lấy tên của nút
-
-            // Điều hướng dựa trên tên của nút được chọn
+            String text = selectedButton.getText();
             if ("Trang chủ".equals(text)) {
-                navigateDashboard();  // Chuyển đến Dashboard
+                navigateDashboard();
             } else if ("Danh mục".equals(text)) {
-                navigateCategory();  // Chuyển đến Category
+                navigateCategory();
             } else if ("Báo cáo".equals(text)) {
-                navigateReport();  // Chuyển đến Report
+                navigateReport();
             }
         }
     }
 
     @FXML
     public void initialize() {
-        ObservableList<String> transactions = FXCollections.observableArrayList(
-                "Giao dịch 1: 5000đ",
-                "Giao dịch 2: 3000đ",
-                "Giao dịch 3: 1000đ"
-        );
+        // Khởi tạo các DAO
+        transactionDAO = new TransactionDAO();
+        categoryDAO = new CategoryDAO();
 
-        // Thêm dữ liệu vào ListView
-        transactionListView.setItems(transactions);
+        // Khởi tạo ObservableList để liên kết với ListView
+        transactionObservableList = FXCollections.observableArrayList();
+        transactionListView.setItems(transactionObservableList);
+
         // Tùy chỉnh cách hiển thị các mục trong ListView
-        transactionListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
             @Override
-            public ListCell<String> call(ListView<String> param) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText(null);
-                        } else {
-                            setText(item);
-                        }
-                    }
-                };
+            protected void updateItem(Transaction item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    String categoryName = categoryDAO.getCategoryById(item.getCategoryId()).getName();
+                    setText(categoryName + " - " + String.format("%,.0f", item.getAmount()) + "đ");
+                }
             }
         });
+        amountField.requestFocus();
+        loadCategories();
+        loadTransactions();
+    }
+    public void focusOnTextField() {
+        amountField.requestFocus();
+    }
+    @FXML
+    private void handleAddTransaction() {
+        String amountText = amountField.getText().trim();
+        if (amountText.isEmpty()) {
+            // Hiển thị cảnh báo nếu người dùng không nhập số tiền
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Số tiền không hợp lệ", "Vui lòng nhập số tiền giao dịch.");
+        } else {
+            // Thực hiện logic để thêm giao dịch vào cơ sở dữ liệu hoặc các thao tác khác
+            System.out.println("Thêm giao dịch với số tiền: " + amountText);
+            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Giao dịch đã được thêm", "Số tiền giao dịch là: " + amountText);
+        }
+    }
 
+
+    private void loadTransactions() {
+        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        try {
+            // Lấy tất cả giao dịch của profile hiện tại từ database
+            transactionObservableList.setAll(transactionDAO.getTransactionsByProfile(currentProfileId));
+        } catch (Exception e) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể tải giao dịch",
+                    "Đã xảy ra lỗi khi tải giao dịch từ cơ sở dữ liệu.");
+        }
+    }
+    private void loadCategories() {
+        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        ObservableList<String> categoryNames = FXCollections.observableArrayList();
+        for (Category category : categoryDAO.getCategoriesByProfile(currentProfileId)) {
+            categoryNames.add(category.getName());  // Thêm tên danh mục vào ComboBox
+        }
+
+        categoryComboBox.setItems(categoryNames);
     }
 }
