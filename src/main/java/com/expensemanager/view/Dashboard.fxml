@@ -24,7 +24,7 @@
    <top>
       <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
          <children>
-            <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
+            <Button fx:id="navigateLoginBtn" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
                <graphic>
                   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
                      <font>
@@ -266,7 +266,7 @@
                         </View>
                      </children>
                   </VBox>
-                  <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch" onAction="#navigateToTransaction">
+                  <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" onAction="#navigateToTransaction" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch">
                      <font>
                         <Font name="Tahoma" size="12.0" />
                      </font></Button>

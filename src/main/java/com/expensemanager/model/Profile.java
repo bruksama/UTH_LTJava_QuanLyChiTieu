@@ -5,6 +5,9 @@ public class Profile {
     private String name;
     private String createdAt;
 
+    public Profile() {
+    }
+
     public Profile(int id, String name, String createdAt) {
         this.id = id;
         this.name = name;
@@ -35,6 +38,9 @@ public class Profile {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreateAt(String createAt) { this.createdAt = createAt;
     }
 }
 
