@@ -2,60 +2,56 @@
 
 <?import com.gluonhq.charm.glisten.control.Icon?>
 <?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
-<?import com.gluonhq.charm.glisten.mvc.View?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <BorderPane prefHeight="600.0" prefWidth="900.0" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController">
     <top>
-        <HBox prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #FFCC00;" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" BorderPane.alignment="CENTER">
+        <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
             <children>
-                <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: trans;">
+                <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
                     <graphic>
-                        <Label text="↩">
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
                             <font>
                                 <Font size="36.0" />
                             </font>
                         </Label>
                     </graphic>
                 </Button>
-                <ToggleButtonGroup blendMode="DARKEN" cache="true" selectionType="SINGLE" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css">
+                <ToggleButtonGroup blendMode="DARKEN" cache="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" selectionType="SINGLE">
                     <toggles>
-                        <ToggleButton mnemonicParsing="false" selected="true" text="Trang chủ" wrapText="true">
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" selected="true" text="Trang chủ" wrapText="true">
                             <toggleGroup>
                                 <ToggleGroup fx:id="timeRangeGroup" />
                             </toggleGroup>
                             <graphic>
-                                <Icon content="HOME" />
+                                <FontAwesomeIconView glyphName="HOME" size="1.2em" />
                             </graphic>
                         </ToggleButton>
-                        <ToggleButton mnemonicParsing="false" text="Giao dịch" toggleGroup="$timeRangeGroup">
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Giao dịch" toggleGroup="$timeRangeGroup">
                             <graphic>
-                                <Icon content="LAPTOP_MAC" />
+                                <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
                             </graphic>
                         </ToggleButton>
-                        <ToggleButton mnemonicParsing="false" text="Danh mục" toggleGroup="$timeRangeGroup">
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Danh mục" toggleGroup="$timeRangeGroup">
                             <graphic>
-                                <Icon content="LIST" />
+                                <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
                             </graphic>
                         </ToggleButton>
-                        <ToggleButton mnemonicParsing="false" text="Báo cáo" toggleGroup="$timeRangeGroup">
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" toggleGroup="$timeRangeGroup">
                             <graphic>
-                                <Icon content="ASSESSMENT" />
+                                <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
                             </graphic>
                         </ToggleButton>
                     </toggles>
@@ -63,4 +59,81 @@
             </children>
         </HBox>
     </top>
+   <left>
+      <VBox prefHeight="550.0" prefWidth="514.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="30.0" prefWidth="318.0">
+               <children>
+                  <HBox prefHeight="30.0" prefWidth="199.0">
+                     <children>
+                        <DatePicker prefHeight="30.0" prefWidth="150.0" translateX="2.0" translateY="2.0" />
+                        <Label prefHeight="31.0" prefWidth="50.0" text="Từ ngày" translateX="10.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="30.0" prefWidth="234.0" translateX="20.0">
+                     <children>
+                        <DatePicker prefHeight="30.0" prefWidth="150.0" translateY="2.0" />
+                        <Label prefHeight="30.0" prefWidth="67.0" text="Đến ngày" translateX="10.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="291.0" prefWidth="476.0">
+               <children>
+                  <VBox prefHeight="292.0" prefWidth="476.0" translateY="10.0">
+                     <children>
+                        <HBox prefHeight="306.0" prefWidth="476.0">
+                           <children>
+                              <HBox prefHeight="292.0" prefWidth="255.0">
+                                 <children>
+                                    <Label fx:id="lblTongThu" alignment="CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="242.0" text="Tổng thu 💰" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="314.0" prefWidth="237.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="34.0" prefWidth="242.0" text="Tổng chi 💸" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <HBox prefHeight="550.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="550.0" prefWidth="584.0">
+               <children>
+                  <HBox prefHeight="43.0" prefWidth="336.0">
+                     <children>
+                        <HBox alignment="TOP_RIGHT" prefHeight="43.0" prefWidth="379.0">
+                           <children>
+                              <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="111.0" text="Tạo báo cáo" translateX="-50.0" translateY="3.0" />
+                           </children>
+                        </HBox>
+                        <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="198.0" text="Xuất báo cáo" translateX="-20.0" translateY="3.0" />
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="503.0" prefWidth="421.0">
+                     <children>
+                        <BarChart maxHeight="359.0" maxWidth="474.0" prefHeight="359.0" prefWidth="474.0" translateY="80.0" VBox.vgrow="ALWAYS">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </BarChart>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="550.0" prefWidth="0.0" />
+         </children>
+      </HBox>
+   </center>
 </BorderPane>

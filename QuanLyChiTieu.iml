@@ -14,5 +14,6 @@
     <orderEntry type="library" exported="" name="jfreechart-1.5.3" level="project" />
     <orderEntry type="library" exported="" name="fontawesomefx-commons-9.1.2" level="project" />
     <orderEntry type="library" exported="" name="fontawesomefx-fontawesome-4.7.0-9.1.2" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
