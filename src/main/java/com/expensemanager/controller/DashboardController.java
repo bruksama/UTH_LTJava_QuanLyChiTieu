@@ -36,6 +36,8 @@ public class DashboardController implements Initializable {
     private Label totalIncomeLabel;
     @FXML
     private Label totalExpenseLabel;
+    @FXML
+    private Button navigateLoginBtn;
 
     private TransactionDAO transactionDAO;
 
@@ -44,6 +46,7 @@ public class DashboardController implements Initializable {
         navigateCategoryBtn.setOnAction(event -> navigateCategory());
         navigateTransactionBtn.setOnAction(event -> navigateTransaction());
         navigateReportBtn.setOnAction(event -> navigateReport());
+        navigateLoginBtn.setOnAction(event -> navigateLogin());
         addTransaction.setOnAction(event -> navigateToTransaction());
         transactionDAO = new TransactionDAO();
 
@@ -158,6 +161,24 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             // Hiển thị thông báo lỗi nếu có vấn đề khi chuyển màn hình
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
+        }
+    }
+
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
 }
