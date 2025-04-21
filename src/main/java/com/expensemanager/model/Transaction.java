@@ -2,6 +2,8 @@ package main.java.com.expensemanager.model;
 
 
 public class Transaction {
+    public static final String TYPE_INCOME = "Thu";
+    public static final String TYPE_EXPENSE = "Chi";
     private int id;
     private int profileId;
     private String type; // "income" hoặc "expense"
