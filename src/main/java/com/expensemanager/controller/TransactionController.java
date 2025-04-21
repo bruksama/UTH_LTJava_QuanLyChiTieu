@@ -110,7 +110,7 @@ public class TransactionController {
         transactionDAO = new TransactionDAO();
         categoryDAO = new CategoryDAO();
         //lấy profileId
-        currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
         datePicker.setOnAction(event -> updateTotalsByDate(datePicker.getValue().toString()));
 
