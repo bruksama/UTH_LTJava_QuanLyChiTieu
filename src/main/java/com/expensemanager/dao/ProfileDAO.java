@@ -5,7 +5,7 @@ import main.java.com.expensemanager.model.Profile;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-;
+import main.java.com.expensemanager.dao.CategoryDAO;
 public class ProfileDAO {
     private final ConnectorDAO dbConnector;
 
@@ -44,14 +44,17 @@ public class ProfileDAO {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         profile.setId(generatedKeys.getInt(1));
+
+                        CategoryDAO categoryDAO = new CategoryDAO();
+                        categoryDAO.preCreateCategory(profile.getId());
                         return true;
                     }
                 }
             }
-            return false;
         } catch (SQLException e) {
-            throw new RuntimeException("Error inserting profile: " + e.getMessage(), e);
+            e.printStackTrace();
         }
+        return false;
 
     }
 

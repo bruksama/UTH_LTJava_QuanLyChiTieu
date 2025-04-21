@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController">
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.ProfileController">
     <top>
         <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
             <children>
@@ -67,7 +67,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="454.0">
                            <children>
-                              <ListView layoutX="-1.0" prefHeight="546.0" prefWidth="454.0" />
+                              <ListView fx:id="profileListView" layoutX="-1.0" prefHeight="546.0" prefWidth="454.0" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -77,8 +77,8 @@
             <AnchorPane prefHeight="550.0" prefWidth="445.0">
                <children>
                   <Label layoutX="40.0" layoutY="134.0" prefHeight="18.0" prefWidth="130.0" text="Tên hồ sơ mới :" />
-                  <TextField layoutX="40.0" layoutY="172.0" prefHeight="36.0" prefWidth="286.0" style="-fx-background-color: ffffff; -fx-border-radius: 10;" />
-                  <Button layoutX="129.0" layoutY="250.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" style="-fx-background-color: #ff0000; -fx-background-radius: 10;" text="Tạo" />
+                  <TextField fx:id="newProfileTextField" layoutX="40.0" layoutY="172.0" prefHeight="36.0" prefWidth="286.0" style="-fx-background-color: ffffff; -fx-border-radius: 10;" onAction="#handleCreateProfile"/>
+                  <Button fx:id="createProfileButton" layoutX="129.0" layoutY="250.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" style="-fx-background-color: #ff0000; -fx-background-radius: 10;" text="Tạo" />
                </children>
             </AnchorPane>
          </children>

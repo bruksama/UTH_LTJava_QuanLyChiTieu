@@ -35,6 +35,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         handleProfileSelection();
+
     }
 
     // Xử lý sự kiện khi người dùng chọn profile từ ComboBox
@@ -46,6 +47,7 @@ public class LoginController {
         // Cập nhật ComboBox với danh sách các profile
         profileComboBox.getItems().clear();  // Xóa tất cả các mục cũ trong ComboBox
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
+
     }
 
     // Xử lý sự kiện khi người dùng nhấn nút OK
@@ -142,7 +144,7 @@ public class LoginController {
     private void navigateDashboard() {
         try {
             // Tải màn hình Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/DashBroad.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Dashboard.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới

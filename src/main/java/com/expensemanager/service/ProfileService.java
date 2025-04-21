@@ -46,19 +46,7 @@ public class ProfileService {
         return profileDAO.updateProfile(profile);
     }
 
-    // Xóa hồ sơ người dùng
-//    public boolean deleteProfileByName(String profileName) {
-//        boolean result = profileDAO.deleteProfileByName(profileName);  // Gọi phương thức xóa từ ProfileDAO
-//
-//        // In ra kết quả xóa để kiểm tra
-//        if (result) {
-//            System.out.println("Đã xóa hồ sơ: " + profileName);
-//        } else {
-//            System.out.println("Không thể xóa hồ sơ: " + profileName);
-//        }
-//
-//        return result;  // Trả về kết quả xóa
-//    }
+
 // Cập nhật phương thức deleteProfile
     public boolean deleteProfile(int profileId) {
         // Gọi phương thức trong ProfileDAO để xóa profile theo ID

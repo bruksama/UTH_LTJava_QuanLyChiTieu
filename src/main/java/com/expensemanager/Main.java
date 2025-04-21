@@ -5,7 +5,7 @@ import main.java.com.expensemanager.dao.ConnectorDAO;
 import main.java.com.expensemanager.dao.ProfileDAO;
 import main.java.com.expensemanager.model.Category;
 import main.java.com.expensemanager.model.Profile;
-import main.java.com.expensemanager.service.CategoryService;
+
 
 import java.io.File;
 
