@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.TransactionController">
+    <top>
+        <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
+            <children>
+                <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
+                    <graphic>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
+                            <font>
+                                <Font size="36.0" />
+                            </font>
+                        </Label>
+                    </graphic>
+                </Button>
+                <ToggleButtonGroup fx:id="navigationGroup" blendMode="DARKEN" cache="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" selectionType="SINGLE">
+                    <toggles>
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Trang chủ" wrapText="true" onAction="#navigateDashboard">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="HOME" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="toggleTransactionButton" mnemonicParsing="false" prefHeight="50.4" selected="true" text="Giao dịch">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Danh mục" onAction="#navigateCategory">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" onAction="#navigateReport">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                    </toggles>
+                </ToggleButtonGroup>
+            </children>
+        </HBox>
+    </top>
+   <left>
+      <VBox prefHeight="450.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox maxWidth="220.0" minWidth="180.0" prefHeight="58.0" prefWidth="220.0">
+               <children>
+                  <DatePicker maxWidth="80.0" minWidth="150.0" prefHeight="50.0" prefWidth="80.0" translateX="100.0" translateY="60.0" />
+                  <Label alignment="CENTER" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="181.0" styleClass="thu" text="0đ" translateX="425.0" translateY="50.0">
+                     <font>
+                        <Font name="Verdana" size="24.0" />
+                     </font></Label>
+                  <Label alignment="CENTER" maxWidth="100.0" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="100.0" styleClass="chi" text="99999đ" translateX="435.0" translateY="50.0">
+                     <font>
+                        <Font name="Verdana" size="24.0" />
+                     </font></Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <HBox maxHeight="370.0" maxWidth="374.0" minWidth="320.0" prefHeight="403.0" prefWidth="374.0" translateX="-150.0" translateY="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane maxWidth="366.0" minWidth="291.0" prefHeight="370.0" prefWidth="366.0" style="-fx-background-color: trans;">
+               <content>
+                  <HBox prefHeight="367.0" prefWidth="363.0">
+                     <children>
+                        <ListView fx:id="transactionListView" prefHeight="381.0" prefWidth="363.0">
+                            <opaqueInsets>
+                                <Insets left="10.0" top="10.0" />
+                            </opaqueInsets>
+                         </ListView>
+                     </children>
+                  </HBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </HBox>
+   </center>
+   <right>
+      <AnchorPane maxHeight="367.0" prefHeight="406.0" prefWidth="334.0" styleClass="dropdown-menu" translateY="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField layoutX="121.0" layoutY="175.0" prefHeight="59.0" prefWidth="191.0" styleClass="onhap" />
+            <Label layoutX="14.0" layoutY="190.0" prefHeight="30.0" prefWidth="104.0" text="Nhập số tiền">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ComboBox layoutX="130.0" layoutY="98.0" prefHeight="51.0" prefWidth="172.0" promptText="Chọn danh mục" styleClass="menu-button" />
+            <Button layoutX="161.0" layoutY="274.0" mnemonicParsing="false" styleClass="button-add-transaction" text="Thêm giao dịch" />
+         </children>
+      </AnchorPane>
+   </right>
+   <stylesheets>
+      <URL value="@../../../../resources/com/expensemanager/css/DashboardStyle.css" />
+      <URL value="@../../../../resources/com/expensemanager/css/TransactionStyle.css" />
+   </stylesheets>
+</BorderPane>
