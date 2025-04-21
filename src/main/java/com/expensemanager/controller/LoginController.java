@@ -111,9 +111,8 @@ public class LoginController {
 
         // Kiểm tra nếu tên profile không trống
         if (newProfileName != null && !newProfileName.isEmpty()) {
-            // Kiểm tra xem profile đã tồn tại trong cơ sở dữ liệu chưa, dựa trên ID profile
-            boolean profileExists = profileService.isProfileExistByName(newProfileName);  // Kiểm tra tồn tại theo ID
 
+            boolean profileExists = profileService.isProfileExistByName(newProfileName);
             if (profileExists) {
                 // Nếu profile đã tồn tại, hiển thị thông báo lỗi
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Hồ sơ với tên này đã tồn tại!", "Vui lòng chọn tên khác.");

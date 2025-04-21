@@ -51,6 +51,8 @@ public class DashboardController implements Initializable {
     private MenuItem updateProfileName;
     @FXML
     private MenuItem deleteProfileName;
+    @FXML
+    private Button profileList;
     private ProfileDAO profileDAO;
     private TransactionDAO transactionDAO;
 
@@ -62,6 +64,7 @@ public class DashboardController implements Initializable {
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
         addTransaction.setOnAction(event -> navigateToTransaction());
+        profileList.setOnAction(event -> handleProfileList());
         transactionDAO = new TransactionDAO();
 
         // Lấy profileId từ SessionManager
@@ -258,6 +261,24 @@ public class DashboardController implements Initializable {
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void handleProfileList() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Profile.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
 
             // Thiết lập scene mới
             Scene scene = new Scene(root);

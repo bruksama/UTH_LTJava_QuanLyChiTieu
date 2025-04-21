@@ -1,12 +1,11 @@
 package main.java.com.expensemanager.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.stage.Stage;
-import main.java.com.expensemanager.dao.ProfileDAO;
+import javafx.fxml.FXMLLoader;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.service.ProfileService;
 import main.java.com.expensemanager.util.SessionManagerUtil;
@@ -21,7 +20,7 @@ public class ProfileController {
     @FXML
     private TextField profileNameField;        // Hiển thị tên profile đã chọn
     @FXML
-    private Button selectProfileButton;        // Nút chọn profile
+    private Button selectProfileButton;         // Nút chọn profile
 
     private ProfileService profileService;
 

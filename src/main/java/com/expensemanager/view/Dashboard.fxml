@@ -75,7 +75,7 @@
                               <Font name="Verdana Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Button maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0">
+                        <Button fx:id="profileList" maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0" onAction="#handleProfileList">
                            <graphic>
                               <FontAwesomeIconView glyphName="PLUS" size="3em" />
                            </graphic>
