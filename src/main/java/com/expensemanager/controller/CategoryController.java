@@ -58,7 +58,7 @@ public class CategoryController implements Initializable {
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
 
-        SessionManagerUtil.getInstance().setCurrentProfileId(4); // giá trị test
+//        SessionManagerUtil.getInstance().setCurrentProfileId(4); // giá trị test
 
         categoryObservableList = FXCollections.observableArrayList();
         catList.setItems(categoryObservableList);
