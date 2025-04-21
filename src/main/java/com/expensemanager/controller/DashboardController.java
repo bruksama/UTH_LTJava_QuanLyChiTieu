@@ -36,18 +36,50 @@ public class DashboardController implements Initializable {
     private Label totalIncomeLabel;
     @FXML
     private Label totalExpenseLabel;
+    @FXML
+    private Button navigateLoginBtn;
 
     private TransactionDAO transactionDAO;
-    private int currentProfileId;
 
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         navigateCategoryBtn.setOnAction(event -> navigateCategory());
         navigateTransactionBtn.setOnAction(event -> navigateTransaction());
         navigateReportBtn.setOnAction(event -> navigateReport());
+        navigateLoginBtn.setOnAction(event -> navigateLogin());
         addTransaction.setOnAction(event -> navigateToTransaction());
         transactionDAO = new TransactionDAO();
-        currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        // Lấy profileId từ SessionManager
+        int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(profileId);
+
+        double totalIncome = 0.0;
+        double totalExpense = 0.0;
+
+        // Lấy ngày hiện tại và tháng hiện tại
+        LocalDate currentDate = LocalDate.now();
+        int currentMonth = currentDate.getMonthValue();
+        int currentYear = currentDate.getYear();
+
+        // Duyệt qua các giao dịch và tính tổng thu/chi theo tháng
+        for (Transaction transaction : transactions) {
+            // Chuyển đổi ngày giao dịch từ String sang LocalDate
+            String transactionDateStr = transaction.getDate();
+            LocalDate transactionDate = LocalDate.parse(transactionDateStr, DateTimeFormatter.ISO_DATE);
+
+            // Kiểm tra xem giao dịch có trong tháng hiện tại không
+            if (transactionDate.getMonthValue() == currentMonth && transactionDate.getYear() == currentYear) {
+                if ("Thu".equals(transaction.getType())) {
+                    totalIncome += transaction.getAmount();
+                } else if ("Chi".equals(transaction.getType())) {
+                    totalExpense += transaction.getAmount();
+                }
+            }
+        }
+        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
+        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -131,34 +163,22 @@ public class DashboardController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
         }
     }
-    public void refreshDashboard() {
-        updateTotalIncomeExpense();  // Cập nhật lại tổng thu chi
-    }
 
-    private void updateTotalIncomeExpense() {
-        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            Parent root = loader.load();
 
-        // Tính toán tổng thu và tổng chi
-        double totalIncome = 0.0;
-        double totalExpense = 0.0;
-        LocalDate currentDate = LocalDate.now();
+            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
 
-        for (Transaction transaction : transactions) {
-            LocalDate transactionDate = LocalDate.parse(transaction.getDate(), DateTimeFormatter.ISO_DATE);
-
-            // Kiểm tra nếu giao dịch là trong tháng hiện tại
-            if (transactionDate.getMonthValue() == currentDate.getMonthValue() &&
-                    transactionDate.getYear() == currentDate.getYear()) {
-                if ("Thu".equals(transaction.getType())) {
-                    totalIncome += transaction.getAmount();
-                } else if ("Chi".equals(transaction.getType())) {
-                    totalExpense += transaction.getAmount();
-                }
-            }
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
-
-        // Cập nhật giá trị tổng thu chi lên giao diện
-        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
     }
 }
