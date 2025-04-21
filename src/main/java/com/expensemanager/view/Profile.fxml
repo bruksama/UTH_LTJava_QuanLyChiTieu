@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController">
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.ProfileController">
     <top>
         <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
             <children>
@@ -65,7 +65,7 @@
                <children>
                   <AnchorPane prefHeight="549.0" prefWidth="470.0">
                      <children>
-                        <ListView prefHeight="549.0" prefWidth="470.0" />
+                        <ListView fx:id="profileListView" prefHeight="549.0" prefWidth="470.0"  />
                         <ScrollPane prefHeight="549.0" prefWidth="470.0">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
@@ -78,8 +78,8 @@
             <AnchorPane prefHeight="550.0" prefWidth="430.0">
                <children>
                   <Label layoutX="102.0" layoutY="111.0" prefHeight="23.0" prefWidth="128.0" text="Tên hồ sơ của bạn :" />
-                  <TextField layoutX="102.0" layoutY="148.0" prefHeight="34.0" prefWidth="271.0" promptText="Nhập tên hồ sơ" style="-fx-background-color: white;" />
-                  <Button layoutX="177.0" layoutY="255.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="122.0" style="-fx-background-color: red; -fx-background-radius: 10;" text="Chọn">
+                  <TextField fx:id="profileNameField" layoutX="102.0" layoutY="148.0" prefHeight="34.0" prefWidth="271.0" promptText="Nhập tên hồ sơ" style="-fx-background-color: white;" />
+                  <Button fx:id="selectProfileButton" layoutX="177.0" layoutY="255.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="122.0" style="-fx-background-color: red; -fx-background-radius: 10;" text="Chọn" >
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

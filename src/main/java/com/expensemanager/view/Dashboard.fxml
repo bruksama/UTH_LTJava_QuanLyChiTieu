@@ -90,15 +90,15 @@
                            </VBox.margin>
                            <children>
                               <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 1">
+                              <Label fx:id="profileName1" layoutX="14.0" layoutY="14.0" text="Tên profile 1" >
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
                               <MenuButton layoutX="102.0" layoutY="101.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                 <items>
-                                  <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                  <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                  <MenuItem fx:id="deleteProfileName" mnemonicParsing="false" text="Xóa profle" />
+                                  <MenuItem fx:id="updateProfileName" mnemonicParsing="false" text="Đổi tên" />
                                 </items>
                               </MenuButton>
                            </children>
@@ -113,15 +113,15 @@
                            </VBox.margin>
                            <children>
                               <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 2">
+                              <Label fx:id="profileName2" layoutX="14.0" layoutY="14.0" text="Tên profile 2">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
                               <MenuButton layoutX="108.0" layoutY="103.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
-                                    <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                    <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                    <MenuItem mnemonicParsing="false" text="Xóa profle" onAction="#handleDeleteProfile"/>
+                                    <MenuItem mnemonicParsing="false" text="Đổi tên" onAction="#handleRenameProfile"/>
                                  </items>
                               </MenuButton>
                            </children>
