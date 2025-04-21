@@ -1,6 +1,5 @@
 package main.java.com.expensemanager.controller;
 
-import com.gluonhq.charm.glisten.control.DropdownButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.dao.ProfileDAO;
@@ -22,6 +20,7 @@ import main.java.com.expensemanager.util.SessionManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -44,6 +43,8 @@ public class CategoryController implements Initializable {
     private HBox catParent;
     @FXML
     private ToggleButton navigateDashboardBtn;
+    @FXML
+    private Button catRemoveAllBtn;
 
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
@@ -54,7 +55,7 @@ public class CategoryController implements Initializable {
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
 
-        SessionManager.getInstance().setCurrentProfileId(4);
+        SessionManager.getInstance().setCurrentProfileId(4); // giá trị test
 
         categoryObservableList = FXCollections.observableArrayList();
         catList.setItems(categoryObservableList);
@@ -66,7 +67,7 @@ public class CategoryController implements Initializable {
             @Override
             protected void updateItem(Category item, boolean empty) {
                 super.updateItem(item, empty);
-                
+
                 if (empty || item == null) {
                     setText(null);
                 } else {
@@ -81,27 +82,28 @@ public class CategoryController implements Initializable {
             if (newValue != null) {
                 catNameField.setText(newValue.getName());
                 catId.setText(String.valueOf(newValue.getId()));
-                
+
                 // Đặt loại danh mục trong dropdown
                 String typeText = newValue.getType().equals(Category.TYPE_INCOME) ? "Thu" : "Chi";
                 catTypeMenu.getSelectionModel().select(typeText);
             }
         });
-        
+
         // Thêm sự kiện khi click vào khu vực trống trên form
         catParent.setOnMouseClicked(this::handleMouseClick);
-        
+
         // Gắn sự kiện cho nút Update
         catUpdateBtn.setOnAction(this::handleUpdateButton);
-        
+
         // Gắn sự kiện cho nút Delete
         catDeleteBtn.setOnAction(this::handleDeleteButton);
+        catRemoveAllBtn.setOnAction(this::handleRemoveAllButton);
 
         navigateDashboardBtn.setOnAction(event -> navigateDashboard());
 
         loadCategories();
     }
-    
+
     private void loadCategories() {
 
         int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
@@ -111,11 +113,11 @@ public class CategoryController implements Initializable {
             categoryObservableList.clear();
             categoryObservableList.addAll(categories);
         } else {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại", 
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại",
                     "Không thể tải danh mục vì profile không tồn tại.");
         }
     }
-    
+
     private void handleMouseClick(MouseEvent event) {
         // Kiểm tra xem click có xảy ra bên ngoài ListView hay không
         Node source = (Node) event.getTarget();
@@ -129,119 +131,142 @@ public class CategoryController implements Initializable {
             clearFields();
         }
     }
-    
+
     private void clearFields() {
         catNameField.clear();
         catId.clear();
         catList.getSelectionModel().clearSelection();
     }
-    
+
     @FXML
     private void handleUpdateButton(ActionEvent event) {
         // Lấy ID của profile hiện tại
         int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
-        
+
         // Kiểm tra profile có tồn tại không
         if (!profileDAO.isProfileExist(currentProfileId)) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại", 
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại",
                     "Không thể thực hiện thao tác vì profile không tồn tại.");
             return;
         }
-        
+
         // Lấy giá trị từ các trường
         String categoryName = catNameField.getText().trim();
         if (categoryName.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên danh mục trống", 
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên danh mục trống",
                     "Vui lòng nhập tên danh mục.");
             return;
         }
-        
+
         // Lấy giá trị loại từ dropdown
         String categoryType = catTypeMenu.getValue().equals("Thu") ?
                 Category.TYPE_INCOME : Category.TYPE_EXPENSE;
 
         String categoryIdText = catId.getText();
-        
+
         if (categoryIdText != null && !categoryIdText.isEmpty()) {
             try {
                 int categoryId = Integer.parseInt(categoryIdText);
                 Category existingCategory = categoryDAO.getCategoryById(categoryId);
-                
+
                 if (existingCategory != null && existingCategory.getProfileId() == currentProfileId) {
                     existingCategory.setName(categoryName);
                     existingCategory.setType(categoryType);
-                    
+
                     if (categoryDAO.updateCategory(categoryName, categoryType, categoryId, currentProfileId)) {
-                        showAlert(Alert.AlertType.INFORMATION, "Thành công", 
-                                "Cập nhật danh mục thành công", 
+                        showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                                "Cập nhật danh mục thành công",
                                 "Danh mục đã được cập nhật thành công.");
-                        
+
                         loadCategories();
                         clearFields();
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể cập nhật danh mục", 
+                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể cập nhật danh mục",
                                 "Đã xảy ra lỗi khi cập nhật danh mục.");
                     }
                 } else {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Danh mục không tồn tại", 
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Danh mục không tồn tại",
                             "Danh mục không tồn tại hoặc không thuộc profile hiện tại.");
                 }
             } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "ID danh mục không hợp lệ", 
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "ID danh mục không hợp lệ",
                         "ID danh mục không phải là một số hợp lệ.");
             }
         } else {
             Category newCategory = new Category(0, categoryName, categoryType, currentProfileId);
-            
+
             if (categoryDAO.insertCategory(newCategory)) {
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", 
-                        "Tạo danh mục thành công", 
+                showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                        "Tạo danh mục thành công",
                         "Danh mục mới đã được tạo thành công.");
-                
+
                 loadCategories();
                 clearFields();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo danh mục", 
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo danh mục",
                         "Đã xảy ra lỗi khi tạo danh mục mới.");
             }
         }
     }
-    
+
     @FXML
     private void handleDeleteButton(ActionEvent event) {
         Category selectedCategory = catList.getSelectionModel().getSelectedItem();
-        
+
         if (selectedCategory == null) {
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có danh mục nào được chọn", 
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có danh mục nào được chọn",
                     "Vui lòng chọn một danh mục để xóa.");
             return;
         }
-        
+
         Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmDialog.setTitle("Xác nhận xóa");
         confirmDialog.setHeaderText("Xác nhận xóa danh mục");
-        confirmDialog.setContentText("Bạn có chắc chắn muốn xóa danh mục \"" + 
+        confirmDialog.setContentText("Bạn có chắc chắn muốn xóa danh mục \"" +
                 selectedCategory.getName() + "\" không?");
-        
+
         Optional<ButtonType> result = confirmDialog.showAndWait();
-        
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
-            
+
             if (categoryDAO.deleteCategory(selectedCategory.getId(), currentProfileId)) {
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", 
-                        "Xóa danh mục thành công", 
+                showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                        "Xóa danh mục thành công",
                         "Danh mục đã được xóa thành công.");
-                
+
                 loadCategories();
                 clearFields();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa danh mục", 
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa danh mục",
                         "Đã xảy ra lỗi khi xóa danh mục.");
             }
         }
     }
-    
+
+    @FXML
+    private void handleRemoveAllButton(ActionEvent event) throws RuntimeException {
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Xác nhận xóa");
+        confirmDialog.setHeaderText("Xác nhận xóa danh mục");
+        confirmDialog.setContentText("Bạn có chắc chắn muốn xóa tất cả danh mục không?");
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+
+            categoryDAO.deleteByProfileId(currentProfileId);
+
+            showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                    "Xóa danh mục thành công",
+                    "Danh mục đã được xóa thành công.");
+
+            loadCategories();
+            clearFields();
+        }
+    }
+
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
