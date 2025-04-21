@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.dao.TransactionDAO;
-import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.util.SessionManagerUtil;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ public class DashboardController implements Initializable {
         transactionDAO = new TransactionDAO();
 
         // Lấy profileId từ SessionManager
-        int profileId = SessionManager.getInstance().getCurrentProfileId();
+        int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
         List<Transaction> transactions = transactionDAO.getTransactionsByProfile(profileId);
 
