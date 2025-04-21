@@ -43,17 +43,17 @@
                         <FontAwesomeIconView glyphName="HOME" size="1.2em" />
                      </graphic>
                   </ToggleButton>
-                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Giao dịch" toggleGroup="$timeRangeGroup">
+                  <ToggleButton fx:id="navigateTransactionBtn" mnemonicParsing="false" prefHeight="50.4" text="Giao dịch" toggleGroup="$timeRangeGroup">
                      <graphic>
                         <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
                      </graphic>
                   </ToggleButton>
-                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Danh mục" toggleGroup="$timeRangeGroup">
+                  <ToggleButton fx:id="navigateCategoryBtn" mnemonicParsing="false" prefHeight="50.4" text="Danh mục" toggleGroup="$timeRangeGroup">
                      <graphic>
                         <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
                      </graphic>
                   </ToggleButton>
-                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" toggleGroup="$timeRangeGroup">
+                  <ToggleButton fx:id="navigateReportBtn" mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" toggleGroup="$timeRangeGroup">
                      <graphic>
                         <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
                      </graphic>
