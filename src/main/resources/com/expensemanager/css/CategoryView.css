@@ -32,3 +32,16 @@
     -fx-border-color: #000000;
     -fx-border-width: 1px;
 }
+
+.list-view {
+    -fx-background-color: #FFFFFF;
+}
+
+.list-cell {
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.list-cell:hover, .list-cell:selected {
+    -fx-background-radius: 10px;
+}
