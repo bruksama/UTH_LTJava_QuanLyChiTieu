@@ -10,7 +10,7 @@ import javafx.fxml.FXMLLoader;
 import main.java.com.expensemanager.Application;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.service.ProfileService;
-import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.util.SessionManagerUtil;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class LoginController {
             Profile profile = profileService.getProfileByUsername(selectedProfile);
             if (profile != null) {
                 // Lưu profileId vào SessionManager
-                SessionManager.getInstance().setCurrentProfileId(profile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
 
                 // Điều hướng sang Dashboard
                 navigateDashboard();
@@ -125,7 +125,7 @@ public class LoginController {
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ người dùng đã được tạo thành công.", "Đã tạo hồ sơ người dùng mới: " + newProfileName);
 
                 // Lưu profileId vào SessionManager
-                SessionManager.getInstance().setCurrentProfileId(newProfile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileId(newProfile.getId());
 
                 // Điều hướng sang Dashboard
                 navigateDashboard();

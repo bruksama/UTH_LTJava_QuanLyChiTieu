@@ -11,13 +11,13 @@ import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import main.java.com.expensemanager.model.Category;
-import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.util.SessionManagerUtil;
 import main.java.com.expensemanager.dao.TransactionDAO;
 import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.model.Transaction;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.List;
 
 
 public class TransactionController {
@@ -29,6 +29,10 @@ public class TransactionController {
     private ObservableList<Transaction> transactionObservableList;
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
+    private int currentProfileId;
+
+    @FXML
+    private DatePicker datePicker;
 
     @FXML
     private ToggleButton toggleTransactionButton;
@@ -38,6 +42,12 @@ public class TransactionController {
 
     @FXML
     private TextField amountField;
+
+    @FXML
+    private Label totalIncomeLabel;
+
+    @FXML
+    private Label totalExpenseLabel;
 
     @FXML
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -99,6 +109,10 @@ public class TransactionController {
         // Khởi tạo các DAO
         transactionDAO = new TransactionDAO();
         categoryDAO = new CategoryDAO();
+        //lấy profileId
+        currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        datePicker.setOnAction(event -> updateTotalsByDate(datePicker.getValue().toString()));
 
         // Khởi tạo ObservableList để liên kết với ListView
         transactionObservableList = FXCollections.observableArrayList();
@@ -139,7 +153,7 @@ public class TransactionController {
 
 
     private void loadTransactions() {
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
         try {
             // Lấy tất cả giao dịch của profile hiện tại từ database
             transactionObservableList.setAll(transactionDAO.getTransactionsByProfile(currentProfileId));
@@ -149,12 +163,36 @@ public class TransactionController {
         }
     }
     private void loadCategories() {
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
         ObservableList<String> categoryNames = FXCollections.observableArrayList();
         for (Category category : categoryDAO.getCategoriesByProfile(currentProfileId)) {
             categoryNames.add(category.getName());  // Thêm tên danh mục vào ComboBox
         }
 
         categoryComboBox.setItems(categoryNames);
+    }
+    private void updateTotalsByDate(String selectedDate) {
+        if (selectedDate != null) {
+            // Lấy tất cả giao dịch của profile hiện tại và lọc theo ngày
+            List<Transaction> allTransactions = transactionDAO.getTransactionsByProfile(currentProfileId);
+            double totalIncome = 0;
+            double totalExpense = 0;
+
+            // Lọc các giao dịch theo ngày đã chọn
+            for (Transaction transaction : allTransactions) {
+                if (transaction.getDate().toString().equals(selectedDate)) {
+                    // Kiểm tra loại giao dịch và tính tổng
+                    if (transaction.getType().equals(Transaction.TYPE_INCOME)) {
+                        totalIncome += transaction.getAmount();  // Thêm vào tổng thu nhập
+                    } else if (transaction.getType().equals(Transaction.TYPE_EXPENSE)) {
+                        totalExpense += transaction.getAmount();  // Thêm vào tổng chi tiêu
+                    }
+                }
+            }
+
+            // Cập nhật Label với tổng thu và chi
+            totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
+            totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+        }
     }
 }
