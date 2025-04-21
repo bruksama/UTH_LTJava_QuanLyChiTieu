@@ -145,7 +145,7 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="5.000.000đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalIncomeLabel" alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
@@ -159,7 +159,7 @@
                               <Font size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="99.999đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalExpenseLabel" alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
