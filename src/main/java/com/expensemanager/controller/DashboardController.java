@@ -10,6 +10,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
 import java.io.IOException;
 
@@ -23,12 +24,15 @@ public class DashboardController implements Initializable {
     private ToggleButton navigateCategoryBtn;
     @FXML
     private ToggleButton navigateReportBtn;
+    @FXML
+    private Button addTransaction;
 
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         navigateCategoryBtn.setOnAction(event -> navigateCategory ());
         navigateTransactionBtn.setOnAction(event -> navigateTransaction ());
         navigateReportBtn.setOnAction(event -> navigateReport ());
+        addTransaction.setOnAction(event -> navigateToTransaction());
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -92,6 +96,24 @@ public class DashboardController implements Initializable {
                     "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
+    @FXML
+    private void navigateToTransaction() {
+        try {
+            // Tải màn hình Transaction.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) addTransaction.getScene().getWindow(); // Lấy Stage hiện tại
+            Scene scene = new Scene(root); // Tạo Scene mới
+            stage.setScene(scene); // Thay thế Scene cũ bằng Scene mới
+            stage.show(); // Hiển thị màn hình mới
 
+            // Lấy controller của Transaction.fxml
+            TransactionController transactionController = loader.getController();
+            transactionController.focusOnTextField(); // Đặt focus vào TextField trong Transaction
 
+        } catch (IOException e) {
+            // Hiển thị thông báo lỗi nếu có vấn đề khi chuyển màn hình
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
+        }
+    }
 }
