@@ -45,6 +45,10 @@ public class CategoryController implements Initializable {
     private ToggleButton navigateDashboardBtn;
     @FXML
     private Button catRemoveAllBtn;
+    @FXML
+    private ToggleButton navigateReportBtn;
+    @FXML
+    private ToggleButton navigateTransactionBtn;
 
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
@@ -100,6 +104,8 @@ public class CategoryController implements Initializable {
         catRemoveAllBtn.setOnAction(this::handleRemoveAllButton);
 
         navigateDashboardBtn.setOnAction(event -> navigateDashboard());
+        navigateTransactionBtn.setOnAction(event -> navigateTransaction ());
+        navigateReportBtn.setOnAction(event -> navigateReport ());
 
         loadCategories();
     }
@@ -281,6 +287,42 @@ public class CategoryController implements Initializable {
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateDashboardBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateTransaction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateTransactionBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateReport() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
 
             // Thiết lập scene mới
             Scene scene = new Scene(root);
