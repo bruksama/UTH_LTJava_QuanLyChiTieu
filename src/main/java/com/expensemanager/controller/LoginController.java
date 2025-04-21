@@ -4,6 +4,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import main.java.com.expensemanager.Application;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.service.ProfileService;
@@ -19,8 +22,6 @@ public class LoginController {
     private Button okButton;  // Nút OK để tiếp tục
 
     @FXML
-    private Button deleteButton;
-    @FXML
     private Button exitButton;
 
     private ProfileService profileService;  // Dịch vụ quản lý profile
@@ -33,41 +34,8 @@ public class LoginController {
     @FXML
     public void initialize() {
         handleProfileSelection();
-        deleteButton.setVisible(false);
     }
 
-
-
-
-
-
-
-    @FXML
-    private void handleDeleteProfile() {
-        String selectedProfile = profileComboBox.getValue();  // Lấy profile được chọn
-
-        if (selectedProfile != null && !selectedProfile.isEmpty()) {
-            // Lấy profile từ service bằng tên
-            Profile profile = profileService.getProfileByUsername(selectedProfile);
-
-            if (profile != null) {
-                // Gọi service để xóa profile
-                boolean result = profileService.deleteProfile(profile.getId());  // Gọi phương thức xóa bằng ID
-
-                if (result) {
-                    showAlert("Thành công", "Hồ sơ đã được xóa.");
-                    handleProfileSelection();  // Cập nhật lại danh sách profile trong ComboBox
-                    deleteButton.setVisible(false);  // Ẩn nút xóa sau khi xóa thành công
-                } else {
-                    showAlert("Lỗi", "Không thể xóa hồ sơ.");
-                }
-            } else {
-                showAlert("Lỗi", "Không tìm thấy hồ sơ với tên: " + selectedProfile);
-            }
-        } else {
-            showAlert("Lỗi", "Vui lòng chọn một hồ sơ để xóa.");
-        }
-    }
 
 
     // Xử lý sự kiện khi người dùng chọn profile từ ComboBox
@@ -81,16 +49,7 @@ public class LoginController {
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
 
         // Khi người dùng chọn một profile, hiển thị nút xóa
-        profileComboBox.setOnAction(event -> {
-            String selectedProfile = profileComboBox.getValue();
-            if (selectedProfile != null && !selectedProfile.isEmpty()) {
-                // Hiển thị nút xóa khi chọn một profile
-                deleteButton.setVisible(true);
-            } else {
-                // Nếu không có profile được chọn, ẩn nút xóa
-                deleteButton.setVisible(false);
-            }
-        });
+
     }
 
 

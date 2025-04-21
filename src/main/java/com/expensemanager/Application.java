@@ -16,25 +16,25 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("view/Login.fxml")));
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-//        primaryStage.initStyle(StageStyle.UNDECORATED);
+        // Mở giao diện Login khi bắt đầu
+        Parent loginRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("view/Category.fxml")));
+        Scene loginScene = new Scene(loginRoot);
+        primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
+    // Hàm để chuyển sang màn hình Dashboard sau khi đăng nhập thành công
     public void showDashboard() {
         try {
             // Mở giao diện Dashboard sau khi đăng nhập thành công
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("view/DashBroad.fxml")));
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.DECORATED); // Kiểu cửa sổ có viền
-            stage.show(); // Hiển thị cửa sổ Dashboard
+            Parent dashboardRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("view/DashBroad.fxml")));
+            Scene dashboardScene = new Scene(dashboardRoot);
+            Stage stage = new Stage();  // Mở cửa sổ mới cho Dashboard
+            stage.setScene(dashboardScene);
+            stage.initStyle(StageStyle.DECORATED);  // Hiển thị cửa sổ có viền
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
