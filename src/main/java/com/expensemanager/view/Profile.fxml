@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.DashboardController">
+    <top>
+        <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="navigateLoginBtn" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
+                    <graphic>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
+                            <font>
+                                <Font size="36.0" />
+                            </font>
+                        </Label>
+                    </graphic>
+                </Button>
+                <ToggleButtonGroup blendMode="DARKEN" cache="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" selectionType="SINGLE">
+                    <toggles>
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" selected="true" text="Trang chủ" wrapText="true">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="timeRangeGroup" />
+                            </toggleGroup>
+                            <graphic>
+                                <FontAwesomeIconView glyphName="HOME" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="navigateTransactionBtn" mnemonicParsing="false" prefHeight="50.4" text="Giao dịch" toggleGroup="$timeRangeGroup">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="navigateCategoryBtn" mnemonicParsing="false" prefHeight="50.4" text="Danh mục" toggleGroup="$timeRangeGroup">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="navigateReportBtn" mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" toggleGroup="$timeRangeGroup">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                    </toggles>
+                </ToggleButtonGroup>
+            </children>
+        </HBox>
+    </top>
+   <center>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="550.0" prefWidth="470.0" style="-fx-background-color: White;">
+               <children>
+                  <AnchorPane prefHeight="549.0" prefWidth="470.0">
+                     <children>
+                        <ListView prefHeight="549.0" prefWidth="470.0" />
+                        <ScrollPane prefHeight="549.0" prefWidth="470.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                          </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <AnchorPane prefHeight="550.0" prefWidth="430.0">
+               <children>
+                  <Label layoutX="102.0" layoutY="111.0" prefHeight="23.0" prefWidth="128.0" text="Tên hồ sơ của bạn :" />
+                  <TextField layoutX="102.0" layoutY="148.0" prefHeight="34.0" prefWidth="271.0" promptText="Nhập tên hồ sơ" style="-fx-background-color: white;" />
+                  <Button layoutX="177.0" layoutY="255.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="122.0" style="-fx-background-color: red; -fx-background-radius: 10;" text="Chọn">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
