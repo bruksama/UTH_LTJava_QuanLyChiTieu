@@ -14,12 +14,12 @@
       <!-- Hình ảnh đại diện profile -->
       <ImageView fx:id="profileImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="2.0" scaleY="2.0" translateY="60.0" BorderPane.alignment="CENTER">
          <image>
-            <Image url="@/main/resources/com/expensemanager/images/logo.png" />
+            <Image url="@../../../../resources/com/expensemanager/images/logo.png" />
          </image>
       </ImageView>
    </top>
    <center>
-      <Pane maxHeight ="150.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="150.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <ComboBox fx:id="profileComboBox" layoutX="213.0" layoutY="46.0" maxWidth="480.0" onAction="#handleProfileSelection" prefHeight="28.0" prefWidth="480.0" promptText="Hãy chọn hồ sơ của bạn" style="-fx-background-radius: 30;">
             </ComboBox>
