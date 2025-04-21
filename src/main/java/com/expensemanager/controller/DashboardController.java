@@ -169,7 +169,7 @@ public class DashboardController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
+            Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
 
             // Thiết lập scene mới
             Scene scene = new Scene(root);

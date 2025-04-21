@@ -48,6 +48,8 @@ public class CategoryController implements Initializable {
     private ToggleButton navigateReportBtn;
     @FXML
     private ToggleButton navigateTransactionBtn;
+    @FXML
+    private Button navigateLoginBtn;
 
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
@@ -105,6 +107,7 @@ public class CategoryController implements Initializable {
         navigateDashboardBtn.setOnAction(event -> navigateDashboard());
         navigateTransactionBtn.setOnAction(event -> navigateTransaction ());
         navigateReportBtn.setOnAction(event -> navigateReport ());
+        navigateLoginBtn.setOnAction(event -> navigateLogin());
 
         loadCategories();
     }
@@ -322,6 +325,24 @@ public class CategoryController implements Initializable {
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
 
             // Thiết lập scene mới
             Scene scene = new Scene(root);
