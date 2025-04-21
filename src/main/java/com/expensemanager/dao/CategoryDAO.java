@@ -20,8 +20,6 @@ public class CategoryDAO {
     private static final String DELETE_SQL =
             "DELETE FROM categories WHERE id = ? AND profileId = ?";
 
-
-
     private static final String SELECT_BY_PROFILE_SQL =
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name";
 
@@ -71,12 +69,14 @@ public class CategoryDAO {
         }
     }
 
-    public boolean updateCategory(String name, String type) {
+    public boolean updateCategory(String name, String type, int id, int profileId) {
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
 
             stmt.setString(1, name);
             stmt.setString(2, type);
+            stmt.setInt(3, id);
+            stmt.setInt(4, profileId);
 
             int affectedRows = stmt.executeUpdate();
             return affectedRows > 0;
@@ -172,13 +172,11 @@ public class CategoryDAO {
         }
     }
 
-    public boolean deleteByProfileId(int profileId) {
+    public void deleteByProfileId(int profileId) {
         List<Category> categories = getCategoriesByProfile(profileId);
 
         for(Category category : categories) {
             deleteCategory(category.getId(), profileId);
         }
-
-        return true;
     }
 }

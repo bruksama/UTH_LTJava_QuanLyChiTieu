@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" stylesheets="@../../../../resources/com/expensemanager/css/DashboardStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.com.expensemanager.controller.CategoryController">
+   <top>
+      <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
+         <children>
+            <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: trans;">
+               <graphic>
+                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </graphic>
+            </Button>
+            <ToggleButtonGroup blendMode="DARKEN" cache="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" selectionType="SINGLE">
+               <toggles>
+                  <ToggleButton fx:id="navigateDashboardBtn" mnemonicParsing="false" prefHeight="50.4" text="Trang chủ" wrapText="true">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="timeRangeGroup" />
+                     </toggleGroup>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="HOME" size="1.2em" />
+                     </graphic>
+                  </ToggleButton>
+                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Giao dịch" toggleGroup="$timeRangeGroup">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
+                     </graphic>
+                  </ToggleButton>
+                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" selected="true" text="Danh mục" toggleGroup="$timeRangeGroup">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
+                     </graphic>
+                  </ToggleButton>
+                  <ToggleButton mnemonicParsing="false" prefHeight="50.4" text="Báo cáo" toggleGroup="$timeRangeGroup">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
+                     </graphic>
+                  </ToggleButton>
+               </toggles>
+            </ToggleButtonGroup>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <HBox fx:id="catParent" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="550.0" prefWidth="502.0" styleClass=".container" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css">
+               <children>
+                  <ScrollPane prefHeight="553.0" prefWidth="502.0">
+                     <content>
+                        <ListView fx:id="catList" prefHeight="548.0" prefWidth="498.0">
+                           <opaqueInsets>
+                              <Insets left="10.0" top="10.0" />
+                           </opaqueInsets>
+                        </ListView>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <VBox prefHeight="550.0" prefWidth="398.0">
+               <children>
+                  <AnchorPane prefHeight="283.0" prefWidth="398.0">
+                     <children>
+                        <TextField fx:id="catNameField" layoutX="47.0" layoutY="41.0" prefHeight="42.0" prefWidth="311.0" promptText="Tên danh mục" styleClass="text-field" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="50.0">
+                           <font>
+                              <Font name="Be Vietnam Pro Regular" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                        </TextField>
+                        <Label layoutX="30.0" layoutY="25.0" text="Tên danh mục">
+                           <font>
+                              <Font name="Be Vietnam Pro Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="30.0" layoutY="106.0" text="Loại">
+                           <font>
+                              <Font name="Be Vietnam Pro Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="catTypeMenu" layoutX="30.0" layoutY="132.0" prefWidth="150.0" styleClass="dropdown-menu" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                           <padding>
+                              <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </ComboBox>
+                        <Button fx:id="catUpdateBtn" layoutX="30.0" layoutY="199.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="154.0" styleClass="success-btn" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" text="Cập nhật" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
+                           <font>
+                              <Font name="Be Vietnam Pro Regular" size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="catDeleteBtn" layoutX="199.0" layoutY="201.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="154.0" styleClass="cancel-btn" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" text="Xóa" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                           <font>
+                              <Font name="Be Vietnam Pro Regular" size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+                  <TextField fx:id="catId" disable="true" editable="false" visible="false" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
