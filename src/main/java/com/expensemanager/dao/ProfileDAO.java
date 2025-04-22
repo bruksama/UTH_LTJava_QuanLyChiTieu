@@ -233,10 +233,20 @@ public class ProfileDAO {
     }
 
 
+    public boolean deleteAllProfiles() {
+        String query = "DELETE FROM profiles";  // Truy vấn để xóa tất cả profile
 
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
+            int affectedRows = stmt.executeUpdate();  // Thực hiện câu lệnh xóa
 
-
+            return affectedRows > 0;  // Nếu có ít nhất 1 dòng bị xóa thì trả về true
+        } catch (SQLException e) {
+            System.err.println("Error deleting all profiles: " + e.getMessage());
+            return false;  // Nếu có lỗi xảy ra, trả về false
+        }
+    }
 
 }
 

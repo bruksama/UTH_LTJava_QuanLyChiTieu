@@ -38,6 +38,8 @@ public class DashboardController implements Initializable {
     private Label totalExpenseLabel;
     @FXML
     private Button navigateLoginBtn;
+    @FXML
+    private Button profileList;
 
     private TransactionDAO transactionDAO;
 
@@ -48,6 +50,7 @@ public class DashboardController implements Initializable {
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
         addTransaction.setOnAction(event -> navigateToTransaction());
+        profileList.setOnAction(event -> handleProfileList());
         transactionDAO = new TransactionDAO();
 
         // Lấy profileId từ SessionManager
@@ -181,4 +184,24 @@ public class DashboardController implements Initializable {
                     "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
+
+    @FXML
+    private void handleProfileList() {
+        try {
+            // Tải trang Profile.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Profile.fxml"));
+            Parent root = loader.load();
+
+            // Lấy cửa sổ hiện tại và thiết lập scene mới
+            Stage stage = (Stage) profileList.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển đến trang profile", "Đã xảy ra lỗi khi chuyển đến trang profile: " + e.getMessage());
+        }
+    }
+
+
 }
