@@ -96,10 +96,10 @@
                                  </font>
                               </Label>
                               <MenuButton layoutX="102.0" layoutY="101.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                  <MenuItem mnemonicParsing="false" text="Đổi tên" />
-                                </items>
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Xóa profle" />
+                                    <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                 </items>
                               </MenuButton>
                            </children>
                         </AnchorPane>
@@ -129,42 +129,45 @@
                      </children>
                   </VBox>
                   <Separator maxHeight="150.0" orientation="VERTICAL" prefHeight="150.0" prefWidth="6.0" translateY="30.0" />
-                  <VBox alignment="TOP_RIGHT" prefHeight="269.0" prefWidth="157.0">
+                  <VBox alignment="TOP_RIGHT" prefHeight="269.0" prefWidth="157.0" spacing="5.0">
                      <children>
-                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-45.0">
+                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-55.0">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label text="Thu" translateX="-129.0">
+                        <Label text="Thu" translateX="-125.0">
                            <font>
-                              <Font name="Verdana Bold" size="13.0" />
+                              <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
                         <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP" translateX="-100.0">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label fx:id="totalIncomeLabel" alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalIncomeLabel" alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-20.0">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Chi" translateX="-131.0">
+                        <Label text="Chi" translateX="-130.0">
                            <font>
-                              <Font name="Verdana Bold" size="13.0" />
+                              <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
                         <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" translateX="-100.0" wrappingWidth="13.300000190734863">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label fx:id="totalExpenseLabel" alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalExpenseLabel" alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-20.0">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
                         </Label>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </VBox>
                </children>
             </HBox>
@@ -178,12 +181,12 @@
                            </font>
                         </Label>
                         <BarChart>
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
+                           <xAxis>
+                              <CategoryAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
                         </BarChart>
                      </children>
                   </VBox>
