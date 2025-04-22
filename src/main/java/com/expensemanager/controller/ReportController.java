@@ -107,7 +107,6 @@ public class ReportController {
         lblTongThu.setText("Tổng thu 💰: " + totalIncome + " VND");
         lblTongChi.setText("Tổng chi 💸: " + totalExpense + " VND");
 
-
         System.out.println("Tổng thu: " + totalIncome);
         System.out.println("Tổng chi: " + totalExpense);
 
