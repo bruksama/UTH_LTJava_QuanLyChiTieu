@@ -66,16 +66,6 @@ public class ProfileService {
         return profileDAO.getProfileById(profileId);
     }
 
-    // Kiểm tra xem hồ sơ người dùng có tồn tại không
-    public boolean isProfileExist(int profileId) {
-        if (profileId <= 0) {
-            System.out.println("Có lỗi xảy ra, vui lòng thử lại!");
-            System.err.println("Lỗi tham số truyền không hợp lệ!");
-            return false;
-        }
-
-        return profileDAO.isProfileExist(profileId);
-    }
 
     public Profile getProfileByUsername(String selectedProfile) {
         if (selectedProfile == null || selectedProfile.isEmpty()) {
@@ -88,21 +78,33 @@ public class ProfileService {
 
     }
 
-    public boolean isProfileExistByName(String profileName) {
-        if (profileName == null || profileName.isEmpty()) {
-            System.out.println("Tên người dùng không hợp lệ!");
-            return false;
-        }
 
-        return profileDAO.isProfileExistByName(profileName);  // Gọi phương thức trong ProfileDAO
-    }
+
+
 
     public List<String> getAllProfileNames() {
         return profileDAO.getAllProfileNames();
     }
 
 
+    public boolean isProfileExist(int profileId) {
+        if (profileId <= 0) {
+            System.out.println("Có lỗi xảy ra, vui lòng thử lại!");
+            System.err.println("Lỗi tham số truyền không hợp lệ!");
+            return false;
+        }
+
+        // Gọi phương thức của ProfileDAO để kiểm tra sự tồn tại của profile theo ID
+        return profileDAO.isProfileExistById(profileId);
+    }
 
 
+    public boolean isProfileExistByName(String newProfile) {
+        if (newProfile == null || newProfile.isEmpty()) {
+            System.out.println("Tên người dùng không hợp lệ!");
+            return false;
+        }
+        return profileDAO.isProfileExistByName(newProfile);  // Gọi phương thức trong ProfileDAO để kiểm tra sự tồn tại theo tên
+    }
 
 }

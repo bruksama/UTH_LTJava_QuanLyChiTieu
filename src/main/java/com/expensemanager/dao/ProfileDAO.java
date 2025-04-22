@@ -233,10 +233,23 @@ public class ProfileDAO {
     }
 
 
+    public boolean isProfileExistById(int profileId) {
+        String query = "SELECT COUNT(*) FROM profiles WHERE id = ?";  // Truy vấn kiểm tra sự tồn tại của profile theo ID
 
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
+            stmt.setInt(1, profileId);  // Truyền profileId vào câu truy vấn
+            ResultSet rs = stmt.executeQuery();
 
-
+            if (rs.next()) {
+                return rs.getInt(1) > 0;  // Nếu có ít nhất 1 profile với ID này, profile tồn tại
+            }
+            return false;  // Nếu không có profile nào với ID này
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if profile exists by ID: " + e.getMessage(), e);
+        }
+    }
 
 }
 
