@@ -10,7 +10,7 @@ public class Transaction {
     private String date;
     private double amount;
 
-    public Transaction() {}
+    public Transaction(String income, String thuTiềnMặt, int i, String date) {}
 
     public Transaction(int id, int profileId, String type, int categoryId,
                        String description, String date, double amount) {
@@ -21,6 +21,9 @@ public class Transaction {
         this.description = description;
         this.date = date;
         this.amount = amount;
+    }
+
+    public Transaction(int i, String income, double v, String date, String lương) {
     }
 
     // Getter và Setter
@@ -52,5 +55,9 @@ public class Transaction {
                 ", date='" + date + '\'' +
                 ", amount=" + amount +
                 '}';
+    }
+
+    public Object getNote() {
+        return null;
     }
 }

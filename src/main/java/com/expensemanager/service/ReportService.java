@@ -3,6 +3,7 @@ package main.java.com.expensemanager.service;
 import main.java.com.expensemanager.dao.ReportDAO;
 import main.java.com.expensemanager.dao.ConnectorDAO;
 import main.java.com.expensemanager.model.Report;
+import main.java.com.expensemanager.model.Transaction;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -52,14 +53,14 @@ public class ReportService {
          }
      }
 
-    public Object getTransactionsInRange(String from, String to) {
+    public List<Transaction> getTransactionsInRange(String from, String to) {
         // Truy vấn từ cơ sở dữ liệu thông qua ReportDAO
         try {
             return reportDAO.getTransactionsByDateRange(from, to);
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return List.of();
     }
 
 
