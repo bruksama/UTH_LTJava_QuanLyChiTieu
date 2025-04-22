@@ -70,7 +70,7 @@ public class LoginController {
             Profile profile = profileService.getProfileByUsername(selectedProfile);
             if (profile != null) {
                 // Lưu profileId vào SessionManager
-                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId()); // Lưu profileId vào session
 
                 // Điều hướng sang Dashboard
                 navigateDashboard();
@@ -92,17 +92,28 @@ public class LoginController {
 
             boolean success = profileService.createProfile(newProfileObj);
             if (success) {
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ đã được tạo", "Hồ sơ người dùng đã được tạo thành công.");
+                // Sau khi tạo thành công, lấy lại profile từ cơ sở dữ liệu
+                Profile createdProfile = profileService.getProfileByUsername(newProfile);
 
-                // Điều hướng sang Dashboard
-                navigateDashboard();
+                // Lưu profileId vào SessionManager
+                if (createdProfile != null) {
+                    SessionManagerUtil.getInstance().setCurrentProfileId(createdProfile.getId()); // Lưu profileId vào session
+                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ người dùng đã được tạo thành công.", "Đã tạo hồ sơ người dùng mới: " + newProfile);
+
+                    // Điều hướng sang Dashboard
+                    navigateDashboard();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể lấy ID profile mới", "Đã xảy ra lỗi khi lấy ID profile mới.");
+                }
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Đăng ký thất bại", "Không thể tạo hồ sơ người dùng.");
+                // Nếu không thành công, hiển thị thông báo lỗi
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo hồ sơ người dùng mới.", "Vui lòng thử lại sau.");
             }
         } else {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Thông tin không hợp lệ", "Vui lòng chọn hoặc tạo hồ sơ.");
         }
     }
+
     // Method tạo hồ sơ mới
     @FXML
     private void handleCreateProfile() {
@@ -128,6 +139,7 @@ public class LoginController {
             boolean success = profileService.createProfile(newProfile);
 
             if (success) {
+
                 // Sau khi tạo thành công, lấy lại profile từ cơ sở dữ liệu
                 Profile createdProfile = profileService.getProfileByUsername(newProfileName);
 
