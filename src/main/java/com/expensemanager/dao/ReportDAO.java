@@ -99,7 +99,6 @@ public class ReportDAO {
                 );
                 transactions.add(t);
             }
-
         } catch (SQLException e) {
             System.err.println("Lỗi khi lấy giao dịch cho báo cáo: " + e.getMessage());
         }
@@ -149,4 +148,33 @@ public class ReportDAO {
     public ConnectorDAO getConnector() {
         return connector;
     }
+
+    public List<Transaction> getTransactionsByDateRange(String from, String to) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE date BETWEEN ? AND ?";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, from);  // Set the start date
+            stmt.setString(2, to);    // Set the end date
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Transaction transaction = new Transaction(
+                        rs.getInt("id"),
+                        rs.getInt("profileId"),
+                        rs.getString("type"),
+                        rs.getInt("categoryId"),
+                        rs.getString("description"),
+                        rs.getString("date"),
+                        rs.getDouble("amount")
+                );
+                transactions.add(transaction);
+            }
+        }
+
+        return transactions;
+    }
+
 }
