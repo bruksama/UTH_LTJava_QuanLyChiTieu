@@ -197,7 +197,7 @@
                               <Font name="Calibri" size="18.0" />
                            </font>
                         </Label>
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="transactionListView" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </VBox>
                   <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" onAction="#navigateToTransaction" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch">
