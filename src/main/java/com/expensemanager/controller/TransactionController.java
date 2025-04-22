@@ -1,6 +1,7 @@
 package main.java.com.expensemanager.controller;
 
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -155,8 +156,24 @@ public class TransactionController {
         // Khởi tạo ObservableList để liên kết với ListView
         transactionObservableList = FXCollections.observableArrayList();
         transactionListView.setItems(transactionObservableList);
+        amountField.setOnAction(event -> handleAddTransaction());
+        addButton.setOnAction(event -> handleAddTransaction());
 
         datePicker.setOnAction(event -> handleDatePicker());
+
+        transactionListView.setOnContextMenuRequested(event -> {
+            Transaction selectedTransaction = transactionListView.getSelectionModel().getSelectedItem();
+
+            if (selectedTransaction != null) {
+                // Nếu có giao dịch được chọn, hiển thị menu xóa
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem deleteItem = new MenuItem("Xóa giao dịch");
+                deleteItem.setOnAction(e -> handleDeleteTransaction(selectedTransaction)); // Gọi hàm xóa giao dịch
+
+                contextMenu.getItems().add(deleteItem);
+                contextMenu.show(transactionListView, event.getScreenX(), event.getScreenY()); // Hiển thị menu tại vị trí click
+            }
+        });
 
         // Tùy chỉnh cách hiển thị các mục trong ListView
         transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
@@ -210,13 +227,9 @@ public class TransactionController {
 
     private void loadTransactions() {
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
-        try {
-            // Lấy tất cả giao dịch của profile hiện tại từ database
-            transactionObservableList.setAll(transactionDAO.getTransactionsByProfile(currentProfileId));
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tải giao dịch",
-                    "Đã xảy ra lỗi khi tải giao dịch từ cơ sở dữ liệu.");
-        }
+        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
+        transactionObservableList.setAll(transactions);  // Sử dụng phương thức setAll để thay đổi danh sách
+//        updateTotalIncomeExpense();
     }
 
     private void loadCategories() {
@@ -232,7 +245,7 @@ public class TransactionController {
     @FXML
     private void handleAddTransaction() {
         String amountText = amountField.getText().trim();
-        String selectedCategoryName = categoryComboBox.getValue(); // Lấy tên danh mục đã chọn
+        String selectedCategoryName = categoryComboBox.getValue();
 
         if (amountText.isEmpty() || selectedCategoryName == null) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thông tin chưa đầy đủ",
@@ -364,6 +377,23 @@ public class TransactionController {
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
             }
+        }
+    }
+    @FXML
+    private void handleButtonClick(ActionEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        String buttonText = clickedButton.getText();
+        amountField.appendText(buttonText);
+    }
+    @FXML
+    private void handleClear() {
+        amountField.clear();
+    }
+    @FXML
+    private void handleBackspace() {
+        String currentText = amountField.getText();
+        if (currentText.length() > 0) {
+            amountField.setText(currentText.substring(0, currentText.length() - 1));
         }
     }
 }

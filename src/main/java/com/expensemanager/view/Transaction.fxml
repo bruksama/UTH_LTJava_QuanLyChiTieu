@@ -10,7 +10,6 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -98,19 +97,11 @@
    <center>
       <HBox maxHeight="370.0" maxWidth="408.0" minWidth="380.0" prefHeight="370.0" prefWidth="360.0" translateX="-150.0" translateY="50.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane maxWidth="389.0" minWidth="291.0" prefHeight="370.0" prefWidth="389.0" style="-fx-background-color: trans;">
-               <content>
-                  <HBox prefHeight="367.0" prefWidth="378.0">
-                     <children>
-                        <ListView fx:id="transactionListView" prefHeight="367.0" prefWidth="377.0">
-                            <opaqueInsets>
-                                <Insets left="10.0" top="10.0" />
-                            </opaqueInsets>
-                         </ListView>
-                     </children>
-                  </HBox>
-               </content>
-            </ScrollPane>
+            <ListView fx:id="transactionListView" prefHeight="367.0" prefWidth="377.0">
+                <opaqueInsets>
+                    <Insets left="10.0" top="10.0" />
+                </opaqueInsets>
+             </ListView>
          </children>
       </HBox>
    </center>
@@ -142,21 +133,21 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="88.0" styleClass="number" text="000" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="67.0" styleClass="number" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="80.0" styleClass="numberDelete" text="⌫" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="77.0" styleClass="number" text="7" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="101.0" styleClass="number" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="82.0" styleClass="number" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="66.0" styleClass="number" text="4" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="74.0" styleClass="number" text="1" />
-                  <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="85.0" styleClass="number" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" prefHeight="57.0" prefWidth="102.0" styleClass="number" text="2" GridPane.columnIndex="1" />
-                  <Button mnemonicParsing="false" prefHeight="58.0" prefWidth="106.0" styleClass="number" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="96.0" styleClass="number" text="3" GridPane.columnIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="39.0" prefWidth="88.0" styleClass="number" text="000" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="59.0" prefWidth="67.0" styleClass="number" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#handleBackspace" prefHeight="45.0" prefWidth="80.0" styleClass="numberDelete" text="⌫" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="38.0" prefWidth="77.0" styleClass="number" text="7" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="41.0" prefWidth="101.0" styleClass="number" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="42.0" prefWidth="82.0" styleClass="number" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="58.0" prefWidth="66.0" styleClass="number" text="4" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="42.0" prefWidth="74.0" styleClass="number" text="1" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="58.0" prefWidth="85.0" styleClass="number" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="57.0" prefWidth="102.0" styleClass="number" text="2" GridPane.columnIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="58.0" prefWidth="106.0" styleClass="number" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonClick" prefHeight="53.0" prefWidth="96.0" styleClass="number" text="3" GridPane.columnIndex="2" />
                </children>
             </GridPane>
-            <Button layoutX="257.0" layoutY="104.0" mnemonicParsing="false" style="-fx-background-color: trans;">
+            <Button layoutX="257.0" layoutY="104.0" mnemonicParsing="false" onAction="#handleClear" style="-fx-background-color: trans;">
                <graphic>
                   <FontAwesomeIconView text="" />
                </graphic>
