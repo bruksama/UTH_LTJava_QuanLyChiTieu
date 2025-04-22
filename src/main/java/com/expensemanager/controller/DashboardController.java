@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import main.java.com.expensemanager.dao.ProfileDAO;
+import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.dao.TransactionDAO;
 import main.java.com.expensemanager.util.SessionManagerUtil;
@@ -40,8 +42,14 @@ public class DashboardController implements Initializable {
     private Button navigateLoginBtn;
     @FXML
     private Button profileList;
+    @FXML
+    private Label profileName1;
+    @FXML
+    private Label profileName2;
 
     private TransactionDAO transactionDAO;
+
+    private ProfileDAO profileDAO;
 
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
@@ -52,7 +60,7 @@ public class DashboardController implements Initializable {
         addTransaction.setOnAction(event -> navigateToTransaction());
         profileList.setOnAction(event -> handleProfileList());
         transactionDAO = new TransactionDAO();
-
+        profileDAO = new ProfileDAO();
         // Lấy profileId từ SessionManager
         int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
@@ -83,8 +91,44 @@ public class DashboardController implements Initializable {
         }
         totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
         totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        // Lấy tên profile đang sử dụng từ cơ sở dữ liệu
+        Profile currentProfile = profileDAO.getProfileById(currentProfileId);
+
+        if (currentProfile != null) {
+            // Hiển thị tên profile đang sử dụng trong profileName1
+            profileName1.setText("Đang sử dụng: " + currentProfile.getName());
+        } else {
+            profileName1.setText("Chưa chọn profile");
+        }
+
+        // Lấy các profile còn lại và hiển thị profile thứ hai trong profileName2
+        loadProfileNames(currentProfileId);
+
+
+
     }
 
+
+    private void loadProfileNames(int currentProfileId) {
+        // Lấy danh sách tất cả profile từ cơ sở dữ liệu
+        List<Profile> profiles = profileDAO.getAllProfiles();
+
+        // Hiển thị profile thứ hai nếu có
+        if (profiles.size() > 1) {
+            for (Profile profile : profiles) {
+                // Nếu profile không phải là profile đang được sử dụng, hiển thị vào profileName2
+                if (profile.getId() != currentProfileId) {
+                    profileName2.setText(profile.getName());
+                    break;
+                }
+            }
+        } else {
+            profileName2.setText("Chưa có profile thứ hai");
+        }
+    }
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
