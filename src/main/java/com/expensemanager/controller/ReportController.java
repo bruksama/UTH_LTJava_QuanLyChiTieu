@@ -7,15 +7,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.java.com.expensemanager.model.Report;
+import main.java.com.expensemanager.dao.ReportDAO;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.service.ReportService;
-import main.java.com.expensemanager.util.ChartUtil;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,6 +44,14 @@ public class ReportController {
     private VBox chartContainer;
 
 
+    @FXML
+    private ListView<String> listViewChi;
+
+    @FXML
+    private ListView<String> listViewThu;
+
+
+
     private final ReportService reportService = new ReportService();
     private List<Transaction> transactionsInRange;
 
@@ -56,10 +61,11 @@ public class ReportController {
         btnExport.setOnAction(e -> exportCSV());
         btnCreate.setOnAction(e -> showReportWithSummary());  // Gọi phương thức tạo báo cáo
 
-        // Đảm bảo rằng các phương thức tính tổng thu chi được thực thi khi người dùng thay đổi ngày
-        fromDatePicker.setOnAction(e -> showReportWithSummary());
-        toDatePicker.setOnAction(e -> showReportWithSummary());
     }
+
+
+    private final ReportDAO reportDAO = new ReportDAO(null); // null vì bên trong nó gọi ConnectorDAO.getInstance()
+
 
     private void showReportWithSummary() {
         // Kiểm tra ngày có hợp lệ không
@@ -67,9 +73,24 @@ public class ReportController {
 
         List<Transaction> transactions = getTransactionsInRange();
         if (transactions.isEmpty()) {
-            System.out.println("Không có giao dịch nào trong khoảng thời gian đã chọn.");
+            lblTongThu.setText("Tổng thu 💰: 0.0 VND");
+            lblTongChi.setText("Tổng chi 💸: 0.0 VND");
+
+            chartContainer.getChildren().clear();
+
+            Label noDataLabel = new Label("⚠ Không có giao dịch nào trong khoảng thời gian đã chọn.");
+            noDataLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red; -fx-font-weight: bold;");
+            noDataLabel.setWrapText(true);
+
+            // Căn giữa nội dung trong VBox
+            chartContainer.setSpacing(20);
+            chartContainer.setStyle("-fx-alignment: center;"); // Căn giữa cả ngang và dọc
+
+            chartContainer.getChildren().add(noDataLabel);
             return;
         }
+
+
         // Tính tổng thu
         double totalIncome = transactions.stream()
                 .filter(t -> "income".equalsIgnoreCase(t.getType()))
@@ -106,17 +127,32 @@ public class ReportController {
         chartContainer.getChildren().add(summary);
         chartContainer.getChildren().add(barChart);
 
+        // Hiển thị danh sách giao dịch thu và chi
+        listViewChi.getItems().clear();
+        listViewThu.getItems().clear();
+
+        for (Transaction gd : transactions) {
+            String dong = gd.getDate() + " - " + gd.getNote() + " - " + gd.getAmount();
+            if ("expense".equalsIgnoreCase(gd.getType())) {
+                listViewChi.getItems().add(dong);
+            } else if ("income".equalsIgnoreCase(gd.getType())) {
+                listViewThu.getItems().add(dong);
+            }
+        }
+
+
     }
-
-
-
-
-
+// lấy dữ liệu nè
     private List<Transaction> getTransactionsInRange() {
-        // Chuyển đổi LocalDate thành String
-        String fromDate = fromDatePicker.getValue().toString(); // Chuyển ngày bắt đầu sang String
-        String toDate = toDatePicker.getValue().toString();     // Chuyển ngày kết thúc sang String
-        return (List<Transaction>) reportService.getTransactionsInRange(fromDate, toDate); // Truyền String vào phương thức
+        String from = fromDatePicker.getValue().toString();
+        String to = toDatePicker.getValue().toString();
+        try {
+            return reportDAO.getTransactionsByDateRange(from, to);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Lỗi", "Không thể lấy dữ liệu từ cơ sở dữ liệu.");
+            return new ArrayList<>();
+        }
     }
 
 
