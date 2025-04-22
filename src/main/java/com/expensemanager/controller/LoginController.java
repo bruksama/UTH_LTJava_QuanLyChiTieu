@@ -48,14 +48,6 @@ public class LoginController {
         profileComboBox.getItems().clear();  // Xóa tất cả các mục cũ trong ComboBox
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
 
-        // Nếu ComboBox có giá trị nào, lấy profileId từ SessionManager
-        String selectedProfile = profileComboBox.getValue();
-        if (selectedProfile != null && !selectedProfile.isEmpty()) {
-            Profile profile = profileService.getProfileByUsername(selectedProfile);
-            if (profile != null) {
-                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
-            }
-        }
     }
 
     // Xử lý sự kiện khi người dùng nhấn nút OK
@@ -103,6 +95,7 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Thông tin không hợp lệ", "Vui lòng chọn hoặc tạo hồ sơ.");
         }
     }
+
     // Method tạo hồ sơ mới
     @FXML
     private void handleCreateProfile() {
@@ -111,8 +104,9 @@ public class LoginController {
 
         // Kiểm tra nếu tên profile không trống
         if (newProfileName != null && !newProfileName.isEmpty()) {
-
+            // Kiểm tra xem profile đã tồn tại trong cơ sở dữ liệu chưa
             boolean profileExists = profileService.isProfileExistByName(newProfileName);
+
             if (profileExists) {
                 // Nếu profile đã tồn tại, hiển thị thông báo lỗi
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Hồ sơ với tên này đã tồn tại!", "Vui lòng chọn tên khác.");
@@ -120,7 +114,7 @@ public class LoginController {
             }
 
             // Tạo profile mới nếu chưa tồn tại
-            Profile newProfile = new Profile();
+            Profile newProfile =  new Profile();
             newProfile.setName(newProfileName);  // Cập nhật tên profile mới
 
             // Lưu hồ sơ mới vào cơ sở dữ liệu
@@ -144,7 +138,6 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Lỗi nhập liệu", "Vui lòng nhập tên hồ sơ.", "Tên hồ sơ không được để trống.");
         }
     }
-
 
 
     // Phương thức để điều hướng sang màn hình Dashboard
