@@ -158,4 +158,40 @@
     -fx-background-color: #FF6600;
     -fx-text-fill: white;
 }
+.number-keypad {
+    -fx-grid-lines-visible: true; /* Hiển thị các đường lưới */
+    -fx-background-color: #FFF;   /* Màu nền */
+    -fx-padding: 10px;
+}
+.number-keypad .button:hover {
+    -fx-background-color: #FFB84D; /* Màu nền khi hover */
+}
+
+/* Thêm hiệu ứng cho nút "Clear" */
+.number-keypad .button:pressed {
+    -fx-background-color: #FF6600;  /* Màu nền khi nhấn */
+    -fx-text-fill: white;
+}
+.number{
+    -fx-background-color: #8EA7E9;
+    -fx-text-fill: black;
+    -fx-border-color: #594545;
+}
+.number:hover{
+    -fx-background-color: #7286D3;
+    -fx-border-color: #7F669D;
+}
+.numberDelete{
+    -fx-background-color: #8EA7E9;
+    -fx-text-fill: black;
+    -fx-border-color: #594545;
+}
+.numberDelete:hover{
+    -fx-background-color: red;
+    -fx-text-fill: black;
+    -fx-border-color: #594545;
+}
+.button-add-transaction:pressed{
+    -fx-background-color: #874C62;
+}
 
