@@ -118,6 +118,50 @@ public class TransactionDAO {
             return false;
         }
     }
+    public double getTotalIncomeByDate(String date, int profileId) {
+        double totalIncome = 0.0;
+        String sql = "SELECT SUM(amount) AS total_income FROM transactions WHERE date = ? AND type = 'income' AND profileId = ?";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, date);  // Ngày giao dịch
+            stmt.setInt(2, profileId); // ID người dùng (profileId)
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalIncome = rs.getDouble("total_income");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng thu: " + e.getMessage());
+        }
+
+        return totalIncome;
+    }
+    public double getTotalExpenseByDate(String date, int profileId) {
+        double totalExpense = 0.0;
+        String sql = "SELECT SUM(amount) AS total_expense FROM transactions WHERE date = ? AND type = 'expense' AND profileId = ?";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, date);  // Ngày giao dịch
+            stmt.setInt(2, profileId); // ID người dùng (profileId)
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalExpense = rs.getDouble("total_expense");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng chi: " + e.getMessage());
+        }
+
+        return totalExpense;
+    }
 
     // Cập nhật giao dịch (nếu muốn)
     public boolean updateTransaction(Transaction transaction) {
