@@ -65,7 +65,7 @@ public class ProfileController {
     // Xử lý khi người dùng chọn một profile từ ListView
     private void handleProfileSelection() {
         String selectedProfile = profileListView.getSelectionModel().getSelectedItem();
-        if (selectedProfile != null) {
+        if (selectedProfile != null && !selectedProfile.isEmpty()) {
             // Hiển thị tên profile vào TextField
             profileNameField.setText(selectedProfile);
         }
@@ -76,24 +76,23 @@ public class ProfileController {
     private void handleSelectProfile() {
         String selectedProfile = profileNameField.getText();
 
-        // Kiểm tra nếu tên profile không rỗng
         if (selectedProfile != null && !selectedProfile.isEmpty()) {
-            // Lấy thông tin profile từ cơ sở dữ liệu
+
             Profile profile = profileService.getProfileByUsername(selectedProfile);
             if (profile != null) {
-                // Lưu profileId vào SessionManager
-                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
 
-                // Chuyển sang màn hình Dashboard
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileName(profile.getName());
+
+
                 navigateToDashboard();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại", "Profile bạn chọn không hợp lệ.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Profile not found", "The profile you selected is invalid.");
             }
         } else {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Chưa chọn profile", "Vui lòng chọn một profile để tiếp tục.");
+            showAlert(Alert.AlertType.ERROR, "Error", "No profile selected", "Please select a profile to continue.");
         }
     }
-
     // Điều hướng đến màn hình Dashboard
     @FXML
     private void navigateToDashboard() {
