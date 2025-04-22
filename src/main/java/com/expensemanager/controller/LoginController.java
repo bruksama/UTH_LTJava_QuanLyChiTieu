@@ -48,6 +48,14 @@ public class LoginController {
         profileComboBox.getItems().clear();  // Xóa tất cả các mục cũ trong ComboBox
         profileComboBox.getItems().addAll(profileList);  // Thêm các profile mới vào ComboBox
 
+        // Nếu ComboBox có giá trị nào, lấy profileId từ SessionManager
+        String selectedProfile = profileComboBox.getValue();
+        if (selectedProfile != null && !selectedProfile.isEmpty()) {
+            Profile profile = profileService.getProfileByUsername(selectedProfile);
+            if (profile != null) {
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+            }
+        }
     }
 
     // Xử lý sự kiện khi người dùng nhấn nút OK
@@ -95,7 +103,6 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Thông tin không hợp lệ", "Vui lòng chọn hoặc tạo hồ sơ.");
         }
     }
-
     // Method tạo hồ sơ mới
     @FXML
     private void handleCreateProfile() {
@@ -104,9 +111,9 @@ public class LoginController {
 
         // Kiểm tra nếu tên profile không trống
         if (newProfileName != null && !newProfileName.isEmpty()) {
-            // Kiểm tra xem profile đã tồn tại trong cơ sở dữ liệu chưa
-            boolean profileExists = profileService.isProfileExistByName(newProfileName);
 
+            // Kiểm tra xem profile đã tồn tại chưa trong cơ sở dữ liệu
+            boolean profileExists = profileService.isProfileExistByName(newProfileName);
             if (profileExists) {
                 // Nếu profile đã tồn tại, hiển thị thông báo lỗi
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Hồ sơ với tên này đã tồn tại!", "Vui lòng chọn tên khác.");
@@ -114,21 +121,26 @@ public class LoginController {
             }
 
             // Tạo profile mới nếu chưa tồn tại
-            Profile newProfile =  new Profile();
+            Profile newProfile = new Profile();
             newProfile.setName(newProfileName);  // Cập nhật tên profile mới
 
             // Lưu hồ sơ mới vào cơ sở dữ liệu
             boolean success = profileService.createProfile(newProfile);
 
             if (success) {
-                // Nếu thành công, hiển thị thông báo và chuyển sang màn hình Dashboard
-                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ người dùng đã được tạo thành công.", "Đã tạo hồ sơ người dùng mới: " + newProfileName);
+                // Sau khi tạo thành công, lấy lại profile từ cơ sở dữ liệu
+                Profile createdProfile = profileService.getProfileByUsername(newProfileName);
 
                 // Lưu profileId vào SessionManager
-                SessionManagerUtil.getInstance().setCurrentProfileId(newProfile.getId());
+                if (createdProfile != null) {
+                    SessionManagerUtil.getInstance().setCurrentProfileId(createdProfile.getId());
+                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Hồ sơ người dùng đã được tạo thành công.", "Đã tạo hồ sơ người dùng mới: " + newProfileName);
 
-                // Điều hướng sang Dashboard
-                navigateDashboard();
+                    // Điều hướng sang Dashboard
+                    navigateDashboard();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể lấy ID profile mới", "Đã xảy ra lỗi khi lấy ID profile mới.");
+                }
             } else {
                 // Nếu không thành công, hiển thị thông báo lỗi
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo hồ sơ người dùng mới.", "Vui lòng thử lại sau.");
@@ -138,6 +150,8 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Lỗi nhập liệu", "Vui lòng nhập tên hồ sơ.", "Tên hồ sơ không được để trống.");
         }
     }
+
+
 
 
     // Phương thức để điều hướng sang màn hình Dashboard
