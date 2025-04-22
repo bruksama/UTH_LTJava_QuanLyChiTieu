@@ -21,6 +21,7 @@ import main.java.com.expensemanager.model.Transaction;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class TransactionController {
     @FXML
@@ -36,10 +37,16 @@ public class TransactionController {
     private DatePicker datePicker;
 
     @FXML
-    private ToggleButton toggleTransactionButton;
+    private ToggleButton navigateDashboardBtn;
 
     @FXML
-    private ToggleButtonGroup navigationGroup;
+    private ToggleButton navigateCategoryBtn;
+
+    @FXML
+    private ToggleButton navigateReportBtn;
+
+    @FXML
+    private Button navigateReturnBtn;
 
     @FXML
     private TextField amountField;
@@ -62,54 +69,76 @@ public class TransactionController {
         alert.showAndWait();
     }
 
-    private void navigateTo(String fxmlFile, String errorMessage) {
+    private void navigateDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Dashboard.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) navigationGroup.getScene().getWindow();
+            Stage stage = (Stage) navigateDashboardBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-
         } catch (IOException e) {
             System.err.println(e.getMessage());
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình", errorMessage + ": " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
 
-    // Phương thức điều hướng tới Dashboard
-    @FXML
-    private void navigateDashboard() {
-        navigateTo("../view/Dashboard.fxml", "Lỗi khi chuyển đến Dashboard");
-    }
-
-    // Phương thức điều hướng tới Category
-    @FXML
-    private void navigateCategory() {
-        navigateTo("../view/Category.fxml", "Lỗi khi chuyển đến Category");
-    }
-
-    @FXML
     private void navigateReport() {
-        navigateTo("../view/Report.fxml", "Lỗi khi chuyển đến Report");
-    }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            Parent root = loader.load();
 
-    @FXML
-    private void handleToggleSelection() {
-        ToggleButton selectedButton = (ToggleButton) navigationGroup.getToggles();
-        if (selectedButton != null) {
-            String text = selectedButton.getText();
-            if ("Trang chủ".equals(text)) {
-                navigateDashboard();
-            } else if ("Danh mục".equals(text)) {
-                navigateCategory();
-            } else if ("Báo cáo".equals(text)) {
-                navigateReport();
-            }
+            Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
 
+    private void navigateCategory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Category.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
     @FXML
     public void initialize() {
         // Khởi tạo các DAO
@@ -118,7 +147,10 @@ public class TransactionController {
         //lấy profileId
         currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
-
+        navigateReturnBtn.setOnAction(event -> navigateLogin());
+        navigateDashboardBtn.setOnAction(event -> navigateDashboard());
+        navigateCategoryBtn.setOnAction(event -> navigateCategory());
+        navigateReportBtn.setOnAction(event -> navigateReport());
         addButton.setOnAction(event -> handleAddTransaction());
         // Khởi tạo ObservableList để liên kết với ListView
         transactionObservableList = FXCollections.observableArrayList();
@@ -158,6 +190,12 @@ public class TransactionController {
                     // Cập nhật lại nội dung của ListCell
                     setGraphic(hbox);
                 }
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
+                deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item)); // Xử lý khi nhấn Xóa
+
+                contextMenu.getItems().add(deleteMenuItem);
+                setContextMenu(contextMenu);
             }
         });
         loadCategories();
@@ -303,8 +341,29 @@ public class TransactionController {
             }
 
             // Cập nhật Label với tổng thu và chi
-            totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-            totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+            totalIncomeLabel.setText(String.format("%,.đ", totalIncome));
+            totalExpenseLabel.setText(String.format("%,.đ", totalExpense));
+        }
+    }
+    private void handleDeleteTransaction(Transaction transaction) {
+        // Cảnh báo xác nhận xóa giao dịch
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Xác nhận xóa");
+        confirmDialog.setHeaderText("Xác nhận xóa giao dịch");
+        confirmDialog.setContentText("Bạn có chắc chắn muốn xóa giao dịch \"" + transaction.getType() + ": " + transaction.getAmount() + "\"?");
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Tiến hành xóa giao dịch trong database
+            boolean success = transactionDAO.deleteTransaction(transaction.getId());
+            if (success) {
+                // Cập nhật lại danh sách giao dịch sau khi xóa
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa giao dịch thành công", "Giao dịch đã được xóa thành công.");
+                loadTransactions(); // Làm mới danh sách giao dịch
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
+            }
         }
     }
 }

@@ -69,6 +69,36 @@ public class TransactionDAO {
         return transactions;
     }
 
+    public List<Transaction> getLatestFiveTransactionsByProfile(int profileId) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE profileId = ? ORDER BY date DESC LIMIT 5";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, profileId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Transaction t = new Transaction(
+                        rs.getInt("id"),
+                        rs.getInt("profileId"),
+                        rs.getString("type"),
+                        rs.getInt("categoryId"),
+                        rs.getString("description"),
+                        rs.getString("date"),
+                        rs.getDouble("amount")
+                );
+                transactions.add(t);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách giao dịch: " + e.getMessage());
+        }
+
+        return transactions;
+    }
+
     // Xóa giao dịch theo ID
     public boolean deleteTransaction(int id) {
         String sql = "DELETE FROM transactions WHERE id = ?";
