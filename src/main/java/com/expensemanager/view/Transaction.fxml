@@ -42,7 +42,7 @@
                                 <FontAwesomeIconView glyphName="HOME" size="1.2em" />
                             </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="toggleTransactionButton" mnemonicParsing="false" prefHeight="50.4" selected="true" text="Giao dịch">
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" selected="true" text="Giao dịch">
                             <graphic>
                                 <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
                             </graphic>
