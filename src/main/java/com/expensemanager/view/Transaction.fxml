@@ -12,7 +12,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -64,12 +63,12 @@
          <children>
             <HBox maxWidth="220.0" minWidth="180.0" prefHeight="58.0" prefWidth="220.0">
                <children>
-                  <DatePicker maxWidth="80.0" minWidth="150.0" prefHeight="50.0" prefWidth="80.0" translateX="100.0" translateY="60.0" />
-                  <Label alignment="CENTER" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="181.0" styleClass="thu" text="0đ" translateX="425.0" translateY="50.0">
+                  <DatePicker fx:id="datePicker" maxWidth="80.0" minWidth="150.0" prefHeight="50.0" prefWidth="80.0" translateX="100.0" translateY="60.0" />
+                  <Label fx:id="totalIncomeLabel" alignment="CENTER" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="181.0" styleClass="thu" text="0đ" translateX="425.0" translateY="50.0">
                      <font>
                         <Font name="Verdana" size="24.0" />
                      </font></Label>
-                  <Label alignment="CENTER" maxWidth="100.0" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="100.0" styleClass="chi" text="99999đ" translateX="435.0" translateY="50.0">
+                  <Label fx:id="totalExpenseLabel" alignment="CENTER" maxWidth="100.0" minHeight="70.0" minWidth="150.0" prefHeight="48.0" prefWidth="100.0" styleClass="chi" text="0đ" translateX="435.0" translateY="50.0">
                      <font>
                         <Font name="Verdana" size="24.0" />
                      </font></Label>
@@ -100,13 +99,13 @@
    <right>
       <AnchorPane maxHeight="367.0" prefHeight="406.0" prefWidth="334.0" styleClass="dropdown-menu" translateY="50.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutX="121.0" layoutY="175.0" prefHeight="59.0" prefWidth="191.0" styleClass="onhap" />
+            <TextField fx:id="amountField" layoutX="121.0" layoutY="175.0" prefHeight="59.0" prefWidth="191.0" styleClass="onhap" />
             <Label layoutX="14.0" layoutY="190.0" prefHeight="30.0" prefWidth="104.0" text="Nhập số tiền">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox layoutX="130.0" layoutY="98.0" prefHeight="51.0" prefWidth="172.0" promptText="Chọn danh mục" styleClass="menu-button" />
+            <ComboBox fx:id="categoryComboBox" layoutX="130.0" layoutY="98.0" prefHeight="51.0" prefWidth="172.0" promptText="Chọn danh mục" styleClass="menu-button" />
             <Button layoutX="161.0" layoutY="274.0" mnemonicParsing="false" styleClass="button-add-transaction" text="Thêm giao dịch" />
          </children>
       </AnchorPane>

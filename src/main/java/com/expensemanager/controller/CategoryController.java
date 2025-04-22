@@ -16,11 +16,10 @@ import javafx.stage.Stage;
 import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.dao.ProfileDAO;
 import main.java.com.expensemanager.model.Category;
-import main.java.com.expensemanager.util.SessionManager;
+import main.java.com.expensemanager.util.SessionManagerUtil;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -49,6 +48,8 @@ public class CategoryController implements Initializable {
     private ToggleButton navigateReportBtn;
     @FXML
     private ToggleButton navigateTransactionBtn;
+    @FXML
+    private Button navigateLoginBtn;
 
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
@@ -59,7 +60,7 @@ public class CategoryController implements Initializable {
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
 
-        SessionManager.getInstance().setCurrentProfileId(4); // giá trị test
+//        SessionManagerUtil.getInstance().setCurrentProfileId(4); // giá trị test
 
         categoryObservableList = FXCollections.observableArrayList();
         catList.setItems(categoryObservableList);
@@ -106,13 +107,14 @@ public class CategoryController implements Initializable {
         navigateDashboardBtn.setOnAction(event -> navigateDashboard());
         navigateTransactionBtn.setOnAction(event -> navigateTransaction ());
         navigateReportBtn.setOnAction(event -> navigateReport ());
+        navigateLoginBtn.setOnAction(event -> navigateLogin());
 
         loadCategories();
     }
 
     private void loadCategories() {
 
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
         if (profileDAO.isProfileExist(currentProfileId)) {
             List<Category> categories = categoryDAO.getCategoriesByProfile(currentProfileId);
@@ -147,7 +149,7 @@ public class CategoryController implements Initializable {
     @FXML
     private void handleUpdateButton(ActionEvent event) {
         // Lấy ID của profile hiện tại
-        int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
         // Kiểm tra profile có tồn tại không
         if (!profileDAO.isProfileExist(currentProfileId)) {
@@ -234,7 +236,7 @@ public class CategoryController implements Initializable {
         Optional<ButtonType> result = confirmDialog.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+            int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
             if (categoryDAO.deleteCategory(selectedCategory.getId(), currentProfileId)) {
                 showAlert(Alert.AlertType.INFORMATION, "Thành công",
@@ -260,7 +262,7 @@ public class CategoryController implements Initializable {
         Optional<ButtonType> result = confirmDialog.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            int currentProfileId = SessionManager.getInstance().getCurrentProfileId();
+            int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
             categoryDAO.deleteByProfileId(currentProfileId);
 
@@ -323,6 +325,24 @@ public class CategoryController implements Initializable {
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
 
             // Thiết lập scene mới
             Scene scene = new Scene(root);
