@@ -21,7 +21,7 @@
    <center>
       <Pane maxHeight="150.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="profileComboBox" layoutX="213.0" layoutY="46.0" maxWidth="480.0" onAction="#handleProfileSelection" prefHeight="28.0" prefWidth="480.0" promptText="Hãy chọn hồ sơ của bạn" style="-fx-background-radius: 30;">
+            <ComboBox fx:id="profileComboBox" layoutX="213.0" layoutY="46.0" maxWidth="480.0" prefHeight="28.0" prefWidth="480.0" promptText="Hãy chọn hồ sơ của bạn" style="-fx-background-radius: 30;">
             </ComboBox>
 
             <TextField fx:id="newProfileTextField" layoutX="216.0" layoutY="96.0" onAction="#handleCreateProfile" prefHeight="26.0" prefWidth="474.0" promptText="Hoặc tạo hồ sơ mới" style="-fx-background-color: #D3D3D3; -fx-background-radius: 30;" />
