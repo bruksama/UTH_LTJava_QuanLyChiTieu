@@ -1,5 +1,7 @@
 package main.java.com.expensemanager.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,12 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
+import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.dao.ProfileDAO;
+import main.java.com.expensemanager.model.Category;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.dao.TransactionDAO;
@@ -46,9 +49,13 @@ public class DashboardController implements Initializable {
     private Label profileName1;
     @FXML
     private Label profileName2;
+    @FXML
+    private ListView<Transaction> transactionListView;
+    @FXML
+    private ObservableList<Transaction> transactionObservableList;
 
     private TransactionDAO transactionDAO;
-
+    private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
 
     @Override
@@ -57,9 +64,13 @@ public class DashboardController implements Initializable {
         navigateTransactionBtn.setOnAction(event -> navigateTransaction());
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
+
         addTransaction.setOnAction(event -> navigateToTransaction());
+
         profileList.setOnAction(event -> handleProfileList());
+
         transactionDAO = new TransactionDAO();
+        categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
 
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
@@ -77,10 +88,45 @@ public class DashboardController implements Initializable {
         // Lấy các profile còn lại và hiển thị profile thứ hai trong profileName2
         loadProfileNames(currentProfileId);
 
+        transactionObservableList = FXCollections.observableArrayList();
+        transactionListView.setItems(transactionObservableList);
 
+        transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
+            @Override
+            protected void updateItem(Transaction item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // Lấy tên danh mục từ categoryId
+                    String categoryName = "Không có danh mục";  // Mặc định là "Không có danh mục"
+                    try {
+                        Category category = categoryDAO.getCategoryById(item.getCategoryId());
+                        if (category != null) {
+                            categoryName = category.getName();
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Không tìm thấy danh mục cho giao dịch: " + e.getMessage());
+                    }
+
+                    // Tạo một HBox để căn chỉnh các phần tử
+                    HBox hbox = new HBox();
+                    Label typeLabel = new Label(item.getType() + ": ");
+                    Label amountLabel = new Label(String.format("%,.0fđ", item.getAmount()));
+                    Label categoryLabel = new Label("(" + categoryName + ")");
+
+                    // Căn chỉnh các phần tử trong HBox
+                    hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
+                    HBox.setHgrow(amountLabel, Priority.ALWAYS); // Căn giữa amountLabel
+
+                    // Cập nhật lại nội dung của ListCell
+                    setGraphic(hbox);
+                }
+            }
+        });
+        loadTransactions();
 
     }
-
 
     private void loadProfileNames(int currentProfileId) {
         // Lấy danh sách tất cả profile từ cơ sở dữ liệu
@@ -217,5 +263,15 @@ public class DashboardController implements Initializable {
         }
     }
 
+    private void loadTransactions() {
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+        try {
+            // Lấy tất cả giao dịch của profile hiện tại từ database
+            transactionObservableList.setAll(transactionDAO.getLatestFiveTransactionsByProfile(currentProfileId));
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải giao dịch",
+                    "Đã xảy ra lỗi khi tải giao dịch từ cơ sở dữ liệu.");
+        }
+    }
 
 }
