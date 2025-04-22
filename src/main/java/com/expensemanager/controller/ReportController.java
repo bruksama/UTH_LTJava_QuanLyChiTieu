@@ -234,7 +234,6 @@ public class ReportController {
         alert.showAndWait();
     }
 
-
     public void setTransactionsInRange(List<Transaction> transactionsInRange) {
         this.transactionsInRange = transactionsInRange;
     }
