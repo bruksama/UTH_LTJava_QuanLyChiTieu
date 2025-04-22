@@ -29,7 +29,7 @@ public class LoginController {
 
     // Khởi tạo ProfileService
     public LoginController() {
-        this.profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO());
+        this.profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO(),new main.java.com.expensemanager.dao.CategoryDAO());
     }
 
     @FXML

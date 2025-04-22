@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import main.java.com.expensemanager.dao.CategoryDAO;
+import main.java.com.expensemanager.dao.ProfileDAO;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.service.ProfileService;
 import main.java.com.expensemanager.util.SessionManagerUtil;
@@ -32,7 +34,9 @@ public class ProfileController {
 
     @FXML
     public void initialize() {
-        profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO());
+        CategoryDAO categoryDAO = new CategoryDAO();
+        ProfileDAO profileDAO = new ProfileDAO();
+        profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO(),new main.java.com.expensemanager.dao.CategoryDAO());
 
         // Tải danh sách các profile hiện có từ cơ sở dữ liệu
         loadProfiles();

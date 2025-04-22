@@ -1,5 +1,6 @@
 package main.java.com.expensemanager.service;
 
+import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.dao.ProfileDAO;
 import java.util.List;
@@ -7,11 +8,11 @@ import java.util.List;
 
 public class ProfileService {
     private final ProfileDAO profileDAO;
+    private final CategoryDAO categoryDAO ;
 
-
-    public ProfileService(ProfileDAO profileDAO) {
+    public ProfileService(ProfileDAO profileDAO,CategoryDAO categoryDAO) {
         this.profileDAO = profileDAO;
-
+        this.categoryDAO = categoryDAO;
     }
 
     // Thêm mới hồ sơ người dùng
@@ -48,10 +49,18 @@ public class ProfileService {
 
 
 // Cập nhật phương thức deleteProfile
-    public boolean deleteProfile(int profileId) {
-        // Gọi phương thức trong ProfileDAO để xóa profile theo ID
-        return profileDAO.deleteProfile(profileId);  // Gọi phương thức xóa trong ProfileDAO
+public boolean deleteProfile(int profileId) {
+    try {
+        // Xóa các categories liên quan đến profile
+        categoryDAO.deleteByProfileId(profileId);
+
+        // Xóa profile
+        return profileDAO.deleteProfile(profileId);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
 
 
@@ -65,6 +74,24 @@ public class ProfileService {
 
         return profileDAO.getProfileById(profileId);
     }
+
+    public boolean deleteAllProfiles() {
+        try {
+            List<Profile> profiles = profileDAO.getAllProfiles();
+            for (Profile profile : profiles) {
+                // Xóa tất cả các category liên quan đến profile
+                categoryDAO.deleteByProfileId(profile.getId());
+                // Xóa profile
+                profileDAO.deleteProfile(profile.getId());
+            }
+            return true;  // Nếu tất cả các profile và categories đều được xóa thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;  // Nếu có lỗi xảy ra, trả về false
+        }
+    }
+
+
 
     // Kiểm tra xem hồ sơ người dùng có tồn tại không
     public boolean isProfileExist(int profileId) {
@@ -102,14 +129,6 @@ public class ProfileService {
     }
 
 
-    public boolean deleteAllProfiles() {
-        try {
-            // Gọi phương thức trong ProfileDAO để xóa tất cả profile
-            return profileDAO.deleteAllProfiles();
-        } catch (Exception e) {
-            System.err.println("Error deleting all profiles: " + e.getMessage());
-            return false;
-        }
-    }
+
 
 }
