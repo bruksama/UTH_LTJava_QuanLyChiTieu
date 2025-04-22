@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
-<?import com.gluonhq.charm.glisten.mvc.View?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
@@ -9,6 +8,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
@@ -75,7 +75,7 @@
                               <Font name="Verdana Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Button fx:id="profileList" maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0" onAction="#handleProfileList">
+                        <Button fx:id="profileList" maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" onAction="#handleProfileList" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0">
                            <graphic>
                               <FontAwesomeIconView glyphName="PLUS" size="3em" />
                            </graphic>
@@ -194,76 +194,7 @@
                               <Font name="Calibri" size="18.0" />
                            </font>
                         </Label>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Ăn uống" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Shoping" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Dịch vụ" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Hóa đơn" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Khác" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
+                        <ListView prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </VBox>
                   <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" onAction="#navigateToTransaction" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch">
