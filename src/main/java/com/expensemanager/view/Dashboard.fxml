@@ -112,7 +112,7 @@
                               <Insets top="30.0" />
                            </VBox.margin>
                            <children>
-                              <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
+                              <Button fx:id="profileQuick" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" onAction="#switchProfile"/>
                               <Label fx:id="profileName2" layoutX="14.0" layoutY="14.0" text="Tên profile 2">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
