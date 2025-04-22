@@ -98,7 +98,7 @@
                   </HBox>
                   <HBox prefHeight="345.0" prefWidth="431.0">
                      <children>
-                        <ListView  fx:id="listViewChi" prefHeight="198.0" prefWidth="182.0" />
+                        <ListView fx:id="listViewChi" prefHeight="198.0" prefWidth="182.0" />
                         <ListView fx:id="listViewThu" prefHeight="198.0" prefWidth="182.0" translateX="50.0" />
                      </children>
                   </HBox>
