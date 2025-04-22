@@ -155,7 +155,6 @@ public class ReportController {
     }
 
 
-
     private BarChart<String, Number> createBarChart(double totalIncome, double totalExpense) {
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Loại giao dịch");
