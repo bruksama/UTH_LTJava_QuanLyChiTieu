@@ -95,7 +95,7 @@ public class CategoryDAO {
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if(rs.next()) {
+                if (rs.next()) {
                     return extractCategory(rs);
                 }
             }
@@ -139,8 +139,12 @@ public class CategoryDAO {
             conn.setAutoCommit(false);
 
             try (PreparedStatement stmt = conn.prepareStatement(INSERT_SQL)) {
-                createDefaultIncomeCategories(stmt, profileId);
-                createDefaultExpenseCategories(stmt, profileId);
+
+                if (getCategoriesByProfile(profileId).isEmpty()) {
+                    createDefaultIncomeCategories(stmt, profileId);
+                    createDefaultExpenseCategories(stmt, profileId);
+                }
+
                 conn.commit();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -175,7 +179,7 @@ public class CategoryDAO {
     public void deleteByProfileId(int profileId) {
         List<Category> categories = getCategoriesByProfile(profileId);
 
-        for(Category category : categories) {
+        for (Category category : categories) {
             deleteCategory(category.getId(), profileId);
         }
     }
@@ -185,11 +189,11 @@ public class CategoryDAO {
              PreparedStatement stmt = conn.prepareStatement(CHECK_CATEGORY_EXIST)) {
 
             stmt.setInt(1, categoryId);
-            stmt.setInt(2, profileId );
+            stmt.setInt(2, profileId);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) >0;
+                return rs.getInt(1) > 0;
             }
 
             return false;

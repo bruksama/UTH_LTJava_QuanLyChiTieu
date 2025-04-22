@@ -102,7 +102,14 @@ public class ProfileService {
     }
 
 
-
-
+    public boolean deleteAllProfiles() {
+        try {
+            // Gọi phương thức trong ProfileDAO để xóa tất cả profile
+            return profileDAO.deleteAllProfiles();
+        } catch (Exception e) {
+            System.err.println("Error deleting all profiles: " + e.getMessage());
+            return false;
+        }
+    }
 
 }
