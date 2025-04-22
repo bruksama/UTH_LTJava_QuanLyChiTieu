@@ -67,13 +67,22 @@ public class ProfileController {
         profileListView.getItems().addAll(profiles);
     }
     // Xử lý khi người dùng chọn một profile từ ListView
+    @FXML
     private void handleProfileSelection() {
         String selectedProfile = profileListView.getSelectionModel().getSelectedItem();
         if (selectedProfile != null && !selectedProfile.isEmpty()) {
             // Hiển thị tên profile vào TextField
             profileNameField.setText(selectedProfile);
+
+            // Lưu thông tin vào SessionManager
+            Profile profile = profileService.getProfileByUsername(selectedProfile);
+            if (profile != null) {
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileName(profile.getName());
+            }
         }
     }
+
 
     // Xử lý sự kiện khi người dùng nhấn nút "Chọn"
     @FXML
@@ -134,6 +143,10 @@ public class ProfileController {
                     // Cập nhật tên profile trong cơ sở dữ liệu
                     profile.setName(newName);
                     if (profileService.updateProfile(profile)) {
+                        // Cập nhật thông tin mới vào SessionManager
+                        SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+                        SessionManagerUtil.getInstance().setCurrentProfileName(profile.getName());
+
                         showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi tên profile thành công", "Tên profile đã được cập nhật.");
                         loadProfiles();
                     } else {
@@ -148,13 +161,13 @@ public class ProfileController {
         }
     }
 
+
     // Xử lý sự kiện "Xóa profile"
     @FXML
     private void handleDeleteProfile() {
         String selectedProfile = profileNameField.getText();
 
         if (selectedProfile != null && !selectedProfile.isEmpty()) {
-            // Lấy thông tin profile từ cơ sở dữ liệu
             Profile profile = profileService.getProfileByUsername(selectedProfile);
             if (profile != null) {
                 // Xác nhận xóa profile
@@ -166,6 +179,10 @@ public class ProfileController {
                 Optional<ButtonType> result = confirmDialog.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     if (profileService.deleteProfile(profile.getId())) {
+                        // Nếu xóa thành công, thiết lập lại SessionManager
+                        SessionManagerUtil.getInstance().setCurrentProfileId(0);
+                        SessionManagerUtil.getInstance().setCurrentProfileName("");
+
                         showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa profile thành công", "Profile đã được xóa.");
                         loadProfiles();
                     } else {
@@ -192,6 +209,10 @@ public class ProfileController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Xóa tất cả profile trong cơ sở dữ liệu
             if (profileService.deleteAllProfiles()) {
+                // Thiết lập lại session
+                SessionManagerUtil.getInstance().setCurrentProfileId(0);
+                SessionManagerUtil.getInstance().setCurrentProfileName("");
+
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa tất cả profile thành công", "Tất cả profile đã được xóa.");
                 loadProfiles();
             } else {
