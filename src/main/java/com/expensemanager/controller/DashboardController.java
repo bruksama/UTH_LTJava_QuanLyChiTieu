@@ -46,6 +46,10 @@ public class DashboardController implements Initializable {
     private Label profileName1;
     @FXML
     private Label profileName2;
+    @FXML
+    private Button profileQuick1;
+    @FXML
+    private Button profileQuick2;
 
     private TransactionDAO transactionDAO;
 
