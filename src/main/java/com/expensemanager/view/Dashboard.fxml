@@ -90,7 +90,7 @@
                            </VBox.margin>
                            <children>
                               <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 1">
+                              <Label fx:id="profileName1" layoutX="14.0" layoutY="14.0" text="Tên profile 1">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
@@ -113,7 +113,7 @@
                            </VBox.margin>
                            <children>
                               <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 2">
+                              <Label fx:id="profileName2" layoutX="14.0" layoutY="14.0" text="Tên profile 2">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
