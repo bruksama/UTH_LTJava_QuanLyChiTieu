@@ -21,6 +21,7 @@ import main.java.com.expensemanager.model.Transaction;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class TransactionController {
     @FXML
@@ -189,6 +190,12 @@ public class TransactionController {
                     // Cập nhật lại nội dung của ListCell
                     setGraphic(hbox);
                 }
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
+                deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item)); // Xử lý khi nhấn Xóa
+
+                contextMenu.getItems().add(deleteMenuItem);
+                setContextMenu(contextMenu);
             }
         });
         loadCategories();
@@ -336,6 +343,27 @@ public class TransactionController {
             // Cập nhật Label với tổng thu và chi
             totalIncomeLabel.setText(String.format("%,.đ", totalIncome));
             totalExpenseLabel.setText(String.format("%,.đ", totalExpense));
+        }
+    }
+    private void handleDeleteTransaction(Transaction transaction) {
+        // Cảnh báo xác nhận xóa giao dịch
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Xác nhận xóa");
+        confirmDialog.setHeaderText("Xác nhận xóa giao dịch");
+        confirmDialog.setContentText("Bạn có chắc chắn muốn xóa giao dịch \"" + transaction.getType() + ": " + transaction.getAmount() + "\"?");
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Tiến hành xóa giao dịch trong database
+            boolean success = transactionDAO.deleteTransaction(transaction.getId());
+            if (success) {
+                // Cập nhật lại danh sách giao dịch sau khi xóa
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa giao dịch thành công", "Giao dịch đã được xóa thành công.");
+                loadTransactions(); // Làm mới danh sách giao dịch
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
+            }
         }
     }
 }
