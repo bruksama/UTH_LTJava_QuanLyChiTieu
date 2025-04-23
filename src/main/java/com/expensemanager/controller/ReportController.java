@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import main.java.com.expensemanager.dao.ReportDAO;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.service.ReportService;
-
+import main.java.com.expensemanager.util.SessionManagerUtil;
 
 
 import java.io.File;
@@ -109,22 +109,22 @@ public class ReportController {
 
         // Tính tổng thu
         double totalIncome = transactions.stream()
-                .filter(t -> "income".equalsIgnoreCase(t.getType()))
+                .filter(t -> "Thu".equalsIgnoreCase(t.getType()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
         // Tính tổng chi
         double totalExpense = transactions.stream()
-                .filter(t -> "expense".equalsIgnoreCase(t.getType()))
+                .filter(t -> "Chi".equalsIgnoreCase(t.getType()))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
         // In ra tổng thu và chi
-        lblTongThu.setText("Tổng thu 💰: " + totalIncome + " VND");
-        lblTongChi.setText("Tổng chi 💸: " + totalExpense + " VND");
+        lblTongThu.setText("Tổng thu 💰: " + Math.round(totalIncome) + " VND");
+        lblTongChi.setText("Tổng chi 💸: " + Math.round(totalExpense) + " VND");
 
-        System.out.println("Tổng thu: " + totalIncome);
-        System.out.println("Tổng chi: " + totalExpense);
+        System.out.println("Tổng thu: " + Math.round(totalIncome));
+        System.out.println("Tổng chi: " + Math.round(totalExpense));
 
         // Hiển thị thông tin tổng thu và tổng chi
         Label summary = new Label("Tổng thu: " + totalIncome + " | Tổng chi: " + totalExpense);
@@ -148,9 +148,9 @@ public class ReportController {
 
         for (Transaction gd : transactions) {
             String dong = gd.getDate() + " - " + gd.getDescription() + " - " + gd.getAmount();
-            if ("expense".equalsIgnoreCase(gd.getType())) {
+            if ("Chi".equalsIgnoreCase(gd.getType())) {
                 listViewChi.getItems().add(dong);
-            } else if ("income".equalsIgnoreCase(gd.getType())) {
+            } else if ("Thu".equalsIgnoreCase(gd.getType())) {
                 listViewThu.getItems().add(dong);
             }
         }
@@ -161,8 +161,10 @@ public class ReportController {
     private List<Transaction> getTransactionsInRange() {
         String from = fromDatePicker.getValue().toString();
         String to = toDatePicker.getValue().toString();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
         try {
-            return reportDAO.getTransactionsByDateRange(from, to);
+            return reportDAO.getTransactionsByDateRange(currentProfileId, from, to);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Không thể lấy dữ liệu từ cơ sở dữ liệu.");

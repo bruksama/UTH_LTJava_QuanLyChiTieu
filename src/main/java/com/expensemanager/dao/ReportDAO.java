@@ -152,15 +152,16 @@ public class ReportDAO {
         return connector;
     }
 
-    public List<Transaction> getTransactionsByDateRange(String from, String to) throws SQLException {
+    public List<Transaction> getTransactionsByDateRange(int profileId, String from, String to) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE date BETWEEN ? AND ?";
+        String sql = "SELECT * FROM transactions WHERE profileId = ? AND date BETWEEN ? AND ?";
 
         try (Connection conn = connector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, from);  // Set the start date
-            stmt.setString(2, to);    // Set the end date
+            stmt.setInt(1, profileId);
+            stmt.setString(2, from);  // Set the start date
+            stmt.setString(3, to);    // Set the end date
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
