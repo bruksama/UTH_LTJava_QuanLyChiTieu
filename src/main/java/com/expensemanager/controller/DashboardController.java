@@ -69,6 +69,7 @@ public class DashboardController implements Initializable {
         addTransaction.setOnAction(event -> navigateToTransaction());
         profileList.setOnAction(event -> handleProfileList());
         profileQuick.setOnAction(event -> switchProfile());
+        categoryDAO = new CategoryDAO();
         transactionDAO = new TransactionDAO();
         profileDAO = new ProfileDAO();
         // Lấy profileId từ SessionManager
