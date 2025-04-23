@@ -1,6 +1,7 @@
 package main.java.com.expensemanager.controller;
 
 import com.gluonhq.charm.glisten.control.ToggleButtonGroup;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +21,7 @@ import main.java.com.expensemanager.model.Transaction;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,11 +154,23 @@ public class TransactionController {
         navigateCategoryBtn.setOnAction(event -> navigateCategory());
         navigateReportBtn.setOnAction(event -> navigateReport());
         addButton.setOnAction(event -> handleAddTransaction());
-        // Khởi tạo ObservableList để liên kết với ListView
         transactionObservableList = FXCollections.observableArrayList();
         transactionListView.setItems(transactionObservableList);
+        amountField.setOnAction(event -> handleAddTransaction());
+        addButton.setOnAction(event -> handleAddTransaction());
+        transactionListView.setOnContextMenuRequested(event -> {
+            Transaction selectedTransaction = transactionListView.getSelectionModel().getSelectedItem();
 
-        datePicker.setOnAction(event -> handleDatePicker());
+            if (selectedTransaction != null) {
+                // Nếu có giao dịch được chọn, hiển thị menu xóa
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem deleteItem = new MenuItem("Xóa giao dịch");
+                deleteItem.setOnAction(e -> handleDeleteTransaction(selectedTransaction)); // Gọi hàm xóa giao dịch
+
+                contextMenu.getItems().add(deleteItem);
+                contextMenu.show(transactionListView, event.getScreenX(), event.getScreenY()); // Hiển thị menu tại vị trí click
+            }
+        });
 
         // Tùy chỉnh cách hiển thị các mục trong ListView
         transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
@@ -210,13 +224,8 @@ public class TransactionController {
 
     private void loadTransactions() {
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
-        try {
-            // Lấy tất cả giao dịch của profile hiện tại từ database
-            transactionObservableList.setAll(transactionDAO.getTransactionsByProfile(currentProfileId));
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tải giao dịch",
-                    "Đã xảy ra lỗi khi tải giao dịch từ cơ sở dữ liệu.");
-        }
+        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
+        transactionObservableList.setAll(transactions);  // Sử dụng phương thức setAll để thay đổi danh sách
     }
 
     private void loadCategories() {
@@ -232,7 +241,7 @@ public class TransactionController {
     @FXML
     private void handleAddTransaction() {
         String amountText = amountField.getText().trim();
-        String selectedCategoryName = categoryComboBox.getValue(); // Lấy tên danh mục đã chọn
+        String selectedCategoryName = categoryComboBox.getValue();
 
         if (amountText.isEmpty() || selectedCategoryName == null) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thông tin chưa đầy đủ",
@@ -300,50 +309,8 @@ public class TransactionController {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm giao dịch",
                     "Đã xảy ra lỗi khi thêm giao dịch vào cơ sở dữ liệu.");
         }
-
-        // Reset amountField và categoryComboBox sau khi thêm giao dịch
         amountField.clear();  // Xóa dữ liệu trong TextField số tiền
         categoryComboBox.setValue("Chọn danh mục");
-    }
-
-    @FXML
-    private void handleDatePicker() {
-        String selectedDate;
-
-        // Kiểm tra nếu người dùng đã chọn ngày
-        if (datePicker.getValue() != null) {
-            selectedDate = datePicker.getValue().toString(); // Lấy ngày từ DatePicker (YYYY-MM-DD)
-        } else {
-            // Nếu không chọn ngày, dùng ngày hôm nay làm mặc định
-            selectedDate = LocalDate.now().toString();
-        }
-
-        updateTotalsByDate(selectedDate);
-    }
-
-    private void updateTotalsByDate(String selectedDate) {
-        if (selectedDate != null) {
-            // Lấy tất cả giao dịch của profile hiện tại và lọc theo ngày
-            List<Transaction> allTransactions = transactionDAO.getTransactionsByProfile(currentProfileId);
-            double totalIncome = 0;
-            double totalExpense = 0;
-
-            // Lọc các giao dịch theo ngày đã chọn
-            for (Transaction transaction : allTransactions) {
-                if (transaction.getDate().equals(selectedDate)) {
-                    // Kiểm tra loại giao dịch và tính tổng
-                    if (transaction.getType().equals(Transaction.TYPE_INCOME)) {
-                        totalIncome += transaction.getAmount();  // Thêm vào tổng thu nhập
-                    } else if (transaction.getType().equals(Transaction.TYPE_EXPENSE)) {
-                        totalExpense += transaction.getAmount();  // Thêm vào tổng chi tiêu
-                    }
-                }
-            }
-
-            // Cập nhật Label với tổng thu và chi
-            totalIncomeLabel.setText(String.format("%,.đ", totalIncome));
-            totalExpenseLabel.setText(String.format("%,.đ", totalExpense));
-        }
     }
     private void handleDeleteTransaction(Transaction transaction) {
         // Cảnh báo xác nhận xóa giao dịch
@@ -365,5 +332,35 @@ public class TransactionController {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
             }
         }
+    }
+    @FXML
+    private void handleButtonClick(ActionEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        String buttonText = clickedButton.getText();
+        amountField.appendText(buttonText);
+    }
+    @FXML
+    private void handleClear() {
+        amountField.clear();
+    }
+    @FXML
+    private void handleBackspace() {
+        String currentText = amountField.getText();
+        if (currentText.length() > 0) {
+            amountField.setText(currentText.substring(0, currentText.length() - 1));
+        }
+    }
+    private void updateTotalsByDate() {
+        String selectedDate = datePicker.getValue().toString();  // Lấy ngày từ DatePicker
+
+        int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();  // Lấy profileId từ SessionManager
+
+        // Lấy tổng thu và tổng chi từ DAO
+        double totalIncome = transactionDAO.getTotalIncomeByDate(selectedDate, profileId);
+        double totalExpense = transactionDAO.getTotalExpenseByDate(selectedDate, profileId);
+
+        // Cập nhật lên giao diện
+        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
+        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
     }
 }
