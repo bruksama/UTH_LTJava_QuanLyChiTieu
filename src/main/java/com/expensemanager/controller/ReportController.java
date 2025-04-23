@@ -1,6 +1,9 @@
 package main.java.com.expensemanager.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -13,6 +16,8 @@ import main.java.com.expensemanager.dao.ReportDAO;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.service.ReportService;
 
+
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportController {
+
+    @FXML private ToggleButton navigateDashboardBtn;
+    @FXML private ToggleButton navigateTransactionBtn;
+    @FXML private ToggleButton navigateCategoryBtn;
+    @FXML private Button navigateLoginBtn;
 
     @FXML
     private DatePicker fromDatePicker;
@@ -61,6 +71,10 @@ public class ReportController {
         btnExport.setOnAction(e -> exportCSV());
         btnCreate.setOnAction(e -> showReportWithSummary());  // Gọi phương thức tạo báo cáo
 
+        navigateCategoryBtn.setOnAction(event -> navigateCategory());
+        navigateTransactionBtn.setOnAction(event -> navigateTransaction());
+        navigateDashboardBtn.setOnAction(event -> navigateDashboard());
+        navigateLoginBtn.setOnAction(event -> navigateLogin());
     }
 
 
@@ -89,6 +103,8 @@ public class ReportController {
             chartContainer.getChildren().add(noDataLabel);
             return;
         }
+
+
 
 
         // Tính tổng thu
@@ -131,7 +147,7 @@ public class ReportController {
         listViewThu.getItems().clear();
 
         for (Transaction gd : transactions) {
-            String dong = gd.getDate() + " - " + gd.getNote() + " - " + gd.getAmount();
+            String dong = gd.getDate() + " - " + gd.getDescription() + " - " + gd.getAmount();
             if ("expense".equalsIgnoreCase(gd.getType())) {
                 listViewChi.getItems().add(dong);
             } else if ("income".equalsIgnoreCase(gd.getType())) {
@@ -141,7 +157,7 @@ public class ReportController {
 
 
     }
-//  lấy dữ liệu nè
+    //Truyền dữ liệu (dltest)
     private List<Transaction> getTransactionsInRange() {
         String from = fromDatePicker.getValue().toString();
         String to = toDatePicker.getValue().toString();
@@ -149,7 +165,8 @@ public class ReportController {
             return reportDAO.getTransactionsByDateRange(from, to);
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Lỗi", "Không thể lấy dữ liệu từ cơ sở dữ liệu.");
+            showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Không thể lấy dữ liệu từ cơ sở dữ liệu.");
+
             return new ArrayList<>();
         }
     }
@@ -201,11 +218,13 @@ public class ReportController {
                 writer.write("Loại,Ghi chú,Số tiền,Ngày\n");
                 for (Transaction t : transactions) {
                     writer.write(String.format("%s,%s,%.2f,%s\n",
-                            t.getType(), t.getNote(), t.getAmount(), t.getDate()));
+                            t.getType(), t.getDescription(), t.getAmount(), t.getDate()));
+
                 }
-                showAlert("Thành công", "Xuất báo cáo thành công: " + file.getAbsolutePath());
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xuất báo cáo thành công", "Đường dẫn: " + file.getAbsolutePath());
             } catch (IOException e) {
-                showAlert("Lỗi", "Không thể ghi file: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể ghi file", "Lỗi chi tiết: " + e.getMessage());
+
             }
         }
     }
@@ -215,7 +234,8 @@ public class ReportController {
         if (fromDatePicker.getValue() == null || toDatePicker.getValue() == null) {
             // Chỉ hiển thị thông báo nếu thiếu cả 2 ngày
             if (fromDatePicker.getValue() == null && toDatePicker.getValue() == null) {
-                showAlert("Lỗi", "Vui lòng chọn đầy đủ ngày bắt đầu và kết thúc.");
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Lỗi nhập dữ liệu", "Vui lòng chọn đầy đủ ngày bắt đầu và kết thúc.");
+
             }
             return false;
         }
@@ -225,13 +245,85 @@ public class ReportController {
     }
 
 
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         alert.showAndWait();
+    }
+
+
+    private void navigateTransaction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Transaction.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateTransactionBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Dashboard.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateDashboardBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateCategory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Category.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
+    }
+
+    private void navigateLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
+
+            // Thiết lập scene mới
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chính",
+                    "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
+        }
     }
 
     public void setTransactionsInRange(List<Transaction> transactionsInRange) {

@@ -69,6 +69,36 @@ public class TransactionDAO {
         return transactions;
     }
 
+    public List<Transaction> getLatestFiveTransactionsByProfile(int profileId) {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE profileId = ? ORDER BY date DESC LIMIT 5";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, profileId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Transaction t = new Transaction(
+                        rs.getInt("id"),
+                        rs.getInt("profileId"),
+                        rs.getString("type"),
+                        rs.getInt("categoryId"),
+                        rs.getString("description"),
+                        rs.getString("date"),
+                        rs.getDouble("amount")
+                );
+                transactions.add(t);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách giao dịch: " + e.getMessage());
+        }
+
+        return transactions;
+    }
+
     // Xóa giao dịch theo ID
     public boolean deleteTransaction(int id) {
         String sql = "DELETE FROM transactions WHERE id = ?";
@@ -87,6 +117,50 @@ public class TransactionDAO {
             System.err.println("Lỗi khi xoá giao dịch: " + e.getMessage());
             return false;
         }
+    }
+    public double getTotalIncomeByDate(String date, int profileId) {
+        double totalIncome = 0.0;
+        String sql = "SELECT SUM(amount) AS total_income FROM transactions WHERE date = ? AND type = 'income' AND profileId = ?";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, date);  // Ngày giao dịch
+            stmt.setInt(2, profileId); // ID người dùng (profileId)
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalIncome = rs.getDouble("total_income");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng thu: " + e.getMessage());
+        }
+
+        return totalIncome;
+    }
+    public double getTotalExpenseByDate(String date, int profileId) {
+        double totalExpense = 0.0;
+        String sql = "SELECT SUM(amount) AS total_expense FROM transactions WHERE date = ? AND type = 'expense' AND profileId = ?";
+
+        try (Connection conn = connector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, date);  // Ngày giao dịch
+            stmt.setInt(2, profileId); // ID người dùng (profileId)
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalExpense = rs.getDouble("total_expense");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng chi: " + e.getMessage());
+        }
+
+        return totalExpense;
     }
 
     // Cập nhật giao dịch (nếu muốn)

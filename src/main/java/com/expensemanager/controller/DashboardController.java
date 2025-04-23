@@ -1,5 +1,7 @@
 package main.java.com.expensemanager.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,11 +9,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
+import main.java.com.expensemanager.dao.CategoryDAO;
+import main.java.com.expensemanager.dao.ProfileDAO;
+import main.java.com.expensemanager.model.Category;
+import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.model.Transaction;
 import main.java.com.expensemanager.dao.TransactionDAO;
 import main.java.com.expensemanager.util.SessionManagerUtil;
@@ -40,8 +45,18 @@ public class DashboardController implements Initializable {
     private Button navigateLoginBtn;
     @FXML
     private Button profileList;
+    @FXML
+    private Label profileName1;
+    @FXML
+    private Label profileName2;
+    @FXML
+    private ListView<Transaction> transactionListView;
+    @FXML
+    private ObservableList<Transaction> transactionObservableList;
 
     private TransactionDAO transactionDAO;
+    private CategoryDAO categoryDAO;
+    private ProfileDAO profileDAO;
 
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
@@ -49,42 +64,87 @@ public class DashboardController implements Initializable {
         navigateTransactionBtn.setOnAction(event -> navigateTransaction());
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
-        addTransaction.setOnAction(event -> navigateToTransaction());
+
+        addTransaction.setOnAction(event -> navigateTransaction());
+
         profileList.setOnAction(event -> handleProfileList());
+
         transactionDAO = new TransactionDAO();
+        categoryDAO = new CategoryDAO();
+        profileDAO = new ProfileDAO();
 
-        // Lấy profileId từ SessionManager
-        int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
-        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(profileId);
+        // Lấy tên profile đang sử dụng từ cơ sở dữ liệu
+        Profile currentProfile = profileDAO.getProfileById(currentProfileId);
 
-        double totalIncome = 0.0;
-        double totalExpense = 0.0;
+        if (currentProfile != null) {
+            // Hiển thị tên profile đang sử dụng trong profileName1
+            profileName1.setText("Đang sử dụng: " + currentProfile.getName());
+        } else {
+            profileName1.setText("Chưa chọn profile");
+        }
 
-        // Lấy ngày hiện tại và tháng hiện tại
-        LocalDate currentDate = LocalDate.now();
-        int currentMonth = currentDate.getMonthValue();
-        int currentYear = currentDate.getYear();
+        // Lấy các profile còn lại và hiển thị profile thứ hai trong profileName2
+        loadProfileNames(currentProfileId);
 
-        // Duyệt qua các giao dịch và tính tổng thu/chi theo tháng
-        for (Transaction transaction : transactions) {
-            // Chuyển đổi ngày giao dịch từ String sang LocalDate
-            String transactionDateStr = transaction.getDate();
-            LocalDate transactionDate = LocalDate.parse(transactionDateStr, DateTimeFormatter.ISO_DATE);
+        transactionObservableList = FXCollections.observableArrayList();
+        transactionListView.setItems(transactionObservableList);
 
-            // Kiểm tra xem giao dịch có trong tháng hiện tại không
-            if (transactionDate.getMonthValue() == currentMonth && transactionDate.getYear() == currentYear) {
-                if ("Thu".equals(transaction.getType())) {
-                    totalIncome += transaction.getAmount();
-                } else if ("Chi".equals(transaction.getType())) {
-                    totalExpense += transaction.getAmount();
+        transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
+            @Override
+            protected void updateItem(Transaction item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // Lấy tên danh mục từ categoryId
+                    String categoryName = "Không có danh mục";  // Mặc định là "Không có danh mục"
+                    try {
+                        Category category = categoryDAO.getCategoryById(item.getCategoryId());
+                        if (category != null) {
+                            categoryName = category.getName();
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Không tìm thấy danh mục cho giao dịch: " + e.getMessage());
+                    }
+
+                    // Tạo một HBox để căn chỉnh các phần tử
+                    HBox hbox = new HBox();
+                    Label typeLabel = new Label(item.getType() + ": ");
+                    Label amountLabel = new Label(String.format("%,.0fđ", item.getAmount()));
+                    Label categoryLabel = new Label("(" + categoryName + ")");
+
+                    // Căn chỉnh các phần tử trong HBox
+                    hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
+                    HBox.setHgrow(amountLabel, Priority.ALWAYS); // Căn giữa amountLabel
+
+                    // Cập nhật lại nội dung của ListCell
+                    setGraphic(hbox);
                 }
             }
-        }
-        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+        });
+        loadTransactions();
+
     }
 
+    private void loadProfileNames(int currentProfileId) {
+        // Lấy danh sách tất cả profile từ cơ sở dữ liệu
+        List<Profile> profiles = profileDAO.getAllProfiles();
+
+        // Hiển thị profile thứ hai nếu có
+        if (profiles.size() > 1) {
+            for (Profile profile : profiles) {
+                // Nếu profile không phải là profile đang được sử dụng, hiển thị vào profileName2
+                if (profile.getId() != currentProfileId) {
+                    profileName2.setText(profile.getName());
+                    break;
+                }
+            }
+        } else {
+            profileName2.setText("Chưa có profile thứ hai");
+        }
+    }
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -95,7 +155,7 @@ public class DashboardController implements Initializable {
 
     private void navigateTransaction() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Transaction.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateTransactionBtn.getScene().getWindow();
@@ -113,7 +173,7 @@ public class DashboardController implements Initializable {
 
     private void navigateReport() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Report.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
@@ -131,7 +191,7 @@ public class DashboardController implements Initializable {
 
     private void navigateCategory() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Category.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Category.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
@@ -146,30 +206,10 @@ public class DashboardController implements Initializable {
                     "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
-    @FXML
-    private void navigateToTransaction() {
-        try {
-            // Tải màn hình Transaction.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) addTransaction.getScene().getWindow(); // Lấy Stage hiện tại
-            Scene scene = new Scene(root); // Tạo Scene mới
-            stage.setScene(scene); // Thay thế Scene cũ bằng Scene mới
-            stage.show(); // Hiển thị màn hình mới
-
-            // Lấy controller của Transaction.fxml
-            TransactionController transactionController = loader.getController();
-            transactionController.focusOnTextField(); // Đặt focus vào TextField trong Transaction
-
-        } catch (IOException e) {
-            // Hiển thị thông báo lỗi nếu có vấn đề khi chuyển màn hình
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
-        }
-    }
 
     private void navigateLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
@@ -189,7 +229,7 @@ public class DashboardController implements Initializable {
     private void handleProfileList() {
         try {
             // Tải trang Profile.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Profile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Profile.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới
@@ -203,5 +243,15 @@ public class DashboardController implements Initializable {
         }
     }
 
+    private void loadTransactions() {
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+        try {
+            // Lấy tất cả giao dịch của profile hiện tại từ database
+            transactionObservableList.setAll(transactionDAO.getLatestFiveTransactionsByProfile(currentProfileId));
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải giao dịch",
+                    "Đã xảy ra lỗi khi tải giao dịch từ cơ sở dữ liệu.");
+        }
+    }
 
 }

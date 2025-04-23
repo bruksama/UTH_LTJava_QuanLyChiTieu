@@ -99,7 +99,6 @@ public class ReportDAO {
                 );
                 transactions.add(t);
             }
-
         } catch (SQLException e) {
             System.err.println("Lỗi khi lấy giao dịch cho báo cáo: " + e.getMessage());
         }

@@ -39,10 +39,15 @@
     -fx-border-color: #FFFFCC;      /* Màu viền khi hover */
 }
 .color_profile{
-    -fx-background-color: linear-gradient(to bottom, #f8bbd0, #f48fb1);
+    -fx-background-color: linear-gradient(to bottom, #1C92D2, #f2fcf3);
 }
 .color_profile2{
-    -fx-background-color: linear-gradient(to bottom, #b3e5fc, #81d4fa);
+    -fx-background-color: linear-gradient(to bottom, #642B73, #C6426E);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-border-color: #574964;
+    -fx-border-width: 2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 .add{
     -fx-border-style: dashed;

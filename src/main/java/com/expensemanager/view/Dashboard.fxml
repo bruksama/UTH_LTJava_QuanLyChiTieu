@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
-<?import com.gluonhq.charm.glisten.mvc.View?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
@@ -9,6 +8,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
@@ -75,31 +75,30 @@
                               <Font name="Verdana Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Button fx:id="profileList" maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0" onAction="#handleProfileList">
+                        <Button fx:id="profileList" maxHeight="70.0" maxWidth="70.0" mnemonicParsing="false" onAction="#handleProfileList" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: trans; -fx-border-style: dashed;" translateX="30.0" translateY="23.0">
                            <graphic>
                               <FontAwesomeIconView glyphName="PLUS" size="3em" />
                            </graphic>
                         </Button>
                      </children>
                   </VBox>
-                  <VBox maxWidth="220.0" prefHeight="268.0" prefWidth="220.0">
+                  <VBox maxWidth="263.0" prefHeight="269.0" prefWidth="263.0">
                      <children>
-                        <AnchorPane maxHeight="150.0" maxWidth="220.0" prefHeight="150.0" prefWidth="220.0" styleClass="color_profile2">
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="214.0" styleClass="color_profile2">
                            <VBox.margin>
                               <Insets top="30.0" />
                            </VBox.margin>
                            <children>
-                              <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 1">
+                              <Label fx:id="profileName1" layoutX="14.0" layoutY="14.0" text="Tên profile 1">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
-                              <MenuButton layoutX="102.0" layoutY="101.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                  <MenuItem mnemonicParsing="false" text="Đổi tên" />
-                                </items>
+                              <MenuButton layoutX="120.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Xóa profle" />
+                                    <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                 </items>
                               </MenuButton>
                            </children>
                         </AnchorPane>
@@ -112,13 +111,13 @@
                               <Insets top="30.0" />
                            </VBox.margin>
                            <children>
-                              <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
-                              <Label layoutX="14.0" layoutY="14.0" text="Tên profile 2">
+                              <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="249.0" style="-fx-background-color: trans;" />
+                              <Label fx:id="profileName2" layoutX="14.0" layoutY="14.0" text="Chưa có profile thứ hai">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
-                              <MenuButton layoutX="108.0" layoutY="103.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
+                              <MenuButton layoutX="130.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
                                     <MenuItem mnemonicParsing="false" text="Xóa profle" />
                                     <MenuItem mnemonicParsing="false" text="Đổi tên" />
@@ -129,42 +128,45 @@
                      </children>
                   </VBox>
                   <Separator maxHeight="150.0" orientation="VERTICAL" prefHeight="150.0" prefWidth="6.0" translateY="30.0" />
-                  <VBox alignment="TOP_RIGHT" prefHeight="269.0" prefWidth="157.0">
+                  <VBox alignment="TOP_RIGHT" prefHeight="269.0" prefWidth="157.0" spacing="5.0">
                      <children>
-                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-45.0">
+                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-50.0">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label text="Thu" translateX="-129.0">
+                        <Label text="Thu" translateX="-115.0">
                            <font>
-                              <Font name="Verdana Bold" size="13.0" />
+                              <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
-                        <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP" translateX="-100.0">
+                        <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP" translateX="-92.0">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label fx:id="totalIncomeLabel" alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalIncomeLabel" alignment="TOP_LEFT" style="-fx-text-fill: #81c784; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-20.0">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Chi" translateX="-131.0">
+                        <Label text="Chi" translateX="-120.0">
                            <font>
-                              <Font name="Verdana Bold" size="13.0" />
+                              <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
-                        <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" translateX="-100.0" wrappingWidth="13.300000190734863">
+                        <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" translateX="-90.0" wrappingWidth="13.300000190734863">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </FontAwesomeIconView>
-                        <Label fx:id="totalExpenseLabel" alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-15.5">
+                        <Label fx:id="totalExpenseLabel" alignment="BASELINE_RIGHT" style="-fx-text-fill: #e57373; -fx-font-weight: bold;" text="0đ" translateX="-10.0" translateY="-20.0">
                            <font>
                               <Font name="Courier New" size="14.0" />
                            </font>
                         </Label>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </VBox>
                </children>
             </HBox>
@@ -178,12 +180,12 @@
                            </font>
                         </Label>
                         <BarChart>
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
+                           <xAxis>
+                              <CategoryAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
                         </BarChart>
                      </children>
                   </VBox>
@@ -194,79 +196,10 @@
                               <Font name="Calibri" size="18.0" />
                            </font>
                         </Label>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Ăn uống" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Shoping" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Dịch vụ" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Hóa đơn" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
-                        <View maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: trans;">
-                           <left>
-                              <Label prefHeight="20.0" text="Khác" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </left>
-                           <right>
-                              <Label text="50000" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font name="Verdana" size="12.0" />
-                                 </font></Label>
-                           </right>
-                        </View>
+                        <ListView fx:id="transactionListView" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </VBox>
-                  <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" onAction="#navigateToTransaction" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch">
+                  <Button fx:id="addTransaction" layoutX="583.0" layoutY="198.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: FCB454; -fx-text-fill: black;" text="Thêm giao dịch">
                      <font>
                         <Font name="Tahoma" size="12.0" />
                      </font></Button>
