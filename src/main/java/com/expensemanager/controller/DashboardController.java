@@ -65,7 +65,7 @@ public class DashboardController implements Initializable {
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
 
-        addTransaction.setOnAction(event -> navigateToTransaction());
+        addTransaction.setOnAction(event -> navigateTransaction());
 
         profileList.setOnAction(event -> handleProfileList());
 
@@ -155,7 +155,7 @@ public class DashboardController implements Initializable {
 
     private void navigateTransaction() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Transaction.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateTransactionBtn.getScene().getWindow();
@@ -173,7 +173,7 @@ public class DashboardController implements Initializable {
 
     private void navigateReport() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Report.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
@@ -191,7 +191,7 @@ public class DashboardController implements Initializable {
 
     private void navigateCategory() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Category.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Category.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
@@ -206,30 +206,10 @@ public class DashboardController implements Initializable {
                     "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
-    @FXML
-    private void navigateToTransaction() {
-        try {
-            // Tải màn hình Transaction.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) addTransaction.getScene().getWindow(); // Lấy Stage hiện tại
-            Scene scene = new Scene(root); // Tạo Scene mới
-            stage.setScene(scene); // Thay thế Scene cũ bằng Scene mới
-            stage.show(); // Hiển thị màn hình mới
-
-            // Lấy controller của Transaction.fxml
-            TransactionController transactionController = loader.getController();
-            transactionController.focusOnTextField(); // Đặt focus vào TextField trong Transaction
-
-        } catch (IOException e) {
-            // Hiển thị thông báo lỗi nếu có vấn đề khi chuyển màn hình
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
-        }
-    }
 
     private void navigateLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
@@ -249,7 +229,7 @@ public class DashboardController implements Initializable {
     private void handleProfileList() {
         try {
             // Tải trang Profile.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Profile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Profile.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới

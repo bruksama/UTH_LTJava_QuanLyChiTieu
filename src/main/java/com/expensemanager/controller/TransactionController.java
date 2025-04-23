@@ -73,7 +73,7 @@ public class TransactionController {
 
     private void navigateDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Dashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateDashboardBtn.getScene().getWindow();
@@ -91,7 +91,7 @@ public class TransactionController {
 
     private void navigateReport() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Report.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
@@ -109,7 +109,7 @@ public class TransactionController {
 
     private void navigateCategory() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Category.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Category.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
@@ -126,7 +126,7 @@ public class TransactionController {
     }
     private void navigateLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
