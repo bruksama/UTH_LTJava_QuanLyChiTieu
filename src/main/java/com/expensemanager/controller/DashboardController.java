@@ -8,13 +8,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.java.com.expensemanager.dao.CategoryDAO;
 import main.java.com.expensemanager.dao.ProfileDAO;
+import main.java.com.expensemanager.dao.ReportDAO;
 import main.java.com.expensemanager.model.Category;
 import main.java.com.expensemanager.model.Profile;
 import main.java.com.expensemanager.model.Transaction;
@@ -23,6 +27,7 @@ import main.java.com.expensemanager.util.SessionManagerUtil;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -55,10 +60,13 @@ public class DashboardController implements Initializable {
     private ObservableList<Transaction> transactionObservableList;
     @FXML
     private Button profileQuick;
+    @FXML
+    private VBox chartContainer;
 
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
+    private ReportDAO reportDAO;
 
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
@@ -74,6 +82,7 @@ public class DashboardController implements Initializable {
         transactionDAO = new TransactionDAO();
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
+        reportDAO = new ReportDAO();
 
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
@@ -127,6 +136,8 @@ public class DashboardController implements Initializable {
             }
         });
         loadTransactions();
+
+        loadChart();
 
     }
 
@@ -276,4 +287,67 @@ public class DashboardController implements Initializable {
         }
     }
 
+    private List<Transaction> getTransactionsInRange() {
+        LocalDate now = LocalDate.now();
+        String from = now.withDayOfMonth(1).toString();
+        String to = now.withDayOfMonth(now.lengthOfMonth()).toString();
+
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        try {
+            return reportDAO.getTransactionsByDateRange(currentProfileId, from, to);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());;
+            return new ArrayList<>();
+        }
+    }
+
+
+    private BarChart<String, Number> createBarChart(double totalIncome, double totalExpense) {
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Loại giao dịch");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Số tiền");
+
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Biểu đồ giao dịch");
+
+        // Dữ liệu cho biểu đồ
+        XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("Thu");
+        incomeSeries.getData().add(new XYChart.Data<>("Thu", totalIncome));
+
+        XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
+        expenseSeries.setName("Chi");
+        expenseSeries.getData().add(new XYChart.Data<>("Chi", totalExpense));
+
+        // Thêm dữ liệu vào biểu đồ
+        barChart.getData().addAll(incomeSeries, expenseSeries);
+
+//        barChart.setPrefSize(500, 400);  // Đặt kích thước cho biểu đồ
+
+        return barChart;
+    }
+
+    private void loadChart() {
+        List<Transaction> transactions = getTransactionsInRange();
+
+        double totalIncome = transactions.stream()
+                .filter(t -> "Thu".equalsIgnoreCase(t.getType()))
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+
+        double totalExpense = transactions.stream()
+                .filter(t -> "Chi".equalsIgnoreCase(t.getType()))
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+
+        totalIncomeLabel.setText(Math.round(totalIncome) + " VND");
+        totalExpenseLabel.setText(Math.round(totalExpense) + " VND");
+
+        BarChart<String, Number> barChart = createBarChart(totalIncome, totalExpense);
+        chartContainer.getChildren().clear();
+        chartContainer.getChildren().add(barChart);
+    }
 }
