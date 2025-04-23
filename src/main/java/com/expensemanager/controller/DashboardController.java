@@ -53,8 +53,6 @@ public class DashboardController implements Initializable {
     private ListView<Transaction> transactionListView;
     @FXML
     private ObservableList<Transaction> transactionObservableList;
-    @FXML
-    private Button profileQuick;
 
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
@@ -66,42 +64,14 @@ public class DashboardController implements Initializable {
         navigateTransactionBtn.setOnAction(event -> navigateTransaction());
         navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
-        addTransaction.setOnAction(event -> navigateToTransaction());
+
+        addTransaction.setOnAction(event -> navigateTransaction());
+
         profileList.setOnAction(event -> handleProfileList());
-        profileQuick.setOnAction(event -> switchProfile());
-        categoryDAO = new CategoryDAO();
+
         transactionDAO = new TransactionDAO();
+        categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
-        // Lấy profileId từ SessionManager
-        int profileId = SessionManagerUtil.getInstance().getCurrentProfileId();
-
-        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(profileId);
-
-        double totalIncome = 0.0;
-        double totalExpense = 0.0;
-
-        // Lấy ngày hiện tại và tháng hiện tại
-        LocalDate currentDate = LocalDate.now();
-        int currentMonth = currentDate.getMonthValue();
-        int currentYear = currentDate.getYear();
-
-        // Duyệt qua các giao dịch và tính tổng thu/chi theo tháng
-        for (Transaction transaction : transactions) {
-            // Chuyển đổi ngày giao dịch từ String sang LocalDate
-            String transactionDateStr = transaction.getDate();
-            LocalDate transactionDate = LocalDate.parse(transactionDateStr, DateTimeFormatter.ISO_DATE);
-
-            // Kiểm tra xem giao dịch có trong tháng hiện tại không
-            if (transactionDate.getMonthValue() == currentMonth && transactionDate.getYear() == currentYear) {
-                if ("Thu".equals(transaction.getType())) {
-                    totalIncome += transaction.getAmount();
-                } else if ("Chi".equals(transaction.getType())) {
-                    totalExpense += transaction.getAmount();
-                }
-            }
-        }
-        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
 
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
@@ -158,27 +128,6 @@ public class DashboardController implements Initializable {
 
     }
 
-    // Xử lý chuyển đổi giữa các profile khi nhấn nút `profileQuick`
-    @FXML
-    private void switchProfile() {
-        String currentProfileName = profileName1.getText().replace("Đang sử dụng: ", ""); // Lấy tên profile1
-        String profileName = profileName2.getText(); // Lấy tên profile2
-
-        // Đổi profile
-        if (!currentProfileName.isEmpty() && !profileName.equals("Chưa có profile thứ hai")) {
-            // Cập nhật session cho profile2
-            Profile profile = profileDAO.getProfileByUsername(profileName);
-            if (profile != null) {
-                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
-                SessionManagerUtil.getInstance().setCurrentProfileName(profile.getName());
-
-                // Cập nhật giao diện cho profileName1 và profileName2
-                profileName1.setText("Đang sử dụng: " + profile.getName());
-                profileName2.setText(currentProfileName); // Đổi profileName2 thành profile đang sử dụng
-            }
-        }
-    }
-
     private void loadProfileNames(int currentProfileId) {
         // Lấy danh sách tất cả profile từ cơ sở dữ liệu
         List<Profile> profiles = profileDAO.getAllProfiles();
@@ -196,7 +145,6 @@ public class DashboardController implements Initializable {
             profileName2.setText("Chưa có profile thứ hai");
         }
     }
-
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -207,7 +155,7 @@ public class DashboardController implements Initializable {
 
     private void navigateTransaction() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Transaction.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateTransactionBtn.getScene().getWindow();
@@ -225,7 +173,7 @@ public class DashboardController implements Initializable {
 
     private void navigateReport() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Report.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Report.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateReportBtn.getScene().getWindow();
@@ -243,7 +191,7 @@ public class DashboardController implements Initializable {
 
     private void navigateCategory() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Category.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Category.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateCategoryBtn.getScene().getWindow();
@@ -258,30 +206,10 @@ public class DashboardController implements Initializable {
                     "Đã xảy ra lỗi khi chuyển đến màn hình chính: " + e.getMessage());
         }
     }
-    @FXML
-    private void navigateToTransaction() {
-        try {
-            // Tải màn hình Transaction.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Transaction.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) addTransaction.getScene().getWindow(); // Lấy Stage hiện tại
-            Scene scene = new Scene(root); // Tạo Scene mới
-            stage.setScene(scene); // Thay thế Scene cũ bằng Scene mới
-            stage.show(); // Hiển thị màn hình mới
-
-            // Lấy controller của Transaction.fxml
-            TransactionController transactionController = loader.getController();
-            transactionController.focusOnTextField(); // Đặt focus vào TextField trong Transaction
-
-        } catch (IOException e) {
-            // Hiển thị thông báo lỗi nếu có vấn đề khi chuyển màn hình
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển màn hình", "Đã xảy ra lỗi khi chuyển đến giao diện Giao dịch: " + e.getMessage());
-        }
-    }
 
     private void navigateLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) navigateLoginBtn.getScene().getWindow();
@@ -301,7 +229,7 @@ public class DashboardController implements Initializable {
     private void handleProfileList() {
         try {
             // Tải trang Profile.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Profile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Profile.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới
@@ -314,6 +242,7 @@ public class DashboardController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển đến trang profile", "Đã xảy ra lỗi khi chuyển đến trang profile: " + e.getMessage());
         }
     }
+
     private void loadTransactions() {
         int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
         try {

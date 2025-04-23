@@ -170,7 +170,7 @@ public class LoginController {
     private void navigateDashboard() {
         try {
             // Tải màn hình Dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/com/expensemanager/view/Dashboard.fxml"));
             Parent root = loader.load();
 
             // Lấy cửa sổ hiện tại và thiết lập scene mới
