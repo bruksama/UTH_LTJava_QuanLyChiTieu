@@ -82,20 +82,19 @@
                         </Button>
                      </children>
                   </VBox>
-                  <VBox maxWidth="220.0" prefHeight="268.0" prefWidth="220.0">
+                  <VBox maxWidth="263.0" prefHeight="269.0" prefWidth="263.0">
                      <children>
-                        <AnchorPane maxHeight="150.0" maxWidth="220.0" prefHeight="150.0" prefWidth="220.0" styleClass="color_profile2">
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="214.0" styleClass="color_profile2">
                            <VBox.margin>
                               <Insets top="30.0" />
                            </VBox.margin>
                            <children>
-                              <Button layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="150.0" prefWidth="220.0" style="-fx-background-color: trans;" />
                               <Label fx:id="profileName1" layoutX="14.0" layoutY="14.0" text="Tên profile 1">
                                  <font>
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
-                              <MenuButton layoutX="102.0" layoutY="101.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
+                              <MenuButton layoutX="120.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
                                     <MenuItem mnemonicParsing="false" text="Xóa profle" />
                                     <MenuItem mnemonicParsing="false" text="Đổi tên" />
@@ -118,7 +117,7 @@
                                     <Font name="Candara Bold Italic" size="24.0" />
                                  </font>
                               </Label>
-                              <MenuButton layoutX="108.0" layoutY="103.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
+                              <MenuButton layoutX="130.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
                                     <MenuItem mnemonicParsing="false" text="Xóa profle" />
                                     <MenuItem mnemonicParsing="false" text="Đổi tên" />
@@ -131,16 +130,16 @@
                   <Separator maxHeight="150.0" orientation="VERTICAL" prefHeight="150.0" prefWidth="6.0" translateY="30.0" />
                   <VBox alignment="TOP_RIGHT" prefHeight="269.0" prefWidth="157.0" spacing="5.0">
                      <children>
-                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-55.0">
+                        <Label style="-fx-text-fill: #0b12e1;" text="Tháng này" translateX="-50.0">
                            <font>
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label text="Thu" translateX="-125.0">
+                        <Label text="Thu" translateX="-115.0">
                            <font>
                               <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
-                        <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP" translateX="-100.0">
+                        <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP" translateX="-92.0">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
@@ -150,11 +149,11 @@
                               <Font name="Courier New" size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Chi" translateX="-130.0">
+                        <Label text="Chi" translateX="-120.0">
                            <font>
                               <Font name="Verdana Bold" size="18.0" />
                            </font></Label>
-                        <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" translateX="-100.0" wrappingWidth="13.300000190734863">
+                        <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" translateX="-90.0" wrappingWidth="13.300000190734863">
                            <font>
                               <Font size="24.0" />
                            </font>
