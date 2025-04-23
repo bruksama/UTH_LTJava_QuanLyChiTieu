@@ -218,6 +218,19 @@ public class ProfileDAO {
 
     // Xóa một profile theo ID
     public boolean deleteProfile(int profileId) {
+        CategoryDAO categoryDAO = new CategoryDAO();
+        TransactionDAO transactionDAO = new TransactionDAO();
+        ReportDAO reportDAO = new ReportDAO();
+
+        // Xóa tất cả các category liên quan đến profile
+        categoryDAO.deleteByProfileId(profileId);
+
+        // Xóa tất cả các transaction liên quan đến profile
+        transactionDAO.deleteTransaction(profileId);
+
+        // Xóa tất cả các report liên quan đến profile
+        reportDAO.deleteReport(profileId);
+
         String query = "DELETE FROM profiles WHERE id = ?";
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -232,21 +245,68 @@ public class ProfileDAO {
         }
     }
 
-
     public boolean deleteAllProfiles() {
-        String query = "DELETE FROM profiles";  // Truy vấn để xóa tất cả profile
+        // Lấy danh sách tất cả profile
+        List<Profile> profiles = getAllProfiles();
 
-        try (Connection conn = dbConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        Connection conn = null;  // Khai báo biến conn ở phạm vi ngoài try-catch
 
-            int affectedRows = stmt.executeUpdate();  // Thực hiện câu lệnh xóa
+        try {
+            // Mở kết nối
+            conn = dbConnector.getConnection();
 
-            return affectedRows > 0;  // Nếu có ít nhất 1 dòng bị xóa thì trả về true
+            // Bắt đầu transaction
+            conn.setAutoCommit(false);
+
+            // Duyệt qua từng profile và xóa các dữ liệu liên quan
+            for (Profile profile : profiles) {
+                // Xóa tất cả các category liên quan đến profile
+                CategoryDAO categoryDAO = new CategoryDAO();
+                categoryDAO.deleteByProfileId(profile.getId());
+
+                // Xóa tất cả các transaction liên quan đến profile
+                TransactionDAO transactionDAO = new TransactionDAO();
+                transactionDAO.deleteTransaction(profile.getId());
+
+                // Xóa tất cả các report liên quan đến profile
+                ReportDAO reportDAO = new ReportDAO();
+                reportDAO.deleteReport(profile.getId());
+
+                // Cuối cùng xóa profile khỏi cơ sở dữ liệu
+                String query = "DELETE FROM profiles WHERE id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                    stmt.setInt(1, profile.getId());
+                    stmt.executeUpdate();
+                }
+            }
+
+            // Cam kết transaction
+            conn.commit();
+            return true;  // Trả về true nếu tất cả các profile và dữ liệu liên quan đều được xóa thành công
         } catch (SQLException e) {
-            System.err.println("Error deleting all profiles: " + e.getMessage());
+            e.printStackTrace();
+            try {
+                // Nếu có lỗi xảy ra, rollback transaction
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             return false;  // Nếu có lỗi xảy ra, trả về false
+        } finally {
+            try {
+                // Đảm bảo đặt auto commit trở lại true
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
 
 }
 

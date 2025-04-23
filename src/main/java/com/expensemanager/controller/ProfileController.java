@@ -36,7 +36,7 @@ public class ProfileController {
     public void initialize() {
         CategoryDAO categoryDAO = new CategoryDAO();
         ProfileDAO profileDAO = new ProfileDAO();
-        profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO(),new main.java.com.expensemanager.dao.CategoryDAO());
+        profileService = new ProfileService(new main.java.com.expensemanager.dao.ProfileDAO(),new main.java.com.expensemanager.dao.CategoryDAO(),new main.java.com.expensemanager.dao.TransactionDAO(),new main.java.com.expensemanager.dao.ReportDAO());
 
         // Tải danh sách các profile hiện có từ cơ sở dữ liệu
         loadProfiles();

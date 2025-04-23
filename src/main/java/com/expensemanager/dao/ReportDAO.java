@@ -14,6 +14,9 @@ public class ReportDAO {
         this.connector = ConnectorDAO.getInstance();
     }
 
+    public ReportDAO() {
+        this.connector = ConnectorDAO.getInstance();  // Lấy đối tượng connector từ singleton
+    }
     // Thêm báo cáo
     public boolean addReport(Report report) {
         String sql = "INSERT INTO reports (profileId, name, description, totalTransaction, totalAmount, startDate, endDate) " +
