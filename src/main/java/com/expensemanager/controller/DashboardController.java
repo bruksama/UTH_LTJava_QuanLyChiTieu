@@ -53,6 +53,8 @@ public class DashboardController implements Initializable {
     private ListView<Transaction> transactionListView;
     @FXML
     private ObservableList<Transaction> transactionObservableList;
+    @FXML
+    private Button profileQuick;
 
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
@@ -68,7 +70,7 @@ public class DashboardController implements Initializable {
         addTransaction.setOnAction(event -> navigateTransaction());
 
         profileList.setOnAction(event -> handleProfileList());
-
+        profileQuick.setOnAction(event -> switchProfile());
         transactionDAO = new TransactionDAO();
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
@@ -126,6 +128,26 @@ public class DashboardController implements Initializable {
         });
         loadTransactions();
 
+    }
+
+    @FXML
+    private void switchProfile() {
+        String currentProfileName = profileName1.getText().replace("Đang sử dụng: ", ""); // Lấy tên profile1
+        String profileName = profileName2.getText(); // Lấy tên profile2
+
+        // Đổi profile
+        if (!currentProfileName.isEmpty() && !profileName.equals("Chưa có profile thứ hai")) {
+            // Cập nhật session cho profile2
+            Profile profile = profileDAO.getProfileByUsername(profileName);
+            if (profile != null) {
+                SessionManagerUtil.getInstance().setCurrentProfileId(profile.getId());
+                SessionManagerUtil.getInstance().setCurrentProfileName(profile.getName());
+
+                // Cập nhật giao diện cho profileName1 và profileName2
+                profileName1.setText("Đang sử dụng: " + profile.getName());
+                profileName2.setText(currentProfileName); // Đổi profileName2 thành profile đang sử dụng
+            }
+        }
     }
 
     private void loadProfileNames(int currentProfileId) {
