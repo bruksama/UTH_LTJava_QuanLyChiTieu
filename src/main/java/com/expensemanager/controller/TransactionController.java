@@ -73,6 +73,7 @@ public class TransactionController {
         transactionObservableList = FXCollections.observableArrayList();
         transactionListView.setItems(transactionObservableList);
         amountField.setOnAction(event -> handleAddTransaction());
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> updateTotalByDate());
         transactionListView.setOnContextMenuRequested(event -> {
             Transaction selectedTransaction = transactionListView.getSelectionModel().getSelectedItem();
 
@@ -92,6 +93,8 @@ public class TransactionController {
 
                 if (empty || item == null) {
                     setText(null);
+                    setGraphic(null);
+                    setContextMenu(null);
                 } else {
                     String categoryName = "Không có danh mục";
 
@@ -115,18 +118,18 @@ public class TransactionController {
                     hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
                     HBox.setHgrow(amountLabel, Priority.ALWAYS);
                     setGraphic(hbox);
+
+                    ContextMenu contextMenu = new ContextMenu();
+                    MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
+                    deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item));
+                    contextMenu.getItems().add(deleteMenuItem);
+                    setContextMenu(contextMenu);
                 }
-
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
-                deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item));
-
-                contextMenu.getItems().add(deleteMenuItem);
-                setContextMenu(contextMenu);
             }
         });
         loadCategories();
         loadTransactions();
+        updateTotalByDate();
     }
     @FXML
     private void loadTransactions() {
@@ -192,6 +195,7 @@ public class TransactionController {
         if (success) {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm giao dịch thành công", "Giao dịch đã được thêm vào cơ sở dữ liệu.");
             loadTransactions();
+            updateTotalByDate();
         } else {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm giao dịch", "Đã xảy ra lỗi khi thêm giao dịch vào cơ sở dữ liệu.");
         }
@@ -210,8 +214,8 @@ public class TransactionController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             boolean success = transactionDAO.deleteTransaction(transaction.getId());
             if (success) {
-                transactionObservableList.remove(transaction);
                 loadTransactions();
+                updateTotalByDate();
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa giao dịch thành công", "Giao dịch đã được xóa thành công.");
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
@@ -238,14 +242,15 @@ public class TransactionController {
             amountField.setText(currentText.substring(0, currentText.length() - 1));
         }
     }
+    private void updateTotalByDate() {
+        LocalDate selectedDate = (datePicker.getValue() != null) ? datePicker.getValue() : LocalDate.now();
+        String formattedDate = selectedDate.toString();
 
-    private void updateTotalsByDate() {
-        String selectedDate = datePicker.getValue().toString();
-        double totalIncome = transactionDAO.getTotalIncomeByDate(selectedDate, currentProfileId);
-        double totalExpense = transactionDAO.getTotalExpenseByDate(selectedDate, currentProfileId);
+        double totalIncome = transactionDAO.getTotalIncomeByDate(formattedDate, currentProfileId);
+        double totalExpense = transactionDAO.getTotalExpenseByDate(formattedDate, currentProfileId);
 
-        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+        totalIncomeLabel.setText(Math.round(totalIncome) + " VND");
+        totalExpenseLabel.setText(Math.round(totalExpense) + " VND");
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
