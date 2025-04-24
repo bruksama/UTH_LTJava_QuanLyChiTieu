@@ -130,13 +130,13 @@ public class TransactionController {
 
         loadCategories();
         loadTransactions();
-        updateTotalByDate();
     }
 
     @FXML
     private void loadTransactions() {
         List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
         transactionObservableList.setAll(transactions);
+        updateTotalByDate();
     }
 
     private void loadCategories() {
@@ -197,7 +197,6 @@ public class TransactionController {
         if (success) {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm giao dịch thành công", "Giao dịch đã được thêm vào cơ sở dữ liệu.");
             loadTransactions();
-            updateTotalByDate();
         } else {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm giao dịch", "Đã xảy ra lỗi khi thêm giao dịch vào cơ sở dữ liệu.");
         }
@@ -217,7 +216,6 @@ public class TransactionController {
             boolean success = transactionDAO.deleteTransaction(transaction.getId());
             if (success) {
                 loadTransactions();
-                updateTotalByDate();
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa giao dịch thành công", "Giao dịch đã được xóa thành công.");
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa giao dịch", "Đã xảy ra lỗi khi xóa giao dịch.");
