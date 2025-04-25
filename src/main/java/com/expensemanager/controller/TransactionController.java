@@ -65,26 +65,29 @@ public class TransactionController {
         categoryDAO = new CategoryDAO();
         currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
 
-        navigateReturnBtn.setOnAction(event -> navigateLogin());
-        navigateDashboardBtn.setOnAction(event -> navigateDashboard());
-        navigateCategoryBtn.setOnAction(event -> navigateCategory());
-        navigateReportBtn.setOnAction(event -> navigateReport());
-        addButton.setOnAction(event -> handleAddTransaction());
+        navigateReturnBtn.setOnAction(e -> navigateLogin());
+        navigateDashboardBtn.setOnAction(e -> navigateDashboard());
+        navigateCategoryBtn.setOnAction(e -> navigateCategory());
+        navigateReportBtn.setOnAction(e -> navigateReport());
+        addButton.setOnAction(e -> handleAddTransaction());
+
         transactionObservableList = FXCollections.observableArrayList();
         transactionListView.setItems(transactionObservableList);
-        amountField.setOnAction(event -> handleAddTransaction());
-        transactionListView.setOnContextMenuRequested(event -> {
-            Transaction selectedTransaction = transactionListView.getSelectionModel().getSelectedItem();
 
-            if (selectedTransaction != null) {
+        amountField.setOnAction(e -> handleAddTransaction());
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> updateTotalByDate());
+
+        transactionListView.setOnContextMenuRequested(event -> {
+            Transaction selected = transactionListView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem deleteItem = new MenuItem("Xóa giao dịch");
-                deleteItem.setOnAction(e -> handleDeleteTransaction(selectedTransaction));
-
+                deleteItem.setOnAction(e -> handleDeleteTransaction(selected));
                 contextMenu.getItems().add(deleteItem);
                 contextMenu.show(transactionListView, event.getScreenX(), event.getScreenY());
             }
         });
+
         transactionListView.setCellFactory(param -> new ListCell<Transaction>() {
             @Override
             protected void updateItem(Transaction item, boolean empty) {
@@ -92,46 +95,48 @@ public class TransactionController {
 
                 if (empty || item == null) {
                     setText(null);
-                } else {
-                    String categoryName = "Không có danh mục";
-
-                    try {
-                        if (categoryDAO.isCategoryExist(item.getCategoryId(), currentProfileId)) {
-                            Category category = categoryDAO.getCategoryById(item.getCategoryId());
-                            if (category != null) {
-                                categoryName = category.getName();
-                            }
-                        } else {
-                            System.err.println("Danh mục với ID " + item.getCategoryId() + " không tồn tại.");
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Lỗi khi lấy danh mục: " + e.getMessage());
-                    }
-
-                    HBox hbox = new HBox();
-                    Label typeLabel = new Label(item.getType() + ": ");
-                    Label amountLabel = new Label(String.format("%,.0fđ", item.getAmount()));
-                    Label categoryLabel = new Label("(" + categoryName + ")");
-                    hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
-                    HBox.setHgrow(amountLabel, Priority.ALWAYS);
-                    setGraphic(hbox);
+                    setGraphic(null);
+                    setContextMenu(null);
+                    return;
                 }
 
-                ContextMenu contextMenu = new ContextMenu();
-                MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
-                deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item));
+                String categoryName = "Không có danh mục";
+                try {
+                    if (categoryDAO.isCategoryExist(item.getCategoryId(), currentProfileId)) {
+                        Category category = categoryDAO.getCategoryById(item.getCategoryId());
+                        if (category != null) categoryName = category.getName();
+                    } else {
+                        System.err.println("Danh mục với ID " + item.getCategoryId() + " không tồn tại.");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Lỗi khi lấy danh mục: " + e.getMessage());
+                }
 
-                contextMenu.getItems().add(deleteMenuItem);
+                HBox hbox = new HBox();
+                Label typeLabel = new Label(item.getType() + ": ");
+                Label amountLabel = new Label(String.format("%,.0fđ", item.getAmount()));
+                Label categoryLabel = new Label("(" + categoryName + ")");
+                hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
+                HBox.setHgrow(amountLabel, Priority.ALWAYS);
+                setGraphic(hbox);
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem deleteItem = new MenuItem("Xóa giao dịch");
+                deleteItem.setOnAction(e -> handleDeleteTransaction(item));
+                contextMenu.getItems().add(deleteItem);
                 setContextMenu(contextMenu);
             }
         });
+
         loadCategories();
         loadTransactions();
     }
+
     @FXML
     private void loadTransactions() {
         List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
         transactionObservableList.setAll(transactions);
+        updateTotalByDate();
     }
 
     private void loadCategories() {
@@ -210,7 +215,6 @@ public class TransactionController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             boolean success = transactionDAO.deleteTransaction(transaction.getId());
             if (success) {
-                transactionObservableList.remove(transaction);
                 loadTransactions();
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa giao dịch thành công", "Giao dịch đã được xóa thành công.");
             } else {
@@ -238,14 +242,15 @@ public class TransactionController {
             amountField.setText(currentText.substring(0, currentText.length() - 1));
         }
     }
+    private void updateTotalByDate() {
+        LocalDate selectedDate = (datePicker.getValue() != null) ? datePicker.getValue() : LocalDate.now();
+        String formattedDate = selectedDate.toString();
 
-    private void updateTotalsByDate() {
-        String selectedDate = datePicker.getValue().toString();
-        double totalIncome = transactionDAO.getTotalIncomeByDate(selectedDate, currentProfileId);
-        double totalExpense = transactionDAO.getTotalExpenseByDate(selectedDate, currentProfileId);
+        double totalIncome = transactionDAO.getTotalIncomeByDate(formattedDate, currentProfileId);
+        double totalExpense = transactionDAO.getTotalExpenseByDate(formattedDate, currentProfileId);
 
-        totalIncomeLabel.setText(String.format("%,.0fđ", totalIncome));
-        totalExpenseLabel.setText(String.format("%,.0fđ", totalExpense));
+        totalIncomeLabel.setText(Math.round(totalIncome) + " VND");
+        totalExpenseLabel.setText(Math.round(totalExpense) + " VND");
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {

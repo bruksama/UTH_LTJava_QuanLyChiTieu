@@ -79,21 +79,16 @@
     -fx-selection-bar: #7ED4AD;       /* Màu sắc khi chọn mục */
 }
 
-/* Định dạng từng mục trong ListView */
 .list-view .cell {
     -fx-background-color: white;      /* Màu nền của các mục trong ListView */
     -fx-text-fill: #333333;           /* Màu chữ đen */
     -fx-padding: 5px 10px;            /* Padding trong mỗi mục */
     -fx-border-radius: 3px;           /* Bo tròn góc cho từng mục */
 }
-
-/* Màu khi hover vào mục */
 .list-view .cell:hover {
     -fx-background-color: #f1f1f1;    /* Màu nền khi di chuột qua mục */
     -fx-text-fill: #ff9800;            /* Màu chữ khi hover */
 }
-
-/* Màu khi mục được chọn */
 .list-view .cell:selected {
     -fx-background-color: #7ED4AD;    /* Màu nền khi mục được chọn */
     -fx-text-fill: white;              /* Màu chữ khi mục được chọn */
@@ -191,7 +186,10 @@
     -fx-text-fill: black;
     -fx-border-color: #594545;
 }
-.button-add-transaction:pressed{
-    -fx-background-color: #874C62;
+.button-add-transaction{
+    -fx-background-color: #7C4585;
 }
-
+.button-add-transaction:hover{
+    -fx-background-color: #874C62;
+    -fx-border-color: #7F669D;
+}
