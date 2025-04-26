@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,6 +50,9 @@ public class TransactionController {
 
     @FXML
     private TextField amountField;
+
+    @FXML
+    private TextField noteField;
 
     @FXML
     private Label totalIncomeLabel;
@@ -112,18 +116,29 @@ public class TransactionController {
                     System.err.println("Lỗi khi lấy danh mục: " + e.getMessage());
                 }
 
-                HBox hbox = new HBox();
                 Label typeLabel = new Label(item.getType() + ": ");
                 Label amountLabel = new Label(String.format("%,.0fđ", item.getAmount()));
                 Label categoryLabel = new Label("(" + categoryName + ")");
-                hbox.getChildren().addAll(typeLabel, amountLabel, categoryLabel);
+
+                HBox topLine = new HBox(typeLabel, amountLabel, categoryLabel);
                 HBox.setHgrow(amountLabel, Priority.ALWAYS);
-                setGraphic(hbox);
+
+                VBox vbox = new VBox();
+                vbox.getChildren().add(topLine);
+
+                String note = item.getDescription();
+                if (note != null && !note.trim().isEmpty()) {
+                    Label noteLabel = new Label("Ghi chú: " + note);
+                    noteLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #555;");
+                    vbox.getChildren().add(noteLabel);
+                }
+
+                setGraphic(vbox);
 
                 ContextMenu contextMenu = new ContextMenu();
-                MenuItem deleteItem = new MenuItem("Xóa giao dịch");
-                deleteItem.setOnAction(e -> handleDeleteTransaction(item));
-                contextMenu.getItems().add(deleteItem);
+                MenuItem deleteMenuItem = new MenuItem("Xóa giao dịch");
+                deleteMenuItem.setOnAction(event -> handleDeleteTransaction(item));
+                contextMenu.getItems().add(deleteMenuItem);
                 setContextMenu(contextMenu);
             }
         });
@@ -151,12 +166,14 @@ public class TransactionController {
     private void handleAddTransaction() {
         String amountText = amountField.getText().trim();
         String selectedCategoryName = categoryComboBox.getValue();
+        String note = noteField.getText().trim(); // <- Lấy thêm nội dung ghi chú
 
         if (amountText.isEmpty() || selectedCategoryName == null) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thông tin chưa đầy đủ",
                     "Vui lòng nhập số tiền và chọn danh mục.");
             return;
         }
+
         double amount = 0;
         try {
             amount = Double.parseDouble(amountText);
@@ -170,11 +187,11 @@ public class TransactionController {
                     "Vui lòng nhập một số tiền hợp lệ.");
             return;
         }
+
         int categoryId = -1;
         String transactionType = "";
 
         List<Category> categories = categoryDAO.getCategoriesByProfile(currentProfileId);
-
         for (Category category : categories) {
             if (category.getName().equals(selectedCategoryName)) {
                 categoryId = category.getId();
@@ -182,14 +199,19 @@ public class TransactionController {
                 break;
             }
         }
+
         if (categoryId == -1) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Danh mục không tồn tại", "Danh mục bạn chọn không có trong cơ sở dữ liệu.");
             return;
         }
+
         String transactionDateString = LocalDate.now().toString();
+        if (note.isEmpty()) {
+            note = "Giao dịch không ghi chú"; // Nếu rỗng, cho 1 note mặc định
+        }
 
         Transaction newTransaction = new Transaction(
-                0, currentProfileId, transactionType, categoryId, "Mô tả giao dịch", transactionDateString, amount
+                0, currentProfileId, transactionType, categoryId, note, transactionDateString, amount
         );
 
         boolean success = transactionDAO.addTransaction(newTransaction);
@@ -200,8 +222,10 @@ public class TransactionController {
         } else {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm giao dịch", "Đã xảy ra lỗi khi thêm giao dịch vào cơ sở dữ liệu.");
         }
+
         amountField.clear();
-        categoryComboBox.setValue("Chọn danh mục");
+        noteField.clear();
+        categoryComboBox.getSelectionModel().clearSelection();
     }
 
     private void handleDeleteTransaction(Transaction transaction) {
@@ -233,6 +257,11 @@ public class TransactionController {
     @FXML
     private void handleClear() {
         amountField.clear();
+    }
+
+    @FXML
+    private void handleClearNote() {
+        noteField.clear();
     }
 
     @FXML
