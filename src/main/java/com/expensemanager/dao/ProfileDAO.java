@@ -226,7 +226,7 @@ public class ProfileDAO {
         categoryDAO.deleteByProfileId(profileId);
 
         // Xóa tất cả các transaction liên quan đến profile
-        transactionDAO.deleteTransaction(profileId);
+        transactionDAO.deleteAllTransactionByProfileId(profileId);
 
         // Xóa tất cả các report liên quan đến profile
         reportDAO.deleteReport(profileId);
@@ -266,7 +266,7 @@ public class ProfileDAO {
 
                 // Xóa tất cả các transaction liên quan đến profile
                 TransactionDAO transactionDAO = new TransactionDAO();
-                transactionDAO.deleteTransaction(profile.getId());
+                transactionDAO.deleteAllTransactionByProfileId(profile.getId());
 
                 // Xóa tất cả các report liên quan đến profile
                 ReportDAO reportDAO = new ReportDAO();
