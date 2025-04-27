@@ -23,11 +23,14 @@ public class CategoryDAO {
     private static final String SELECT_BY_PROFILE_SQL =
             "SELECT * FROM categories WHERE profileId = ? ORDER BY name";
 
-    private static final String SELECT_BY_ID =
+    private static final String SELECT_BY_ID_SQL =
             "SELECT * FROM categories WHERE id = ?";
 
     private static final String CHECK_CATEGORY_EXIST =
             "SELECT COUNT(*) FROM categories WHERE id = ? AND profileId = ?";
+
+    private static final String SELECT_BY_TYPE_SQL =
+            "SELECT * FROM categories WHERE type = ? AND profileId = ? ORDER BY name";
 
     public CategoryDAO() {
         this.dbConnector = ConnectorDAO.getInstance();
@@ -91,7 +94,7 @@ public class CategoryDAO {
 
     public Category getCategoryById(int id) {
         try (Connection conn = dbConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID)) {
+             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -112,6 +115,26 @@ public class CategoryDAO {
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_BY_PROFILE_SQL)) {
             stmt.setInt(1, profileId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    categories.add(extractCategory(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return categories;
+    }
+
+    public List<Category> getCategoriesByType(String type, int profileId) {
+        List<Category> categories = new ArrayList<>();
+
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_TYPE_SQL)) {
+            stmt.setString(1, type);
+            stmt.setInt(2, profileId);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

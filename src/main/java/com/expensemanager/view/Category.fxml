@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -65,10 +67,23 @@
          <children>
             <VBox prefHeight="550.0" prefWidth="502.0" styleClass=".container" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" HBox.hgrow="ALWAYS">
                <children>
-                  <ListView fx:id="catList" maxHeight="1.7976931348623157E308" prefWidth="498.0" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" VBox.vgrow="ALWAYS">
+                  <TabPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="502.0" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab fx:id="tabAll" text="Tất cả" />
+                      <Tab fx:id="tabIncome" text="Thu" />
+                        <Tab fx:id="tabExpense" text="Chi" />
+                    </tabs>
+                     <VBox.margin>
+                        <Insets bottom="-1.0" />
+                     </VBox.margin>
+                  </TabPane>
+                  <ListView fx:id="catList" maxHeight="1.7976931348623157E308" prefWidth="502.0" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" VBox.vgrow="ALWAYS">
                      <opaqueInsets>
                         <Insets left="10.0" top="10.0" />
                      </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="-1.0" />
+                     </VBox.margin>
                   </ListView>
                </children>
             </VBox>
@@ -112,14 +127,18 @@
                               <Font name="Be Vietnam Pro Regular" size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="catRemoveAllBtn" layoutX="108.0" layoutY="277.0" mnemonicParsing="false" prefHeight="51.0" styleClass="cancel-btn" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" text="Xóa tất cả danh mục" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                     </children>
+                  </AnchorPane>
+                  <TextField fx:id="catId" disable="true" editable="false" visible="false" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="catRemoveAllBtn" layoutX="30.0" layoutY="120.0" mnemonicParsing="false" prefHeight="51.0" styleClass="cancel-btn" stylesheets="@../../../../resources/com/expensemanager/css/CategoryView.css" text="Xóa tất cả danh mục" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
                            <font>
                               <Font name="Be Vietnam Pro Regular" size="14.0" />
                            </font>
                         </Button>
                      </children>
                   </AnchorPane>
-                  <TextField fx:id="catId" disable="true" editable="false" visible="false" />
                </children>
                <HBox.margin>
                   <Insets />

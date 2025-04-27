@@ -50,6 +50,12 @@ public class CategoryController implements Initializable {
     private ToggleButton navigateTransactionBtn;
     @FXML
     private Button navigateLoginBtn;
+    @FXML
+    private Tab tabAll;
+    @FXML
+    private Tab tabIncome;
+    @FXML
+    private Tab tabExpense;
 
     private CategoryDAO categoryDAO;
     private ProfileDAO profileDAO;
@@ -66,7 +72,7 @@ public class CategoryController implements Initializable {
         catList.setItems(categoryObservableList);
 
         catTypeMenu.getItems().clear();
-        catTypeMenu.getItems().addAll("Thu", "Chi");
+        catTypeMenu.getItems().setAll("Thu", "Chi");
 
         catList.setCellFactory(param -> new ListCell<Category>() {
             @Override
@@ -94,20 +100,35 @@ public class CategoryController implements Initializable {
             }
         });
 
-        // Thêm sự kiện khi click vào khu vực trống trên form
         catParent.setOnMouseClicked(this::handleMouseClick);
 
-        // Gắn sự kiện cho nút Update
         catUpdateBtn.setOnAction(this::handleUpdateButton);
 
-        // Gắn sự kiện cho nút Delete
         catDeleteBtn.setOnAction(this::handleDeleteButton);
         catRemoveAllBtn.setOnAction(this::handleRemoveAllButton);
 
         navigateDashboardBtn.setOnAction(event -> navigateDashboard());
-        navigateTransactionBtn.setOnAction(event -> navigateTransaction ());
-        navigateReportBtn.setOnAction(event -> navigateReport ());
+        navigateTransactionBtn.setOnAction(event -> navigateTransaction());
+        navigateReportBtn.setOnAction(event -> navigateReport());
         navigateLoginBtn.setOnAction(event -> navigateLogin());
+
+        tabAll.setOnSelectionChanged(event -> {
+            if (tabAll.isSelected()) {
+                loadCategories();
+            }
+        });
+
+        tabIncome.setOnSelectionChanged(event -> {
+            if (tabIncome.isSelected()) {
+                loadIncomeCategories();
+            }
+        });
+
+        tabExpense.setOnSelectionChanged(event -> {
+            if (tabExpense.isSelected()) {
+                loadExpenseCategories();
+            }
+        });
 
         loadCategories();
     }
@@ -119,7 +140,35 @@ public class CategoryController implements Initializable {
         if (profileDAO.isProfileExist(currentProfileId)) {
             List<Category> categories = categoryDAO.getCategoriesByProfile(currentProfileId);
             categoryObservableList.clear();
-            categoryObservableList.addAll(categories);
+            categoryObservableList.setAll(categories);
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại",
+                    "Không thể tải danh mục vì profile không tồn tại.");
+        }
+    }
+
+    private void loadIncomeCategories() {
+
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        if (profileDAO.isProfileExist(currentProfileId)) {
+            List<Category> categories = categoryDAO.getCategoriesByType("Thu", currentProfileId);
+            categoryObservableList.clear();
+            categoryObservableList.setAll(categories);
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại",
+                    "Không thể tải danh mục vì profile không tồn tại.");
+        }
+    }
+
+    private void loadExpenseCategories() {
+
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+
+        if (profileDAO.isProfileExist(currentProfileId)) {
+            List<Category> categories = categoryDAO.getCategoriesByType("Chi", currentProfileId);
+            categoryObservableList.clear();
+            categoryObservableList.setAll(categories);
         } else {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Profile không tồn tại",
                     "Không thể tải danh mục vì profile không tồn tại.");
@@ -186,7 +235,13 @@ public class CategoryController implements Initializable {
                                 "Cập nhật danh mục thành công",
                                 "Danh mục đã được cập nhật thành công.");
 
-                        loadCategories();
+                        if (tabIncome.isSelected()) {
+                            loadIncomeCategories();
+                        } else if (tabExpense.isSelected()) {
+                            loadExpenseCategories();
+                        } else {
+                            loadCategories();
+                        }
                         clearFields();
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể cập nhật danh mục",
@@ -208,7 +263,13 @@ public class CategoryController implements Initializable {
                         "Tạo danh mục thành công",
                         "Danh mục mới đã được tạo thành công.");
 
-                loadCategories();
+                if (tabIncome.isSelected()) {
+                    loadIncomeCategories();
+                } else if (tabExpense.isSelected()) {
+                    loadExpenseCategories();
+                } else {
+                    loadCategories();
+                }
                 clearFields();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tạo danh mục",
@@ -243,7 +304,13 @@ public class CategoryController implements Initializable {
                         "Xóa danh mục thành công",
                         "Danh mục đã được xóa thành công.");
 
-                loadCategories();
+                if (tabIncome.isSelected()) {
+                    loadIncomeCategories();
+                } else if (tabExpense.isSelected()) {
+                    loadExpenseCategories();
+                } else {
+                    loadCategories();
+                }
                 clearFields();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa danh mục",
@@ -270,7 +337,13 @@ public class CategoryController implements Initializable {
                     "Xóa danh mục thành công",
                     "Danh mục đã được xóa thành công.");
 
-            loadCategories();
+            if (tabIncome.isSelected()) {
+                loadIncomeCategories();
+            } else if (tabExpense.isSelected()) {
+                loadExpenseCategories();
+            } else {
+                loadCategories();
+            }
             clearFields();
         }
     }
