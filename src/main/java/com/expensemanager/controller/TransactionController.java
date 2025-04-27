@@ -52,7 +52,7 @@ public class TransactionController {
     private TextField amountField;
 
     @FXML
-    private TextField noteField;
+    private TextField descriptionField;
 
     @FXML
     private Label totalIncomeLabel;
@@ -79,7 +79,7 @@ public class TransactionController {
         transactionListView.setItems(transactionObservableList);
 
         amountField.setOnAction(e -> handleAddTransaction());
-        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> updateTotalByDate());
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> loadTransactions());
 
         transactionListView.setOnContextMenuRequested(event -> {
             Transaction selected = transactionListView.getSelectionModel().getSelectedItem();
@@ -126,11 +126,11 @@ public class TransactionController {
                 VBox vbox = new VBox();
                 vbox.getChildren().add(topLine);
 
-                String note = item.getDescription();
-                if (note != null && !note.trim().isEmpty()) {
-                    Label noteLabel = new Label("Ghi chú: " + note);
-                    noteLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #555;");
-                    vbox.getChildren().add(noteLabel);
+                String description = item.getDescription();
+                if (description != null && !description.trim().isEmpty()) {
+                    Label descriptionLabel = new Label("Mô tả: " + description);
+                    descriptionLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #555;");
+                    vbox.getChildren().add(descriptionLabel);
                 }
 
                 setGraphic(vbox);
@@ -149,7 +149,9 @@ public class TransactionController {
 
     @FXML
     private void loadTransactions() {
-        List<Transaction> transactions = transactionDAO.getTransactionsByProfile(currentProfileId);
+        LocalDate selectedDate = (datePicker.getValue() != null) ? datePicker.getValue() : LocalDate.now();
+        String formattedDate = selectedDate.toString();
+        List<Transaction> transactions = transactionDAO.getTransactionsByDate(currentProfileId, formattedDate);
         transactionObservableList.setAll(transactions);
         updateTotalByDate();
     }
@@ -166,7 +168,7 @@ public class TransactionController {
     private void handleAddTransaction() {
         String amountText = amountField.getText().trim();
         String selectedCategoryName = categoryComboBox.getValue();
-        String note = noteField.getText().trim(); // <- Lấy thêm nội dung ghi chú
+        String note = descriptionField.getText().trim();
 
         if (amountText.isEmpty() || selectedCategoryName == null) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thông tin chưa đầy đủ",
@@ -207,7 +209,7 @@ public class TransactionController {
 
         String transactionDateString = LocalDate.now().toString();
         if (note.isEmpty()) {
-            note = "Giao dịch không ghi chú"; // Nếu rỗng, cho 1 note mặc định
+            note = "Giao dịch không mô tả";
         }
 
         Transaction newTransaction = new Transaction(
@@ -224,7 +226,7 @@ public class TransactionController {
         }
 
         amountField.clear();
-        noteField.clear();
+        descriptionField.clear();
         categoryComboBox.getSelectionModel().clearSelection();
     }
 
@@ -260,8 +262,8 @@ public class TransactionController {
     }
 
     @FXML
-    private void handleClearNote() {
-        noteField.clear();
+    private void handleClearDescription() {
+        descriptionField.clear();
     }
 
     @FXML

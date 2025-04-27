@@ -13,7 +13,6 @@ public class TransactionDAO {
         this.connector = ConnectorDAO.getInstance();
     }
 
-    // Thêm giao dịch
     public boolean addTransaction(Transaction transaction) {
         String sql = "INSERT INTO transactions (profileId, type, categoryId, description, amount) VALUES (?, ?, ?, ?, ?)";
 
@@ -38,14 +37,15 @@ public class TransactionDAO {
         }
     }
 
-    // Lấy danh sách giao dịch theo profileId
-    public List<Transaction> getTransactionsByProfile(int profileId) {
+    public List<Transaction> getTransactionsByDate(int profileId, String date) {
         List<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE profileId = ? ORDER BY date DESC";
+        String sql = "SELECT * FROM transactions WHERE profileId = ? AND date(date) = ?";
+
         try (Connection conn = connector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, profileId);
+            stmt.setString(2, date);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -62,7 +62,7 @@ public class TransactionDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách giao dịch: " + e.getMessage());
+            System.err.println("Lỗi khi lấy giao dịch theo ngày: " + e.getMessage());
         }
 
         return transactions;
@@ -98,7 +98,6 @@ public class TransactionDAO {
         return transactions;
     }
 
-    // Xóa giao dịch theo ID
     public boolean deleteTransaction(int id) {
         String sql = "DELETE FROM transactions WHERE id = ?";
 
