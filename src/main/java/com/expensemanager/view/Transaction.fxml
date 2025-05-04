@@ -155,13 +155,13 @@
                   <FontAwesomeIconView text="" />
                </graphic>
             </Button>
-            <TextField fx:id="amountField1" layoutX="98.0" layoutY="351.0" prefHeight="59.0" prefWidth="252.0" />
-            <Label layoutX="30.0" layoutY="365.0" prefHeight="30.0" prefWidth="47.0" text="Note">
+            <TextField fx:id="descriptionField" layoutX="98.0" layoutY="351.0" prefHeight="59.0" prefWidth="252.0" />
+            <Label layoutX="30.0" layoutY="365.0" prefHeight="30.0" prefWidth="47.0" text="Mô tả">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button layoutX="284.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleClear" style="-fx-background-color: trans;">
+            <Button layoutX="284.0" layoutY="366.0" mnemonicParsing="false" style="-fx-background-color: trans;" onAction="#handleClearDescription">
                <graphic>
                   <FontAwesomeIconView glyphName="TRASH" />
                </graphic>
