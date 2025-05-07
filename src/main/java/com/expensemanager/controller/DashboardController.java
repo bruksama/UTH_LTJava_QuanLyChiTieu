@@ -62,6 +62,16 @@ public class DashboardController implements Initializable {
     private Button profileQuick;
     @FXML
     private VBox chartContainer;
+    @FXML
+    private MenuItem deleteProfileMenuItem;
+    @FXML
+    private MenuItem renameProfileMenuItem;
+    @FXML
+    private MenuItem renameProfile2MenuItem;
+    @FXML
+    private MenuItem deleteProfile2MenuItem;
+
+
 
     private TransactionDAO transactionDAO;
     private CategoryDAO categoryDAO;
@@ -79,6 +89,13 @@ public class DashboardController implements Initializable {
 
         profileList.setOnAction(event -> handleProfileList());
         profileQuick.setOnAction(event -> switchProfile());
+
+        deleteProfileMenuItem.setOnAction(event -> handleMenuItemDeleteProfile());
+        renameProfileMenuItem.setOnAction(event -> handleMenuItemRenameProfile());
+
+        renameProfile2MenuItem.setOnAction(event -> handleMenuItemRenameProfile2());
+        deleteProfile2MenuItem.setOnAction(event -> handleMenuItemDeleteProfile2());
+
         transactionDAO = new TransactionDAO();
         categoryDAO = new CategoryDAO();
         profileDAO = new ProfileDAO();
@@ -350,4 +367,162 @@ public class DashboardController implements Initializable {
         chartContainer.getChildren().clear();
         chartContainer.getChildren().add(barChart);
     }
+
+    @FXML
+    private void handleMenuItemDeleteProfile() {
+        // Lấy profile đang sử dụng
+        String currentProfileName = profileName1.getText().replace("Đang sử dụng: ", "");
+        if (currentProfileName.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có profile", "Bạn cần chọn một profile để xóa.");
+            return;
+        }
+
+        // Kiểm tra xem có phải profile đang sử dụng không
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+        Profile profile = profileDAO.getProfileById(currentProfileId);
+
+        if (profile != null) {
+            // Nếu đây là profile đang sử dụng, không thể xóa
+            if (profile.getName().equals(currentProfileName)) {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ đang sử dụng", "Bạn không thể xóa hồ sơ đang sử dụng.");
+                return;
+            }
+
+            // Xóa profile
+            boolean success = profileDAO.deleteProfile(profile.getId());
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa hồ sơ thành công", "Hồ sơ đã được xóa.");
+                // Cập nhật lại giao diện (có thể chuyển về màn hình login hoặc chọn profile khác)
+                loadProfileNames(currentProfileId); // Tải lại danh sách profile
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ", "Đã xảy ra lỗi khi xóa hồ sơ.");
+            }
+        }
+    }
+
+    @FXML
+    private void handleMenuItemRenameProfile() {
+        // Lấy tên profile đang sử dụng
+        String currentProfileName = profileName1.getText().replace("Đang sử dụng: ", "");
+
+        if (currentProfileName.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có profile", "Bạn cần chọn một profile để đổi tên.");
+            return;
+        }
+
+        // Hiển thị hộp thoại nhập tên mới
+        TextInputDialog dialog = new TextInputDialog(currentProfileName);
+        dialog.setTitle("Đổi tên hồ sơ");
+        dialog.setHeaderText("Nhập tên hồ sơ mới:");
+        dialog.setContentText("Tên hồ sơ mới:");
+
+        // Lấy tên mới từ hộp thoại
+        dialog.showAndWait().ifPresent(newProfileName -> {
+            if (newProfileName != null && !newProfileName.trim().isEmpty()) {
+                // Kiểm tra tên mới hợp lệ
+                if (profileDAO.isProfileExistByName(newProfileName)) {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên hồ sơ đã tồn tại", "Hồ sơ với tên này đã tồn tại.");
+                    return;
+                }
+
+                // Cập nhật tên hồ sơ trong cơ sở dữ liệu
+                int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+                Profile profile = profileDAO.getProfileById(currentProfileId);
+                if (profile != null) {
+                    profile.setName(newProfileName);
+
+                    boolean success = profileDAO.updateProfile(profile);
+                    if (success) {
+                        SessionManagerUtil.getInstance().setCurrentProfileName(newProfileName); // Cập nhật tên trong session
+                        profileName1.setText("Đang sử dụng: " + newProfileName); // Cập nhật giao diện
+
+                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi tên hồ sơ thành công", "Tên hồ sơ đã được đổi thành: " + newProfileName);
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đổi tên hồ sơ", "Đã xảy ra lỗi khi đổi tên hồ sơ.");
+                    }
+                }
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên hồ sơ không hợp lệ", "Tên hồ sơ không được để trống.");
+            }
+        });
+    }
+
+    @FXML
+    private void handleMenuItemRenameProfile2() {
+        // Lấy tên của Profile 2
+        String currentProfileName = profileName2.getText();
+
+        if (currentProfileName.equals("Chưa có profile thứ hai")) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có profile thứ hai", "Bạn cần tạo một profile thứ hai.");
+            return;
+        }
+
+        // Hiển thị hộp thoại nhập tên mới
+        TextInputDialog dialog = new TextInputDialog(currentProfileName);
+        dialog.setTitle("Đổi tên hồ sơ");
+        dialog.setHeaderText("Nhập tên hồ sơ mới:");
+        dialog.setContentText("Tên hồ sơ mới:");
+
+        dialog.showAndWait().ifPresent(newProfileName -> {
+            if (newProfileName != null && !newProfileName.trim().isEmpty()) {
+                // Kiểm tra tên mới hợp lệ
+                if (profileDAO.isProfileExistByName(newProfileName)) {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên hồ sơ đã tồn tại", "Hồ sơ với tên này đã tồn tại.");
+                    return;
+                }
+
+                // Cập nhật tên hồ sơ trong cơ sở dữ liệu
+                int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+                Profile profile = profileDAO.getProfileById(currentProfileId);
+                if (profile != null) {
+                    profile.setName(newProfileName);
+
+                    boolean success = profileDAO.updateProfile(profile);
+                    if (success) {
+                        profileName2.setText(newProfileName); // Cập nhật giao diện cho profileName2
+
+                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi tên hồ sơ thành công", "Tên hồ sơ đã được đổi thành: " + newProfileName);
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đổi tên hồ sơ", "Đã xảy ra lỗi khi đổi tên hồ sơ.");
+                    }
+                }
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên hồ sơ không hợp lệ", "Tên hồ sơ không được để trống.");
+            }
+        });
+    }
+
+    @FXML
+    private void handleMenuItemDeleteProfile2() {
+        String currentProfileName = profileName2.getText();
+
+        if (currentProfileName.equals("Chưa có profile thứ hai")) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có profile thứ hai", "Bạn cần tạo một profile thứ hai.");
+            return;
+        }
+
+        // Xác nhận xóa hồ sơ
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận");
+        alert.setHeaderText("Bạn có chắc chắn muốn xóa hồ sơ này?");
+        alert.setContentText("Hồ sơ sẽ bị xóa vĩnh viễn.");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+                Profile profile = profileDAO.getProfileById(currentProfileId);
+                if (profile != null) {
+                    boolean success = profileDAO.deleteProfile(profile.getId());
+                    if (success) {
+                        profileName2.setText("Chưa có profile thứ hai");
+                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa hồ sơ thành công", "Hồ sơ đã được xóa.");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ", "Đã xảy ra lỗi khi xóa hồ sơ.");
+                    }
+                }
+            }
+        });
+    }
+
+
 }
