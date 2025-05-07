@@ -96,8 +96,8 @@
                               </Label>
                               <MenuButton layoutX="120.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
-                                    <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                    <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                    <MenuItem fx:id="deleteProfileMenuItem" mnemonicParsing="false" text="Xóa profle" onAction="#handleMenuItemDeleteProfile" />
+                                    <MenuItem fx:id="renameProfileMenuItem" mnemonicParsing="false" text="Đổi tên" onAction="#handleMenuItemRenameProfile"/>
                                  </items>
                               </MenuButton>
                            </children>
@@ -119,8 +119,8 @@
                               </Label>
                               <MenuButton layoutX="130.0" layoutY="106.0" mnemonicParsing="false" style="-fx-background-color: FCB454;" text="Tùy chọn">
                                  <items>
-                                    <MenuItem mnemonicParsing="false" text="Xóa profle" />
-                                    <MenuItem mnemonicParsing="false" text="Đổi tên" />
+                                    <MenuItem fx:id="deleteProfile2MenuItem" mnemonicParsing="false" text="Xóa profle" onAction="#handleMenuItemDeleteProfile2"/>
+                                    <MenuItem fx:id="renameProfile2MenuItem" mnemonicParsing="false" text="Đổi tên" onAction="#handleMenuItemRenameProfile2" />
                                  </items>
                               </MenuButton>
                            </children>
