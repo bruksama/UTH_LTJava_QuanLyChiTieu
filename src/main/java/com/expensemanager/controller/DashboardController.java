@@ -449,7 +449,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void handleMenuItemRenameProfile2() {
-        // Lấy tên của Profile 2
+        // Lấy tên của profile2
         String currentProfileName = profileName2.getText();
 
         if (currentProfileName.equals("Chưa có profile thứ hai")) {
@@ -457,8 +457,24 @@ public class DashboardController implements Initializable {
             return;
         }
 
+        // Lấy profile thứ 2 từ cơ sở dữ liệu dựa trên tên
+        Profile profile2 = profileDAO.getProfileByUsername(currentProfileName);
+
+        if (profile2 == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không tìm thấy profile thứ hai", "Hồ sơ không tồn tại trong cơ sở dữ liệu.");
+            return;
+        }
+
+        // Kiểm tra nếu profile2 là profile đang sử dụng
+        int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
+        if (profile2.getId() == currentProfileId) {
+            // Nếu profile 2 là profile hiện tại đang sử dụng, không cho phép đổi tên
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đổi tên hồ sơ đang sử dụng", "Bạn không thể đổi tên hồ sơ đang sử dụng.");
+            return;
+        }
+
         // Hiển thị hộp thoại nhập tên mới
-        TextInputDialog dialog = new TextInputDialog(currentProfileName);
+        TextInputDialog dialog = new TextInputDialog(profile2.getName());
         dialog.setTitle("Đổi tên hồ sơ");
         dialog.setHeaderText("Nhập tên hồ sơ mới:");
         dialog.setContentText("Tên hồ sơ mới:");
@@ -472,19 +488,14 @@ public class DashboardController implements Initializable {
                 }
 
                 // Cập nhật tên hồ sơ trong cơ sở dữ liệu
-                int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
-                Profile profile = profileDAO.getProfileById(currentProfileId);
-                if (profile != null) {
-                    profile.setName(newProfileName);
+                profile2.setName(newProfileName);
+                boolean success = profileDAO.updateProfile(profile2);
+                if (success) {
+                    profileName2.setText(newProfileName); // Cập nhật giao diện
 
-                    boolean success = profileDAO.updateProfile(profile);
-                    if (success) {
-                        profileName2.setText(newProfileName); // Cập nhật giao diện cho profileName2
-
-                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi tên hồ sơ thành công", "Tên hồ sơ đã được đổi thành: " + newProfileName);
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đổi tên hồ sơ", "Đã xảy ra lỗi khi đổi tên hồ sơ.");
-                    }
+                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi tên hồ sơ thành công", "Tên hồ sơ đã được đổi thành: " + newProfileName);
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đổi tên hồ sơ", "Đã xảy ra lỗi khi đổi tên hồ sơ.");
                 }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên hồ sơ không hợp lệ", "Tên hồ sơ không được để trống.");
@@ -496,12 +507,21 @@ public class DashboardController implements Initializable {
     private void handleMenuItemDeleteProfile2() {
         String currentProfileName = profileName2.getText();
 
+        // Kiểm tra nếu profile 2 không có tên
         if (currentProfileName.equals("Chưa có profile thứ hai")) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không có profile thứ hai", "Bạn cần tạo một profile thứ hai.");
             return;
         }
 
-        // Xác nhận xóa hồ sơ
+        // Lấy ID của profile 2 từ cơ sở dữ liệu (thay vì lấy tên)
+        Profile profile2 = profileDAO.getProfileByUsername(currentProfileName);
+
+        if (profile2 == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không tìm thấy profile thứ hai", "Hồ sơ không tồn tại trong cơ sở dữ liệu.");
+            return;
+        }
+
+        // Xác nhận xóa profile 2
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác nhận");
         alert.setHeaderText("Bạn có chắc chắn muốn xóa hồ sơ này?");
@@ -509,20 +529,26 @@ public class DashboardController implements Initializable {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                // Kiểm tra nếu profile 2 là profile đang sử dụng, không xóa
                 int currentProfileId = SessionManagerUtil.getInstance().getCurrentProfileId();
-                Profile profile = profileDAO.getProfileById(currentProfileId);
-                if (profile != null) {
-                    boolean success = profileDAO.deleteProfile(profile.getId());
-                    if (success) {
-                        profileName2.setText("Chưa có profile thứ hai");
-                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa hồ sơ thành công", "Hồ sơ đã được xóa.");
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ", "Đã xảy ra lỗi khi xóa hồ sơ.");
-                    }
+                if (profile2.getId() == currentProfileId) {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ đang sử dụng", "Bạn không thể xóa hồ sơ đang sử dụng.");
+                    return;
+                }
+
+                // Xóa profile 2 bằng ID
+                boolean success = profileDAO.deleteProfile(profile2.getId());
+                if (success) {
+                    // Sau khi xóa, cập nhật giao diện
+                    profileName2.setText("Chưa có profile thứ hai");
+                    showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa hồ sơ thành công", "Hồ sơ đã được xóa.");
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa hồ sơ", "Đã xảy ra lỗi khi xóa hồ sơ.");
                 }
             }
         });
     }
+
 
 
 }
