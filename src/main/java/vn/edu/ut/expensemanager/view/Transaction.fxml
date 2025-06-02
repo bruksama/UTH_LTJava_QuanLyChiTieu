@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: F8F4E1;" styleClass="parent" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.vn.edu.ut.expensemanager.controller.TransactionController">
+    <top>
+        <HBox prefHeight="50.4" prefWidth="900.0" style="-fx-background-color: FF9B17;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="navigateReturnBtn" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="↩">
+                            <font>
+                                <Font size="36.0" />
+                            </font>
+                        </Label>
+                    </graphic>
+                </Button>
+                <ToggleButtonGroup blendMode="DARKEN" cache="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" selectionType="SINGLE">
+                    <toggles>
+                        <ToggleButton fx:id="navigateDashboardBtn" mnemonicParsing="false" prefHeight="50.4" text="Trang chủ" wrapText="true">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="HOME" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton mnemonicParsing="false" prefHeight="50.4" selected="true" text="Giao dịch">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="MONEY" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="navigateCategoryBtn" mnemonicParsing="false" prefHeight="50.4" text="Danh mục">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="BOOKMARK" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                        <ToggleButton fx:id="navigateReportBtn" mnemonicParsing="false" prefHeight="50.4" text="Báo cáo">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="PIE_CHART" size="1.2em" />
+                            </graphic>
+                        </ToggleButton>
+                    </toggles>
+                </ToggleButtonGroup>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <HBox spacing="10.0">
+            <children>
+                <VBox maxHeight="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
+                    <padding><Insets bottom="20.0" left="25.0" top="20.0" /></padding>
+                    <children>
+                        <HBox maxWidth="1.7976931348623157E308" minWidth="180.0" prefHeight="50.0" prefWidth="381.0" spacing="10.0">
+                            <children>
+                                <DatePicker fx:id="datePicker" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="53.0" prefHeight="51.0" prefWidth="69.0" />
+                                <Label fx:id="totalIncomeLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" styleClass="thu" text="0đ" wrapText="true">
+                                    <font>
+                                        <Font name="Verdana" size="12.0" />
+                                    </font>
+                                    <graphic>
+                                        <FontAwesomeIconView fill="#81c784" glyphName="ARROW_UP">
+                                            <font>
+                                                <Font name="System Bold" size="36.0" />
+                                            </font>
+                                        </FontAwesomeIconView>
+                                    </graphic>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="totalExpenseLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" styleClass="chi" text="0đ" wrapText="true">
+                                    <font>
+                                        <Font name="Verdana" size="12.0" />
+                                    </font>
+                                    <graphic>
+                                        <FontAwesomeIconView fill="#e57373" glyphName="ARROW_DOWN" wrappingWidth="13.300000190734863">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                        </FontAwesomeIconView>
+                                    </graphic>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <Label prefHeight="30.0" prefWidth="415.0" style="-fx-text-fill: #0b12e1;" text="Danh sách giao dịch ngày">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <ListView fx:id="transactionListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                    </children>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+                </VBox>
+                <VBox spacing="20.0" styleClass="dropdown-menu" HBox.hgrow="ALWAYS">
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                    <children>
+                        <Label prefHeight="30.0" prefWidth="134.0" style="-fx-text-fill: #0b12e1;" text="Thêm giao dịch" textFill="#0b12e1">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER">
+                            <children>
+                                <ComboBox fx:id="categoryComboBox" prefHeight="51.0" prefWidth="172.0" promptText="Chọn danh mục" styleClass="menu-button" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label text="Số tiền">
+                                    <font>
+                                        <Font size="18.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="amountField" prefHeight="59.0" styleClass="onhap" HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#handleClear" style="-fx-background-color: transparent;">
+                                    <graphic>
+                                        <FontAwesomeIconView text="" />
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER">
+                            <children>
+                                <GridPane alignment="CENTER" prefHeight="143.0" prefWidth="200.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="000" GridPane.rowIndex="3" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        <Button maxWidth="66.4" mnemonicParsing="false" onAction="#handleBackspace" prefHeight="37.0" prefWidth="68.0" styleClass="numberDelete" text="⌫" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="7" GridPane.rowIndex="2" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="4" GridPane.rowIndex="1" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="1" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="2" GridPane.columnIndex="1" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <Button maxHeight="1.7976931348623157E308" maxWidth="66.4" mnemonicParsing="false" onAction="#handleButtonClick" prefWidth="67.2" styleClass="number" text="3" GridPane.columnIndex="2" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10.0">
+                            <children>
+                                <Label text="Mô tả">
+                                    <font>
+                                        <Font size="18.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="descriptionField" HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#handleClearDescription" style="-fx-background-color: transparent;">
+                                    <graphic>
+                                        <FontAwesomeIconView glyphName="TRASH" />
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <Region VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER">
+                            <children>
+                                <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddTransaction" prefHeight="42.0" prefWidth="90.0" styleClass="button-add-transaction" text="Lưu" />
+                            </children>
+                        </HBox>
+                    </children>
+               <HBox.margin>
+                  <Insets bottom="20.0" top="20.0" />
+               </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+    </center>
+    <stylesheets>
+        <URL value="@../../../../../../resources/vn/edu/ut/expensemanager/css/DashboardStyle.css" />
+        <URL value="@../../../../../../resources/vn/edu/ut/expensemanager/css/TransactionStyle.css" />
+    </stylesheets>
+</BorderPane>
